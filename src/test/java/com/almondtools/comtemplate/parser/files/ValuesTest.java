@@ -1,0 +1,56 @@
+package com.almondtools.comtemplate.parser.files;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.almondtools.comtemplate.engine.TemplateGroup;
+
+public class ValuesTest extends TemplateTests {
+
+	private TemplateGroup group;
+
+	@Before
+	public void before() throws Exception {
+		group = compileFile("src/test/resources/values.ctp");
+	}
+
+	@Test
+	public void testMap() throws Exception {
+		String rendered = group.getDefinition("rendermap").evaluate();
+		assertThat(rendered, equalTo("map = [name=name,type=type]"));
+	}
+
+	@Test
+	public void testDuplicateMap() throws Exception {
+		String rendered = group.getDefinition("renderduplicatemap").evaluate();
+		assertThat(rendered, equalTo("map = [name=value,type=type]"));
+	}
+
+	@Test
+	public void testList() throws Exception {
+		String rendered = group.getDefinition("renderlist").evaluate();
+		assertThat(rendered, equalTo("list = [element1,element2]"));
+	}
+
+	@Test
+	public void testInt() throws Exception {
+		String rendered = group.getDefinition("renderint").evaluate();
+		assertThat(rendered, equalTo("int = 22"));
+	}
+
+	@Test
+	public void testDec() throws Exception {
+		String rendered = group.getDefinition("renderdec").evaluate();
+		assertThat(rendered, equalTo("dec = -0.2"));
+	}
+
+	@Test
+	public void testBool() throws Exception {
+		String rendered = group.getDefinition("renderbool").evaluate();
+		assertThat(rendered, equalTo("bool = false"));
+	}
+
+}
