@@ -1,4 +1,4 @@
-#Common Challenges
+#Advanced Topics
 
 ## Global Variables
 

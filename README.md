@@ -7,18 +7,11 @@ ComTemplate provides a **pure functional template language**:
  - There are no mutable variables and no side effects (except those hidden in the host language)
  - This makes mixing up layout and code very hard 
 
-## ComTemplate Syntax
+## [ComTemplate Syntax](TemplateFileSyntax.md)
 
-see ...
+## [Attributes and Functions](AttributesFunctions.md)
 
-## Attributes and Functions
-
-see ...
-
-## Common Challenges
-
-see ...
+## [Advanced Topics](AdvancedTopics.md)
 
 ## Planned Features
 
-todo
