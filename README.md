@@ -7,6 +7,12 @@ ComTemplate provides a **pure functional template language**:
  - There are no mutable variables and no side effects (except those hidden in the host language)
  - This makes mixing up layout and code very hard 
 
+## Starting with ComTemplate
+
+ComTemplate is yet not sufficiently documented. But it is sufficiently tested - each feature has a corresponding unit test.
+
+If something does not work properly, open an issue. If you have patches for code or documentation (even typos) then open a pull request.
+
 ## [ComTemplate Syntax](doc/TemplateFileSyntax.md)
 
 ## [Template Library](doc/TemplateLibrary.md)
@@ -18,5 +24,6 @@ ComTemplate provides a **pure functional template language**:
  - better error reporting
  - reflective references to variables (experimental)
  - comtemplate unit (unit tests and coverage for templates)
- - imports at usage location 
+ - imports at usage location
+ - deploy in a maven repository 
 
