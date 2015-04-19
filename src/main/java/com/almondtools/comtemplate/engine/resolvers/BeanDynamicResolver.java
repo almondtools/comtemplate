@@ -9,7 +9,7 @@ import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 import com.almondtools.comtemplate.engine.expressions.NativeObject;
 
-public class BeanDynamicResolver extends AbstractResolver<NativeObject> {
+public class BeanDynamicResolver extends ExclusiveTypeResolver<NativeObject> {
 
 	public BeanDynamicResolver() {
 		super(NativeObject.class);

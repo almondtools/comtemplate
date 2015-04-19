@@ -27,15 +27,6 @@ public class ListResolverTest {
 	}
 
 	@Test
-	public void testResolveItem() throws Exception {
-		Scope scope = mock(Scope.class);
-		ResolvedListLiteral base = new ResolvedListLiteral(string("s1"), string("s2"));
-
-		assertThat(resolver.resolveTyped(base, "item", asList(integer(0)), scope), equalTo(string("s1")));
-		assertThat(resolver.resolveTyped(base, "item", asList(integer(1)), scope), equalTo(string("s2")));
-	}
-
-	@Test
 	public void testResolveItemEmptyList() throws Exception {
 		Scope scope = mock(Scope.class);
 		ResolvedListLiteral base = new ResolvedListLiteral();

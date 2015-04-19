@@ -7,11 +7,11 @@ import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 
-public abstract class AbstractResolver<T> implements Resolver {
+public abstract class ExclusiveTypeResolver<T> implements Resolver {
 
 	private Class<T> clazz;
 
-	public AbstractResolver(Class<T> clazz) {
+	public ExclusiveTypeResolver(Class<T> clazz) {
 		this.clazz = clazz;
 	}
 

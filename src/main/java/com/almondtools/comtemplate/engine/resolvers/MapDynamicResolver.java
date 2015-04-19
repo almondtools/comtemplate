@@ -8,7 +8,7 @@ import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 
-public class MapDynamicResolver extends AbstractResolver<ResolvedMapLiteral> {
+public class MapDynamicResolver extends ExclusiveTypeResolver<ResolvedMapLiteral> {
 
 	public MapDynamicResolver() {
 		super(ResolvedMapLiteral.class);

@@ -20,13 +20,13 @@ import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 import com.almondtools.comtemplate.engine.expressions.IntegerLiteral;
 import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 
-public class AbstractResolverTest {
+public class ExclusiveTypeResolverTest {
 
-	private AbstractResolver<StringLiteral> resolver;
+	private ExclusiveTypeResolver<StringLiteral> resolver;
 
 	@Before
 	public void before() {
-		resolver = new AbstractResolver<StringLiteral>(StringLiteral.class) {
+		resolver = new ExclusiveTypeResolver<StringLiteral>(StringLiteral.class) {
 
 			@Override
 			public TemplateImmediateExpression resolveTyped(StringLiteral base, String function, List<TemplateImmediateExpression> arguments, Scope scope) {

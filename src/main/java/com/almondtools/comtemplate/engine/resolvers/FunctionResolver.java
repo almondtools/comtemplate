@@ -20,6 +20,10 @@ public abstract class FunctionResolver implements Resolver {
 		this.name = name;
 		this.arity = arity;
 	}
+	
+	public String getName() {
+		return name;
+	}
 
 	@Override
 	public TemplateImmediateExpression resolve(TemplateImmediateExpression base, String function, List<TemplateImmediateExpression> arguments, Scope scope) {
