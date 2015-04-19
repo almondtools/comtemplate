@@ -31,4 +31,17 @@ public class ErrorsTest extends TemplateTests {
 		                            
 	}
 
+	@Test
+	public void testInvalidDefinitionOp() throws Exception {
+		List<String> errors = findErrors("src/test/resources/errors/invaliddefinitionop.ctp");
+		
+		assertThat(errors, contains(
+			"unexpected characters in line 1:23 was <:>, expected <'::='>",
+			"unexpected characters in line 7:23 was <:>, expected <'::='>",
+			"unexpected characters in line 13:23 was <=>, expected <'::='>",
+			"unexpected characters in line 19:23 was <:>, expected <'::='>"
+			));
+		
+	}
+	
 }
