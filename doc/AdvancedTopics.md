@@ -17,9 +17,32 @@ This interpreter can also resolve global context variables:
      @@myModelObject.property
    
 
-## Special Templates
+## Advanced Templates
 
-todo
+The default way of templating will be the writing of a custom template in a ComTemplate file. Most requirements will be solved with this method.
+
+A more advanced way to create templates is available to java developers. An advanced template can be created as following
+
+ - create a new template class as sub class of `TemplateDefinition`
+ - the interpreter uses a set of `GlobalTemplates`, register your template on this object by calling `GlobalTemplates.register(TemplateDefinition)`
+ 
+Use this Method to specify template behavior with a new control flow, that is not yet provided in ComTemplate. Although it is possible to introduce behaviors with side effects with this method, I recommend not to break the **pure functional nature** of ComTemplate, with such an advanced template.
+
+Some standard templates are yet implemented in this way, e.g. `if` (IfTemplate), `for` (ForTemplate) or `apply` (ApplyTemplate).
+
+## Custom Attribute/Function Resolvers
+
+As ComTemplate allows you to define your own templates, it also allows you to define new functions or attributes. Functions and attributes are not managed in the object `GlobalTemplates` but in an object of `ResolverRegistry`.
+
+To define a new attribute/function resolver
+
+ - create a new resolver class as sub class of `Resolver`
+ - the interpreter uses a `ResolverRegistry`, register your resolver on this object by calling `Resolver.register(Class<? extends TemplateImmediateExpression>, Resolver)`
+ 
+ Use this method to add new functional expressions to ComTemplate. Although it is possible to introduce behaviors with side effects with this method, I recommend not to break the **pure functional nature** of ComTemplate, with such a resolver.
+
+All standard resolvers yet are implemented in this way.
+ 
 
 ## Inheritance with ComTemplate objects
 
