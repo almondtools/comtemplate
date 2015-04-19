@@ -7,7 +7,7 @@ import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 
-public abstract class ExclusiveTypeResolver<T> implements Resolver {
+public abstract class ExclusiveTypeResolver<T extends TemplateImmediateExpression> implements Resolver {
 
 	private Class<T> clazz;
 

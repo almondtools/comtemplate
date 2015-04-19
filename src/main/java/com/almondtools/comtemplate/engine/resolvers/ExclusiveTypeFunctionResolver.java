@@ -6,26 +6,35 @@ import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 
-public abstract class ExclusiveTypeFunctionResolver<T> extends FunctionResolver {
+public abstract class ExclusiveTypeFunctionResolver<T extends TemplateImmediateExpression> extends ExclusiveTypeResolver<T> {
 
-	private Class<T> clazz;
+	private String name;
+	private int arity;
 
 	public ExclusiveTypeFunctionResolver(Class<T> clazz, String name, int arity) {
-		super(name, arity);
-		this.clazz = clazz;
+		super(clazz);
+		this.name = name;
+		this.arity = arity;
 	}
 
 	public ExclusiveTypeFunctionResolver(Class<T> clazz, String name) {
-		super(name);
-		this.clazz = clazz;
+		this(clazz, name, 0);
 	}
-
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getArity() {
+		return arity;
+	}
+	
 	@Override
-	public TemplateImmediateExpression resolve(TemplateImmediateExpression base, List<TemplateImmediateExpression> arguments, Scope scope) {
-		if (clazz.isInstance(base)) {
-			return resolveTyped(clazz.cast(base), arguments, scope);
+	public TemplateImmediateExpression resolveTyped(T base, String function, List<TemplateImmediateExpression> arguments, Scope scope) {
+		if (name.equals(function) && arguments.size() == arity) {
+			return resolveTyped(base, arguments, scope);
 		}
-		return new ExpressionResolutionError(base, getName(), arguments, scope, this);
+		return new ExpressionResolutionError(base, name, arguments, scope, this);
 	}
 
 	public abstract TemplateImmediateExpression resolveTyped(T base, List<TemplateImmediateExpression> arguments, Scope scope);

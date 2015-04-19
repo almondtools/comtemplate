@@ -17,17 +17,18 @@ import org.junit.Test;
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
+import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 
-public class FunctionResolverTest {
+public class ExclusiveTypeFunctionResolverTest {
 
-	private FunctionResolver resolver;
+	private ExclusiveTypeFunctionResolver<StringLiteral> resolver;
 
 	@Before
 	public void before() {
-		resolver = new FunctionResolver("func", 2) {
+		resolver = new ExclusiveTypeFunctionResolver<StringLiteral>(StringLiteral.class, "func", 2) {
 
 			@Override
-			public TemplateImmediateExpression resolve(TemplateImmediateExpression base, List<TemplateImmediateExpression> arguments, Scope scope) {
+			public TemplateImmediateExpression resolveTyped(StringLiteral base, List<TemplateImmediateExpression> arguments, Scope scope) {
 				return TRUE;
 			}
 

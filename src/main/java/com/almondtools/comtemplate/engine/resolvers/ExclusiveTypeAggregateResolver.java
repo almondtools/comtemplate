@@ -10,9 +10,8 @@ import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 
+public class ExclusiveTypeAggregateResolver<T extends TemplateImmediateExpression> extends ExclusiveTypeResolver<T> {
 
-public abstract class ExclusiveTypeAggregateResolver<T extends TemplateImmediateExpression> extends ExclusiveTypeResolver<T>{
-	
 	private Map<String, ExclusiveTypeFunctionResolver<T>> functions;
 
 	@SafeVarargs
@@ -22,18 +21,18 @@ public abstract class ExclusiveTypeAggregateResolver<T extends TemplateImmediate
 	}
 
 	@SafeVarargs
-	public static <T> Map<String, ExclusiveTypeFunctionResolver<T>> functionMapOf(ExclusiveTypeFunctionResolver<T>... functions) {
+	public static <T extends TemplateImmediateExpression> Map<String, ExclusiveTypeFunctionResolver<T>> functionMapOf(ExclusiveTypeFunctionResolver<T>... functions) {
 		return Stream.of(functions)
-				.collect(toMap(f -> f.getName(), f -> f));
+			.collect(toMap(f -> f.getName(), f -> f));
 	}
 
 	@Override
 	public TemplateImmediateExpression resolveTyped(T base, String function, List<TemplateImmediateExpression> arguments, Scope scope) {
 		ExclusiveTypeFunctionResolver<T> resolver = functions.get(function);
-		if (resolver == null) {
-			return new ExpressionResolutionError(base, function, arguments, scope, this);
+		if (resolver != null) {
+			return resolver.resolveTyped(base, arguments, scope);
 		} else {
-			return resolver.resolve(base, arguments, scope);
+			return new ExpressionResolutionError(base, function, arguments, scope, this);
 		}
 	}
 
