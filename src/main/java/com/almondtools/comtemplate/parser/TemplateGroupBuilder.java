@@ -177,6 +177,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	@Override
 	public TemplateGroupNode visitValueDefinition(ValueDefinitionContext ctx) {
 		String name = ctx.name.getText();
+		activeDefinition = activeGroup.groupDefinition();
 		TemplateExpression value = ctx.value().accept(this).as(TemplateExpression.class);
 		activeGroup.defineConstant(var(name, value));
 		return node(var(name, value));

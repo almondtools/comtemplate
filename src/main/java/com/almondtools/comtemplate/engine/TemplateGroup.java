@@ -1,18 +1,23 @@
 package com.almondtools.comtemplate.engine;
 
 import static com.almondtools.comtemplate.engine.TemplateParameter.toParams;
+import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.almondtools.comtemplate.engine.expressions.TemplateResolutionError;
+
 public class TemplateGroup {
 
+	private final TemplateDefinition groupDefinition;
 	private String name;
 	private List<TemplateDefinition> imports;
 	private List<TemplateDefinition> definitions;
 	private List<TemplateVariable> constants;
 
 	public TemplateGroup(String name) {
+		this.groupDefinition = new Definition(name, this);
 		this.name = name;
 		this.imports = new ArrayList<>();
 		this.definitions = new ArrayList<>();
@@ -80,6 +85,28 @@ public class TemplateGroup {
 		definition.setGroup(this);
 		definitions.add(definition);
 		return definition;
+	}
+
+	public TemplateDefinition groupDefinition() {
+		return groupDefinition;
+	}
+	
+	public Scope groupScope() {
+		return new Scope(groupDefinition, emptyList());
+	}
+	
+	private static class Definition extends TemplateDefinition {
+
+		public Definition(String name, TemplateGroup group) {
+			super(name);
+			setGroup(group);
+		}
+		
+		@Override
+		public TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments) {
+			return new TemplateResolutionError(getName(), this);
+		}
+		
 	}
 
 }
