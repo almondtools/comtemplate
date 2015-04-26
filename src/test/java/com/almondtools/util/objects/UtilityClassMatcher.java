@@ -1,9 +1,11 @@
 package com.almondtools.util.objects;
 
 import static java.lang.reflect.Modifier.isFinal;
+import static java.lang.reflect.Modifier.isStatic;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -19,8 +21,9 @@ public class UtilityClassMatcher extends TypeSafeMatcher<Class<?>> {
 
 	@Override
 	public void describeTo(Description description) {
-		// TODO Auto-generated method stub
-		
+		description.appendText("should be declared final\n");
+		description.appendText("and have a private default constructor\n");
+		description.appendText("and have only static methods\n");
 	}
 
 	@Override
@@ -41,6 +44,11 @@ public class UtilityClassMatcher extends TypeSafeMatcher<Class<?>> {
 			}
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException e) {
 			return false;
+		}
+		for (Method method : item.getDeclaredMethods()) {
+			if (!isStatic(method.getModifiers())) {
+				return false;
+			}
 		}
 		return true;
 	}
