@@ -45,16 +45,11 @@ public class TemplateGroupTest {
 	}
 
 	@Test
-	public void testGetConstantsEmpty() throws Exception {
-		assertThat(new TemplateGroup("group").getConstants(), empty());
-	}
-
-	@Test
 	public void testGetConstantsNotEmpty() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
-		TemplateVariable constant = var("constant", string("constant"));
-		group.defineConstant(constant);
-		assertThat(group.getConstants(), contains(constant));
+		ConstantDefinition constant = group.defineConstant("constant");
+		constant.setValue(string("constant"));
+		assertThat(group.getDefinitions(), contains(constant));
 	}
 
 	@Test
@@ -87,7 +82,7 @@ public class TemplateGroupTest {
 	@Test
 	public void testResolveVariableFound() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
-		group.defineConstant(var("var", string("string")));
+		group.defineConstant("var").setValue(string("string"));
 		assertThat(group.resolveVariable("var"), equalTo(var("var", string("string"))));
 	}
 

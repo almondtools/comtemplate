@@ -1,27 +1,20 @@
 package com.almondtools.comtemplate.engine;
 
 import static com.almondtools.comtemplate.engine.TemplateParameter.toParams;
-import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.almondtools.comtemplate.engine.expressions.TemplateResolutionError;
-
 public class TemplateGroup {
 
-	private final TemplateDefinition groupDefinition;
 	private String name;
 	private List<TemplateDefinition> imports;
 	private List<TemplateDefinition> definitions;
-	private List<TemplateVariable> constants;
 
 	public TemplateGroup(String name) {
-		this.groupDefinition = new Definition(name, this);
 		this.name = name;
 		this.imports = new ArrayList<>();
 		this.definitions = new ArrayList<>();
-		this.constants = new ArrayList<>();
 	}
 
 	public String getName() {
@@ -40,10 +33,6 @@ public class TemplateGroup {
 		return definitions;
 	}
 
-	public List<TemplateVariable> getConstants() {
-		return constants;
-	}
-
 	public TemplateDefinition getDefinition(String template) {
 		return definitions.stream()
 			.filter(def -> template.equals(def.getName()))
@@ -55,7 +44,9 @@ public class TemplateGroup {
 	}
 
 	public TemplateVariable resolveVariable(String variable) {
-		return constants.stream()
+		return definitions.stream()
+			.filter(def -> def instanceof ConstantDefinition)
+			.map(def -> ((ConstantDefinition) def).toVariable())
 			.filter(constant -> variable.equals(constant.getName()))
 			.findFirst()
 			.orElse(null);
@@ -77,36 +68,14 @@ public class TemplateGroup {
 		return defineObject(name, toParams(parameters));
 	}
 
-	public void defineConstant(TemplateVariable constant) {
-		constants.add(constant);
+	public ConstantDefinition defineConstant(String name) {
+		return define(new ConstantDefinition(name));
 	}
 
 	public <T extends TemplateDefinition> T define(T definition) {
 		definition.setGroup(this);
 		definitions.add(definition);
 		return definition;
-	}
-
-	public TemplateDefinition groupDefinition() {
-		return groupDefinition;
-	}
-	
-	public Scope groupScope() {
-		return new Scope(groupDefinition, emptyList());
-	}
-	
-	private static class Definition extends TemplateDefinition {
-
-		public Definition(String name, TemplateGroup group) {
-			super(name);
-			setGroup(group);
-		}
-		
-		@Override
-		public TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments) {
-			return new TemplateResolutionError(getName(), this);
-		}
-		
 	}
 
 }

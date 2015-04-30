@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
+import com.almondtools.comtemplate.engine.ConstantDefinition;
 import com.almondtools.comtemplate.engine.CustomObjectDefinition;
 import com.almondtools.comtemplate.engine.CustomTemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateDefinition;
@@ -177,10 +178,11 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	@Override
 	public TemplateGroupNode visitValueDefinition(ValueDefinitionContext ctx) {
 		String name = ctx.name.getText();
-		activeDefinition = activeGroup.groupDefinition();
+		ConstantDefinition constantDefinition = activeGroup.defineConstant(name);
+		activeDefinition = constantDefinition;
 		TemplateExpression value = ctx.value().accept(this).as(TemplateExpression.class);
-		activeGroup.defineConstant(var(name, value));
-		return node(var(name, value));
+		constantDefinition.setValue(value);
+		return node(constantDefinition);
 	}
 
 	@Override

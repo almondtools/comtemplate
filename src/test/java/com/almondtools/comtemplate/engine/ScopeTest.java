@@ -48,8 +48,9 @@ public class ScopeTest {
 	@Test
 	public void testResolveVariableToConstant() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
-		group.defineConstant(TemplateVariable.var("constant", string("string")));
-		definition.setGroup(group);
+		ConstantDefinition definedConstant = group.defineConstant("constant");
+		definedConstant.setValue(string("string"));
+		definition = definedConstant;
 		assertThat(new Scope(definition).resolveVariable("constant").getValue(), equalTo(string("string")));
 	}
 

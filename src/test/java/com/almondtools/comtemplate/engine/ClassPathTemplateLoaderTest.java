@@ -1,8 +1,8 @@
 package com.almondtools.comtemplate.engine;
 
 import static java.util.Collections.emptyList;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
@@ -47,7 +47,7 @@ public class ClassPathTemplateLoaderTest {
 		ClassPathTemplateLoader loader = new ClassPathTemplateLoader();
 		loader.addClassPath("src/test/resources");
 		TemplateGroup group = loader.loadGroup("cp.test");
-		assertThat(group.getConstants(), hasSize(1));
+		assertThat(group.getDefinition("test"), instanceOf(ConstantDefinition.class));
 	}
 
 	@Test

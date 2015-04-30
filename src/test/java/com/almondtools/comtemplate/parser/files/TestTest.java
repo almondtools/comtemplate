@@ -1,6 +1,7 @@
 package com.almondtools.comtemplate.parser.files;
 
 import static com.almondtools.comtemplate.parser.files.TemplateTests.compileFile;
+import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -24,9 +25,7 @@ public class TestTest {
 
 	@Test
 	public void testTestTrue() throws Exception {
-		ResolvedMapLiteral results = (ResolvedMapLiteral) group.resolveVariable("test")
-			.getValue()
-			.apply(interpreter, group.groupScope());
+		ResolvedMapLiteral results = (ResolvedMapLiteral) group.getDefinition("test").evaluate(interpreter, null, emptyList());
 		assertThat(results.getAttribute("test1").as(Boolean.class), is(true));
 		assertThat(results.getAttribute("test2").as(Boolean.class), is(true));
 		assertThat(results.getAttribute("test3").as(Boolean.class), is(true));
@@ -34,9 +33,7 @@ public class TestTest {
 
 	@Test
 	public void testTestFalse() throws Exception {
-		ResolvedMapLiteral results = (ResolvedMapLiteral) group.resolveVariable("fail")
-			.getValue()
-			.apply(interpreter, group.groupScope());
+		ResolvedMapLiteral results = (ResolvedMapLiteral) group.getDefinition("fail").evaluate(interpreter, null, emptyList());
 		assertThat(results.getAttribute("test1").as(Boolean.class), is(false));
 		assertThat(results.getAttribute("test2").as(Boolean.class), is(false));
 		assertThat(results.getAttribute("test3").as(Boolean.class), is(false));
