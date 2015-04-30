@@ -2,38 +2,6 @@ html(content) ::= {
 <html>@content</html>
 }
 
-test ::= [
+test ::= html("content").equals("<html>content</html>")
  
-test1=html("content").equalTo("<html>content</html>"),
- 
-test2=html("othercontent").evaluatesTo({
- <html>
-   othercontent
- </html>
-}),
- 
-test3=html("other content").evaluatesTo({
-<html>
-  other content
-</html>
-})
- 
-]
-
-fail ::= [
- 
-test1=html("content").equalTo("<html>\ncontent</html>"),
- 
-test2=html("othercontent").evaluatesTo({
-<html>
-  other content
-</html>
-}),
- 
-test3=html("other content").evaluatesTo({
-<html>
-  othercontent
-</html>
-})
- 
-]
+fail ::= html("content").equals("<html>\ncontent</html>")

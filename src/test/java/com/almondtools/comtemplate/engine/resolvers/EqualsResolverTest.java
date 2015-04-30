@@ -12,13 +12,13 @@ import org.junit.Test;
 import com.almondtools.comtemplate.engine.Scope;
 
 
-public class EqualToResolverTest {
+public class EqualsResolverTest {
 
-	private EqualToResolver resolver;
+	private EqualsResolver resolver;
 
 	@Before
 	public void before() {
-		resolver = new EqualToResolver();
+		resolver = new EqualsResolver();
 	}
 
 	@Test

@@ -22,8 +22,7 @@ import com.almondtools.comtemplate.engine.resolvers.BeanDynamicResolver;
 import com.almondtools.comtemplate.engine.resolvers.CompoundResolver;
 import com.almondtools.comtemplate.engine.resolvers.CompressResolver;
 import com.almondtools.comtemplate.engine.resolvers.EmptyResolver;
-import com.almondtools.comtemplate.engine.resolvers.EqualToResolver;
-import com.almondtools.comtemplate.engine.resolvers.EvaluatesToResolver;
+import com.almondtools.comtemplate.engine.resolvers.EqualsResolver;
 import com.almondtools.comtemplate.engine.resolvers.ItemResolver;
 import com.almondtools.comtemplate.engine.resolvers.ListResolver;
 import com.almondtools.comtemplate.engine.resolvers.MapDynamicResolver;
@@ -112,8 +111,7 @@ public class ResolverRegistryTest {
 			instanceOf(EmptyResolver.class),
 			instanceOf(TrimResolver.class),
 			instanceOf(CompressResolver.class),
-			instanceOf(EqualToResolver.class),
-			instanceOf(EvaluatesToResolver.class)
+			instanceOf(EqualsResolver.class)
 			));
 	}
 	

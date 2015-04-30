@@ -12,8 +12,7 @@ import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 import com.almondtools.comtemplate.engine.resolvers.BasicResolver;
 import com.almondtools.comtemplate.engine.resolvers.BeanDynamicResolver;
 import com.almondtools.comtemplate.engine.resolvers.CompoundResolver;
-import com.almondtools.comtemplate.engine.resolvers.EqualToResolver;
-import com.almondtools.comtemplate.engine.resolvers.EvaluatesToResolver;
+import com.almondtools.comtemplate.engine.resolvers.EqualsResolver;
 import com.almondtools.comtemplate.engine.resolvers.ItemResolver;
 import com.almondtools.comtemplate.engine.resolvers.ListResolver;
 import com.almondtools.comtemplate.engine.resolvers.MapDynamicResolver;
@@ -79,8 +78,7 @@ public class ResolverRegistry {
 		registry.register(ResolvedListLiteral.class, new SeparatedResolver());
 		registry.register(ResolvedListLiteral.class, new ItemResolver());
 
-		registry.register(TemplateImmediateExpression.class, new EqualToResolver());
-		registry.register(TemplateImmediateExpression.class, new EvaluatesToResolver());
+		registry.register(TemplateImmediateExpression.class, new EqualsResolver());
 
 		return registry;
 	}

@@ -7,10 +7,10 @@ import java.util.List;
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 
-public class EqualToResolver extends FunctionResolver {
+public class EqualsResolver extends FunctionResolver {
 
-	public EqualToResolver() {
-		super("equalTo", 1);
+	public EqualsResolver() {
+		super("equals", 1);
 	}
 
 	@Override
