@@ -22,6 +22,11 @@ public class ClassPathTemplateLoader extends AbstractTemplateLoader implements T
 		this.resolvedGroups = new HashMap<String, TemplateGroup>();
 	}
 
+	public ClassPathTemplateLoader(TemplateCompiler compiler) {
+		super(compiler);
+		this.resolvedGroups = new HashMap<String, TemplateGroup>();
+	}
+
 	public ClassPathTemplateLoader addClassPath(String pathName) {
 		try {
 			Path path = Paths.get(pathName);
