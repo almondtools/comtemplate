@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.almondtools.comtemplate.engine.DefaultErrorHandler;
+import com.almondtools.comtemplate.engine.DefaultTemplateInterpreter;
 import com.almondtools.comtemplate.engine.GlobalTemplates;
 import com.almondtools.comtemplate.engine.ResolverRegistry;
 import com.almondtools.comtemplate.engine.TemplateGroup;
@@ -33,7 +34,7 @@ public class GlobalDataTest extends TemplateTests {
 		GlobalTemplates globals = defaultTemplates();
 		globals.register(var("global", new ResolvedMapLiteral(var("mystring", string("my string")))));
 		DefaultErrorHandler errors = new DefaultErrorHandler();
-		TemplateInterpreter interpreter = new TemplateInterpreter(resolvers, globals, errors);
+		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(resolvers, globals, errors);
 		
 		String rendered = group.getDefinition("globalDataRule").evaluate(interpreter, null, emptyList()).getText();
 		

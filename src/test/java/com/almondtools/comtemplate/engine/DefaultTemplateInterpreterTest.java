@@ -55,7 +55,7 @@ import com.almondtools.comtemplate.engine.expressions.ToObject;
 import com.almondtools.comtemplate.engine.expressions.VariableResolutionError;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TemplateInterpreterTest {
+public class DefaultTemplateInterpreterTest {
 
 	@Rule
 	public ExpectedException expected = ExpectedException.none();
@@ -68,11 +68,11 @@ public class TemplateInterpreterTest {
 	@Mock
 	private Scope scope;
 
-	private TemplateInterpreter interpreter;
+	private DefaultTemplateInterpreter interpreter;
 
 	@Before
 	public void before() throws Exception {
-		interpreter = new TemplateInterpreter(resolvers, globals, handler);
+		interpreter = new DefaultTemplateInterpreter(resolvers, globals, handler);
 	}
 
 	@Test

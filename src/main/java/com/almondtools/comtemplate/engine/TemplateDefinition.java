@@ -71,7 +71,7 @@ public abstract class TemplateDefinition {
 	}
 
 	public String evaluate(List<TemplateVariable> arguments) {
-		return evaluate(new TemplateInterpreter(), null, arguments).getText();
+		return evaluate(new DefaultTemplateInterpreter(), null, arguments).getText();
 	}
 
 	public abstract TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments);

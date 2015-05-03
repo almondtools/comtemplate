@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.almondtools.comtemplate.engine.DefaultTemplateInterpreter;
 import com.almondtools.comtemplate.engine.TemplateGroup;
 import com.almondtools.comtemplate.engine.TemplateInterpreter;
 import com.almondtools.comtemplate.engine.expressions.BooleanLiteral;
@@ -20,7 +21,7 @@ public class TestTest {
 	@Before
 	public void before() throws Exception {
 		group = compileFile("src/test/resources/test.ctp");
-		interpreter = new TemplateInterpreter();
+		interpreter = new DefaultTemplateInterpreter();
 	}
 
 	@Test
