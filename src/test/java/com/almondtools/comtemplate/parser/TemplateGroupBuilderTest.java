@@ -1,16 +1,24 @@
 package com.almondtools.comtemplate.parser;
 
+import java.io.File;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 
 public class TemplateGroupBuilderTest {
 
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+	
 	private TemplateGroupBuilder builder;
 
 	@Before
 	public void before() throws Exception {
-		builder = new TemplateGroupBuilder("name", null);
+		File newFile = folder.newFile("name.ctg");
+		builder = new TemplateGroupBuilder("name", newFile.getAbsolutePath());
 	}
 	
 	@Test(expected=UnsupportedOperationException.class)

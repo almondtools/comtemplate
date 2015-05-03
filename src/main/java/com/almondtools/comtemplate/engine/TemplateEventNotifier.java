@@ -30,12 +30,12 @@ import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 import com.almondtools.comtemplate.engine.expressions.ToObject;
 
-public class TemplateInterpreterDecorator implements TemplateInterpreter {
+public class TemplateEventNotifier implements TemplateInterpreter {
 
 	private TemplateInterpreter interpreter;
 	private List<InterpreterListener> listeners;
 	
-	public TemplateInterpreterDecorator(TemplateInterpreter interpreter, InterpreterListener... listeners) {
+	public TemplateEventNotifier(TemplateInterpreter interpreter, InterpreterListener... listeners) {
 		this.interpreter = interpreter;
 		this.listeners = new ArrayList<InterpreterListener>(asList(listeners));
 	}

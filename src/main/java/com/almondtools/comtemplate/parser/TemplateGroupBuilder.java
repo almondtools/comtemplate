@@ -13,11 +13,15 @@ import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.antlr.v4.runtime.ANTLRFileStream;
+import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -105,14 +109,34 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	private TemplateGroup activeGroup;
 	private TemplateDefinition activeDefinition;
 
-	public TemplateGroupBuilder(String name, ParserRuleContext root) {
-		this(name, root, new UnsupportedLoader());
+	public TemplateGroupBuilder(String name, InputStream stream) throws IOException {
+		this(name, stream, new UnsupportedLoader());
+	}
+	
+	public TemplateGroupBuilder(String name, String fileName) throws IOException {
+		this(name, fileName, new UnsupportedLoader());
 	}
 
-	public TemplateGroupBuilder(String name, ParserRuleContext root, TemplateLoader loader) {
+	public TemplateGroupBuilder(String name, InputStream stream, TemplateLoader loader) throws IOException {
+		this(name, new ANTLRInputStream(stream), loader);
+	}
+
+	public TemplateGroupBuilder(String name, String fileName, TemplateLoader loader) throws IOException {
+		this(name, new ANTLRFileStream(fileName), loader);
+	}
+	
+	public TemplateGroupBuilder(String name, ANTLRInputStream stream, TemplateLoader loader) throws IOException {
 		this.name = name;
-		this.root = root;
 		this.loader = loader;
+		this.root = parse(stream);
+	}
+
+	private TemplateFileContext parse(ANTLRInputStream stream) {
+		ComtemplateLexer lexer = new ComtemplateLexer(stream);
+		ComtemplateParser parser = new ComtemplateParser(new MultiChannelTokenStream(lexer));
+		parser.removeErrorListeners();
+		parser.addErrorListener(new TemplateErrorListener());
+		return parser.templateFile();
 	}
 
 	@Override
