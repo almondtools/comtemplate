@@ -1,7 +1,5 @@
 package com.almondtools.comtemplate.engine;
 
-import static java.util.Arrays.asList;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,16 +28,19 @@ import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 import com.almondtools.comtemplate.engine.expressions.ToObject;
 
-public class TemplateEventNotifier implements TemplateInterpreter {
+public class TemplateEventNotifier extends DefaultTemplateInterpreter {
 
-	private TemplateInterpreter interpreter;
 	private List<InterpreterListener> listeners;
-	
-	public TemplateEventNotifier(TemplateInterpreter interpreter, InterpreterListener... listeners) {
-		this.interpreter = interpreter;
-		this.listeners = new ArrayList<InterpreterListener>(asList(listeners));
+
+	public TemplateEventNotifier() {
+		this.listeners = new ArrayList<InterpreterListener>();
 	}
-	
+
+	public TemplateEventNotifier(ResolverRegistry resolvers, GlobalTemplates templates, ErrorHandler handler) {
+		super(resolvers, templates, handler);
+		this.listeners = new ArrayList<InterpreterListener>();
+	}
+
 	public void addListener(InterpreterListener listener) {
 		listeners.add(listener);
 	}
@@ -53,122 +54,122 @@ public class TemplateEventNotifier implements TemplateInterpreter {
 
 	@Override
 	public TemplateImmediateExpression visitRawText(RawText rawText, Scope scope) {
-		return notifyAndReturn(rawText, interpreter.visitRawText(rawText, scope));
+		return notifyAndReturn(rawText, super.visitRawText(rawText, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalVar(EvalVar evalVar, Scope scope) {
-		return notifyAndReturn(evalVar, interpreter.visitEvalVar(evalVar, scope));
+		return notifyAndReturn(evalVar, super.visitEvalVar(evalVar, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalContextVar(EvalContextVar evalContextVar, Scope scope) {
-		return notifyAndReturn(evalContextVar, interpreter.visitEvalContextVar(evalContextVar, scope));
+		return notifyAndReturn(evalContextVar, super.visitEvalContextVar(evalContextVar, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalTemplate(EvalTemplate evalTemplate, Scope scope) {
-		return notifyAndReturn(evalTemplate, interpreter.visitEvalTemplate(evalTemplate, scope));
+		return notifyAndReturn(evalTemplate, super.visitEvalTemplate(evalTemplate, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalTemplateFunction(EvalTemplateFunction evalTemplateFunction, Scope scope) {
-		return notifyAndReturn(evalTemplateFunction, interpreter.visitEvalTemplateFunction(evalTemplateFunction, scope));
+		return notifyAndReturn(evalTemplateFunction, super.visitEvalTemplateFunction(evalTemplateFunction, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalAnonymousTemplate(EvalAnonymousTemplate evalAnonymousTemplate, Scope scope) {
-		return notifyAndReturn(evalAnonymousTemplate, interpreter.visitEvalAnonymousTemplate(evalAnonymousTemplate, scope));
+		return notifyAndReturn(evalAnonymousTemplate, super.visitEvalAnonymousTemplate(evalAnonymousTemplate, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalAttribute(EvalAttribute evalAttribute, Scope scope) {
-		return notifyAndReturn(evalAttribute, interpreter.visitEvalAttribute(evalAttribute, scope));
+		return notifyAndReturn(evalAttribute, super.visitEvalAttribute(evalAttribute, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalFunction(EvalFunction evalFunction, Scope scope) {
-		return notifyAndReturn(evalFunction, interpreter.visitEvalFunction(evalFunction, scope));
+		return notifyAndReturn(evalFunction, super.visitEvalFunction(evalFunction, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvaluated(Evaluated evaluated, Scope scope) {
-		return notifyAndReturn(evaluated, interpreter.visitEvaluated(evaluated, scope));
+		return notifyAndReturn(evaluated, super.visitEvaluated(evaluated, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitExists(Exists exists, Scope scope) {
-		return notifyAndReturn(exists, interpreter.visitExists(exists, scope));
+		return notifyAndReturn(exists, super.visitExists(exists, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitDefaulted(Defaulted defaulted, Scope scope) {
-		return notifyAndReturn(defaulted, interpreter.visitDefaulted(defaulted, scope));
+		return notifyAndReturn(defaulted, super.visitDefaulted(defaulted, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitConcat(Concat concat, Scope scope) {
-		return notifyAndReturn(concat, interpreter.visitConcat(concat, scope));
+		return notifyAndReturn(concat, super.visitConcat(concat, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitToObject(ToObject toObject, Scope scope) {
-		return notifyAndReturn(toObject, interpreter.visitToObject(toObject, scope));
+		return notifyAndReturn(toObject, super.visitToObject(toObject, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitMapLiteral(MapLiteral mapLiteral, Scope scope) {
-		return notifyAndReturn(mapLiteral, interpreter.visitMapLiteral(mapLiteral, scope));
+		return notifyAndReturn(mapLiteral, super.visitMapLiteral(mapLiteral, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitMapLiteral(ResolvedMapLiteral mapLiteral, Scope scope) {
-		return notifyAndReturn(mapLiteral, interpreter.visitMapLiteral(mapLiteral, scope));
+		return notifyAndReturn(mapLiteral, super.visitMapLiteral(mapLiteral, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitListLiteral(ListLiteral listLiteral, Scope scope) {
-		return notifyAndReturn(listLiteral, interpreter.visitListLiteral(listLiteral, scope));
+		return notifyAndReturn(listLiteral, super.visitListLiteral(listLiteral, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitListLiteral(ResolvedListLiteral listLiteral, Scope scope) {
-		return notifyAndReturn(listLiteral, interpreter.visitListLiteral(listLiteral, scope));
+		return notifyAndReturn(listLiteral, super.visitListLiteral(listLiteral, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitStringLiteral(StringLiteral stringLiteral, Scope scope) {
-		return notifyAndReturn(stringLiteral, interpreter.visitStringLiteral(stringLiteral, scope));
+		return notifyAndReturn(stringLiteral, super.visitStringLiteral(stringLiteral, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitIntegerLiteral(IntegerLiteral integerLiteral, Scope scope) {
-		return notifyAndReturn(integerLiteral, interpreter.visitIntegerLiteral(integerLiteral, scope));
+		return notifyAndReturn(integerLiteral, super.visitIntegerLiteral(integerLiteral, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitDecimalLiteral(DecimalLiteral decimalLiteral, Scope scope) {
-		return notifyAndReturn(decimalLiteral, interpreter.visitDecimalLiteral(decimalLiteral, scope));
+		return notifyAndReturn(decimalLiteral, super.visitDecimalLiteral(decimalLiteral, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitBooleanLiteral(BooleanLiteral booleanLiteral, Scope scope) {
-		return notifyAndReturn(booleanLiteral, interpreter.visitBooleanLiteral(booleanLiteral, scope));
+		return notifyAndReturn(booleanLiteral, super.visitBooleanLiteral(booleanLiteral, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitNativeObject(NativeObject nativeObject, Scope scope) {
-		return notifyAndReturn(nativeObject, interpreter.visitNativeObject(nativeObject, scope));
+		return notifyAndReturn(nativeObject, super.visitNativeObject(nativeObject, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitCast(Cast cast, Scope scope) {
-		return notifyAndReturn(cast, interpreter.visitCast(cast, scope));
+		return notifyAndReturn(cast, super.visitCast(cast, scope));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitErrorExpression(ErrorExpression errorExpression, Scope scope) {
-		return notifyAndReturn(errorExpression, interpreter.visitErrorExpression(errorExpression, scope));
+		return notifyAndReturn(errorExpression, super.visitErrorExpression(errorExpression, scope));
 	}
-	
+
 }

@@ -176,10 +176,10 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitTemplateFile(TemplateFileContext ctx) {
 		activeGroup = new TemplateGroup(name);
 		for (ImportctpContext imp : ctx.imports().importctp()) {
-			imp.accept(this);
+			visit(imp);
 		}
 		for (ClauseContext clause : ctx.clauses().clause()) {
-			clause.accept(this);
+			visit(clause);
 		}
 		return node(activeGroup);
 	}
@@ -191,12 +191,12 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitValueClause(ValueClauseContext ctx) {
-		return ctx.valueDefinition().accept(this);
+		return visit(ctx.valueDefinition());
 	}
 
 	@Override
 	public TemplateGroupNode visitFunctionClause(FunctionClauseContext ctx) {
-		return ctx.functionDefinition().accept(this);
+		return visit(ctx.functionDefinition());
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		String name = ctx.name.getText();
 		ConstantDefinition constantDefinition = activeGroup.defineConstant(name);
 		activeDefinition = constantDefinition;
-		TemplateExpression value = ctx.value().accept(this).as(TemplateExpression.class);
+		TemplateExpression value = visit(ctx.value()).as(TemplateExpression.class);
 		constantDefinition.setValue(value);
 		return node(constantDefinition);
 	}
@@ -214,12 +214,12 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		String name = ctx.name.getText();
 		List<TemplateParameter> templateParameters = opt(ctx.parameters())
 			.map(parameters -> parameters.parameter().stream()
-				.map(parameter -> parameter.accept(this).as(TemplateParameter.class))
+				.map(parameter -> visit(parameter).as(TemplateParameter.class))
 				.collect(toList()))
 			.orElse(emptyList());
 		CustomTemplateDefinition templateDefinition = activeGroup.defineTemplate(name, templateParameters);
 		activeDefinition = templateDefinition;
-		EvalAnonymousTemplate template = ctx.template().accept(this).as(EvalAnonymousTemplate.class);
+		EvalAnonymousTemplate template = visit(ctx.template()).as(EvalAnonymousTemplate.class);
 		template.stripEnclosingNewLines();
 		for (TemplateExpression expression : template.getExpressions()) {
 			templateDefinition.add(expression);
@@ -232,12 +232,12 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		String name = ctx.name.getText();
 		List<TemplateParameter> templateParameters = opt(ctx.parameters())
 			.map(parameters -> parameters.parameter().stream()
-				.map(parameter -> parameter.accept(this).as(TemplateParameter.class))
+				.map(parameter -> visit(parameter).as(TemplateParameter.class))
 				.collect(toList()))
 			.orElse(emptyList());
 		CustomObjectDefinition objectDefinition = activeGroup.defineObject(name, templateParameters);
 		activeDefinition = objectDefinition;
-		TemplateExpression result = ctx.value().accept(this).as(TemplateExpression.class);
+		TemplateExpression result = visit(ctx.value()).as(TemplateExpression.class);
 		objectDefinition.setResult(result);
 		return node(objectDefinition);
 	}
@@ -245,7 +245,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	@Override
 	public TemplateGroupNode visitTemplate(TemplateContext ctx) {
 		List<TemplateExpression> expressions = ctx.templateBody().templateChunk().stream()
-			.map(chunk -> chunk.accept(this).as(TemplateExpression.class))
+			.map(chunk -> visit(chunk).as(TemplateExpression.class))
 			.collect(toList());
 		return node(new EvalAnonymousTemplate(activeDefinition, expressions));
 	}
@@ -257,12 +257,12 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitCodeChunk(CodeChunkContext ctx) {
-		return ctx.templateReference().accept(this);
+		return visit(ctx.templateReference());
 	}
 
 	@Override
 	public TemplateGroupNode visitTextChunk(TextChunkContext ctx) {
-		return ctx.inlineText().accept(this);
+		return visit(ctx.inlineText());
 	}
 
 	@Override
@@ -272,7 +272,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitTemplateReference(TemplateReferenceContext ctx) {
-		TemplateExpression value = ctx.value().accept(this).as(TemplateExpression.class);
+		TemplateExpression value = visit(ctx.value()).as(TemplateExpression.class);
 		return node(value);
 	}
 
@@ -286,7 +286,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		String name = ctx.name.getText();
 		String type = ctx.type != null ? ctx.type.getText() : null;
 		TemplateExpression defaultValue = opt(ctx.value())
-			.map(value -> value.accept(this).as(TemplateExpression.class))
+			.map(value -> visit(value).as(TemplateExpression.class))
 			.orElse(null);
 		return node(param(name, type, defaultValue));
 	}
@@ -304,7 +304,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		String template = ctx.name.getText();
 		List<TemplateVariable> templateAssignments = opt(ctx.attributes())
 			.map(attributes -> attributes.attribute().stream()
-				.map(attribute -> attribute.accept(this).as(TemplateVariable.class))
+				.map(attribute -> visit(attribute).as(TemplateVariable.class))
 				.collect(toList()))
 			.orElse(emptyList());
 		return node(new EvalTemplate(template, activeDefinition, templateAssignments));
@@ -315,7 +315,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		String template = ctx.name.getText();
 		List<TemplateExpression> templateItems = opt(ctx.items())
 			.map(items -> items.item().stream()
-				.map(item -> item.accept(this).as(TemplateExpression.class))
+				.map(item -> visit(item).as(TemplateExpression.class))
 				.collect(toList()))
 			.orElse(emptyList());
 		return node(new EvalTemplateFunction(template, activeDefinition, templateItems));
@@ -331,7 +331,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitMap(MapContext ctx) {
 		Map<String, TemplateExpression> map = opt(ctx.attributes())
 			.map(attributes -> (Map<String, TemplateExpression>) attributes.attribute().stream()
-				.map(attribute -> attribute.accept(this).as(TemplateVariable.class))
+				.map(attribute -> visit(attribute).as(TemplateVariable.class))
 				.collect(toMap(TemplateVariable::getName, TemplateVariable::getValue, (o, n) -> n, LinkedHashMap::new)))
 			.orElse(emptyMap());
 		return node(map(map));
@@ -350,7 +350,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	@Override
 	public TemplateGroupNode visitAttribute(AttributeContext ctx) {
 		String text = ctx.name.getText();
-		TemplateExpression value = ctx.value().accept(this).as(TemplateExpression.class);
+		TemplateExpression value = visit(ctx.value()).as(TemplateExpression.class);
 		return node(var(text, value));
 	}
 
@@ -358,7 +358,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitList(ListContext ctx) {
 		List<TemplateExpression> listItems = opt(ctx.items())
 			.map(items -> items.item().stream()
-				.map(item -> item.accept(this).as(TemplateExpression.class))
+				.map(item -> visit(item).as(TemplateExpression.class))
 				.collect(toList()))
 			.orElse(emptyList());
 		return node(list(listItems));
@@ -371,41 +371,41 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitItem(ItemContext ctx) {
-		return ctx.value().accept(this);
+		return visit(ctx.value());
 	}
 
 	@Override
 	public TemplateGroupNode visitValueScalar(ValueScalarContext ctx) {
-		return ctx.scalar().accept(this);
+		return visit(ctx.scalar());
 	}
 
 	@Override
 	public TemplateGroupNode visitValueList(ValueListContext ctx) {
-		return ctx.list().accept(this);
+		return visit(ctx.list());
 	}
 
 	@Override
 	public TemplateGroupNode visitValueMap(ValueMapContext ctx) {
-		return ctx.map().accept(this);
+		return visit(ctx.map());
 	}
 
 	@Override
 	public TemplateGroupNode visitValueRef(ValueRefContext ctx) {
-		return ctx.ref().accept(this);
+		return visit(ctx.ref());
 	}
 
 	@Override
 	public TemplateGroupNode visitValueAnonymousTemplate(ValueAnonymousTemplateContext ctx) {
-		return ctx.template().accept(this);
+		return visit(ctx.template());
 	}
 
 	@Override
 	public TemplateGroupNode visitValueFunction(ValueFunctionContext ctx) {
-		TemplateExpression base = ctx.value().accept(this).as(TemplateExpression.class);
+		TemplateExpression base = visit(ctx.value()).as(TemplateExpression.class);
 		String function = ctx.function().name.getText();
 		List<TemplateExpression> arguments = opt(ctx.function().items())
 			.map(items -> items.item().stream()
-				.map(item -> item.accept(this).as(TemplateExpression.class))
+				.map(item -> visit(item).as(TemplateExpression.class))
 				.collect(toList()))
 			.orElse(emptyList());
 		return node(new EvalFunction(base, function, arguments));
@@ -413,14 +413,14 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitValueAttribute(ValueAttributeContext ctx) {
-		TemplateExpression base = ctx.value().accept(this).as(TemplateExpression.class);
+		TemplateExpression base = visit(ctx.value()).as(TemplateExpression.class);
 		String attribute = ctx.attr.getText();
 		return node(new EvalAttribute(base, attribute));
 	}
 
 	@Override
 	public TemplateGroupNode visitValueExists(ValueExistsContext ctx) {
-		TemplateExpression expression = ctx.value().accept(this).as(TemplateExpression.class);
+		TemplateExpression expression = visit(ctx.value()).as(TemplateExpression.class);
 		return node(new Exists(expression));
 	}
 
@@ -434,7 +434,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	@Override
 	public TemplateGroupNode visitValueConcat(ValueConcatContext ctx) {
 		List<TemplateExpression> arguments = ctx.value().stream()
-			.map(value -> value.accept(this).as(TemplateExpression.class))
+			.map(value -> visit(value).as(TemplateExpression.class))
 			.collect(toList());
 		return node(new Concat(arguments));
 	}
