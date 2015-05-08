@@ -1,5 +1,5 @@
 html(content) ::= {
-<html>@content</html>
+<html>`content`</html>
 }
 
 test ::= html("content").equals("<html>content</html>")

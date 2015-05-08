@@ -22,13 +22,13 @@ public class CyclicImportsTest extends TemplateTests {
 	}
 	
 	@Test
-	public void testBrackets() throws Exception {
+	public void testAdd() throws Exception {
 		String rendered = group.getDefinition("testadd").evaluate();
 		assertThat(rendered, equalTo("3 = 1 + 2"));
 	}
 	
 	@Test
-	public void testBraces() throws Exception {
+	public void testMul() throws Exception {
 		String rendered = group.getDefinition("testmul").evaluate();
 		assertThat(rendered, equalTo("2 = 1 * 2"));
 	}

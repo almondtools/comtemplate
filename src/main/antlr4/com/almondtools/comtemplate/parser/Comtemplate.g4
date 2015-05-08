@@ -63,7 +63,7 @@ templateChunk
 	;
 
 templateReference
-	: ReferenceMark value
+	: ReferenceMark value ReferenceMark
 	;
 
 parameters
@@ -79,7 +79,7 @@ ref
 	| name=Identifier '(' items ')' #refTemplateBySequence
 	| name=Identifier '(' ')' #refTemplateEmpty
 	| name=Identifier '(' (item | attribute) (',' (item | attribute))+ ')'? {syntaxError();} #refTemplateError
-	| ReferenceMark? name=Identifier  #refVariable
+	| EscapeMark? name=Identifier  #refVariable
 	;
 
 map 
@@ -161,8 +161,12 @@ Import
 	: 'import'
 	;
 
-ReferenceMark
+EscapeMark
 	: '@'
+	;
+
+ReferenceMark
+	: '`'
 	;
 
 IntegerLiteral

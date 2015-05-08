@@ -293,7 +293,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitRefVariable(RefVariableContext ctx) {
-		boolean inContext = ctx.ReferenceMark() != null;
+		boolean inContext = ctx.EscapeMark() != null;
 		String name = ctx.name.getText();
 		TemplateExpression expression = inContext ? new EvalContextVar(name) : new EvalVar(name, activeDefinition);
 		return node(expression);

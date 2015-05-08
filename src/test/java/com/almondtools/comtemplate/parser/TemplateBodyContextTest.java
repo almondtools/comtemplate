@@ -13,8 +13,8 @@ public class TemplateBodyContextTest {
 
 	@Test
 	public void testOuterWhitespacesAreIgnored() throws Exception {
-		FunctionDefinitionContext ctx = parseBodyContext("tmp() ::= {  <html id=\"1\"> @content </html> } ");
-		assertThat(ctx.getText(), equalTo("tmp()::={  <html id=\"1\"> @content </html> }"));
+		FunctionDefinitionContext ctx = parseBodyContext("tmp() ::= {  <html id=\"1\"> `content` </html> } ");
+		assertThat(ctx.getText(), equalTo("tmp()::={  <html id=\"1\"> `content` </html> }"));
 	}
 
 	private FunctionDefinitionContext parseBodyContext(String text) {

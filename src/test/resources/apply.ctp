@@ -4,13 +4,13 @@ myobject(name, type) ::= [
 ]
 
 mytemplate(content) ::= {
-@content
+`content`
 }
 
 applyObject() ::= {
-@apply(name="myobject",arguments=[name='myname',type='mytype']).name
+`apply(name="myobject",arguments=[name='myname',type='mytype']).name`
 }
 
 applyTemplate() ::= {
-@apply(name="mytemplate",arguments=[content='mycontent'])
+`apply(name="mytemplate",arguments=[content='mycontent'])`
 }

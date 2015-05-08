@@ -1,15 +1,15 @@
 snippet() ::= {
-@if(cond=@context?,then=@context,else="nothing")
+`if(cond=@context?,then=@context,else="nothing")`
 }
 
 defaultsnippet() ::= {
-@context?:"nothing"
+`context?:"nothing"`
 }
 
-withContext(context="someContext") ::= {@snippet()}
+withContext(context="someContext") ::= {`snippet()`}
 
-withoutContext() ::= {@snippet()}
+withoutContext() ::= {`snippet()`}
 
-defaultWithContext(context="someContext") ::= {@snippet()}
+defaultWithContext(context="someContext") ::= {`snippet()`}
 
-defaultWithoutContext() ::= {@snippet()}
+defaultWithoutContext() ::= {`snippet()`}
