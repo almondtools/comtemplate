@@ -21,7 +21,6 @@ If something does not work properly, open an issue. If you have patches for code
 
 ## Planned Features
 
- - comtemplate unit (unit tests and coverage for templates)
  - adhoc templates (files with implicit rule & inline imports)
  - better error reporting
  - reflective references to variables (experimental)
