@@ -16,6 +16,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.almondtools.comtemplate.engine.expressions.Cast;
 import com.almondtools.comtemplate.engine.expressions.Concat;
 import com.almondtools.comtemplate.engine.expressions.DecimalLiteral;
 import com.almondtools.comtemplate.engine.expressions.Defaulted;
@@ -44,6 +46,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.Exists;
+import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 import com.almondtools.comtemplate.engine.expressions.IntegerLiteral;
 import com.almondtools.comtemplate.engine.expressions.NativeObject;
 import com.almondtools.comtemplate.engine.expressions.RawText;
@@ -52,6 +55,7 @@ import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 import com.almondtools.comtemplate.engine.expressions.TemplateResolutionError;
 import com.almondtools.comtemplate.engine.expressions.ToObject;
+import com.almondtools.comtemplate.engine.expressions.UnexpectedTypeError;
 import com.almondtools.comtemplate.engine.expressions.VariableResolutionError;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -199,7 +203,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalAttribute() throws Exception {
 		TemplateExpression base = map(var("key", string("value")));
-		when(resolvers.getResolverFor(Mockito.any(ResolvedMapLiteral.class))).thenReturn(new TestResolver());
+		when(resolvers.getResolverFor(any(ResolvedMapLiteral.class))).thenReturn(new TestResolver());
 		TemplateImmediateExpression result = interpreter.visitEvalAttribute(new EvalAttribute(base, "attribute"), scope);
 
 		assertThat(result, equalTo(string("[key='value'].attribute()")));
@@ -245,6 +249,26 @@ public class DefaultTemplateInterpreterTest {
 	}
 
 	@Test
+	public void testVisitExistsOnVariableResolutionError() throws Exception {
+		VariableResolutionError error = new VariableResolutionError(null, scope);
+		when(handler.handle(any(ErrorExpression.class))).thenReturn(error);
+		
+		TemplateImmediateExpression result = interpreter.visitExists(new Exists(error), scope);
+
+		assertThat(result, equalTo(FALSE));
+	}
+
+	@Test
+	public void testVisitExistsOnExpressionResolutionError() throws Exception {
+		ExpressionResolutionError error = new ExpressionResolutionError(null, null, null, scope, null);
+		when(handler.handle(any(ErrorExpression.class))).thenReturn(error);
+		
+		TemplateImmediateExpression result = interpreter.visitExists(new Exists(error), scope);
+
+		assertThat(result, equalTo(FALSE));
+	}
+
+	@Test
 	public void testVisitExistsOnStaticUnresolved() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		TemplateImmediateExpression result = interpreter.visitExists(new Exists(new EvalVar("unresolvable", definition)), scope);
@@ -274,6 +298,26 @@ public class DefaultTemplateInterpreterTest {
 		assertThat(result, equalTo(string("default")));
 	}
 
+	@Test
+	public void testVisitDefaultedOnVariableResolutionError() throws Exception {
+		VariableResolutionError error = new VariableResolutionError(null, scope);
+		when(handler.handle(any(ErrorExpression.class))).thenReturn(error);
+		
+		TemplateImmediateExpression result = interpreter.visitDefaulted(new Defaulted(error, string("default")), scope);
+		
+		assertThat(result, equalTo(string("default")));
+	}
+	
+	@Test
+	public void testVisitDefaultedOnExpressionResolutionError() throws Exception {
+		ExpressionResolutionError error = new ExpressionResolutionError(null, null, null, scope, null);
+		when(handler.handle(any(ErrorExpression.class))).thenReturn(error);
+		
+		TemplateImmediateExpression result = interpreter.visitDefaulted(new Defaulted(error, string("default")), scope);
+		
+		assertThat(result, equalTo(string("default")));
+	}
+	
 	@Test
 	public void testVisitDefaultedOnStaticUnresolved() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
@@ -325,6 +369,13 @@ public class DefaultTemplateInterpreterTest {
 	}
 
 	@Test
+	public void testVisitConcatObjects() throws Exception {
+		TemplateImmediateExpression result = interpreter.visitConcat(new Concat(map(var("_type", string("type1"))), map(var("_type", string("type2")))), scope);
+
+		assertThat(result, equalTo(new ResolvedMapLiteral(var("_supertypes", new ResolvedListLiteral(string("type1"), string("type2"))))));
+	}
+
+	@Test
 	public void testVisitToObjectOnScalar() throws Exception {
 		TemplateImmediateExpression result = interpreter.visitToObject(new ToObject("mytype", string("s")), scope);
 
@@ -336,6 +387,13 @@ public class DefaultTemplateInterpreterTest {
 		TemplateImmediateExpression result = interpreter.visitToObject(new ToObject("mytype", map(var("a", integer(1)), var("b", integer(2)))), scope);
 
 		assertThat(result, equalTo(new ResolvedMapLiteral(var("_type", string("mytype")), var("a", integer(1)), var("b", integer(2)))));
+	}
+
+	@Test
+	public void testVisitToObjectOnObject() throws Exception {
+		TemplateImmediateExpression result = interpreter.visitToObject(new ToObject("mytype", map(var("a", integer(1)), var("_type", string("superclass")))), scope);
+
+		assertThat(result, equalTo(new ResolvedMapLiteral(var("_type", string("mytype")), var("_supertypes", new ResolvedListLiteral(string("superclass"))), var("a", integer(1)))));
 	}
 
 	@Test
@@ -404,6 +462,33 @@ public class DefaultTemplateInterpreterTest {
 		TemplateImmediateExpression result = interpreter.visitNativeObject(literal, scope);
 
 		assertThat(result, sameInstance(literal));
+	}
+
+	@Test
+	public void testVisitCastNotAcceptsPrimitives() throws Exception {
+		TemplateImmediateExpression result = interpreter.visitCast(new Cast(string("str"), "object"), scope);
+		assertThat(result, instanceOf(UnexpectedTypeError.class));
+	}
+
+	@Test
+	public void testVisitCastNotAcceptsMaps() throws Exception {
+		ResolvedMapLiteral map = new ResolvedMapLiteral(var("a", string("b")));
+		TemplateImmediateExpression result = interpreter.visitCast(new Cast(map, "object"), scope);
+		assertThat(result, instanceOf(UnexpectedTypeError.class));
+	}
+
+	@Test
+	public void testVisitCastAcceptsObjectsWithType() throws Exception {
+		ResolvedMapLiteral map = new ResolvedMapLiteral(var("a", string("b")),var("_type", string("object")));
+		TemplateImmediateExpression result = interpreter.visitCast(new Cast(map, "object"), scope);
+		assertThat(result, sameInstance(map));
+	}
+
+	@Test
+	public void testVisitCastAcceptsObjectsWithSuperType() throws Exception {
+		ResolvedMapLiteral map = new ResolvedMapLiteral(var("a", string("b")),var("_supertypes", new ResolvedListLiteral(string("object"))));
+		TemplateImmediateExpression result = interpreter.visitCast(new Cast(map, "object"), scope);
+		assertThat(result, sameInstance(map));
 	}
 
 	@Test

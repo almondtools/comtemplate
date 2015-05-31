@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,7 +14,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -29,18 +29,6 @@ public class ClassPathTemplateLoaderTest {
 	
 	@Mock
 	private ClassLoader classLoader;
-	
-	private ClassPathTemplateLoader loader;
-	
-	@Before
-	public void before() throws Exception {
-		loader = new ClassPathTemplateLoader() {
-			@Override
-			protected ClassLoader getClassLoader() {
-				return classLoader;
-			}
-		};
-	}
 
 	@Test
 	public void testAddClassPath() throws Exception {
@@ -59,8 +47,18 @@ public class ClassPathTemplateLoaderTest {
 
 	@Test
 	public void testAddClassPathLoaderFails() throws Exception {
+		ClassPathTemplateLoader loader = newClassPathTemplateLoaderWithMockedClassLoader();
 		expected.expect(ClassPathResolutionException.class);
 		loader.addClassPath("src/test/resources");
+	}
+
+	public ClassPathTemplateLoader newClassPathTemplateLoaderWithMockedClassLoader() {
+		return new ClassPathTemplateLoader() {
+			@Override
+			protected ClassLoader getClassLoader() {
+				return classLoader;
+			}
+		};
 	}
 
 	@Test
@@ -70,6 +68,7 @@ public class ClassPathTemplateLoaderTest {
 	
 	@Test
 	public void testLoadGroup() throws Exception {
+		ClassPathTemplateLoader loader = newClassPathTemplateLoaderWithMockedClassLoader();
 		when(classLoader.getResourceAsStream("mygroup.ctp")).thenReturn(new ByteArrayInputStream("template() ::= {template}".getBytes("UTF-8")));
 		
 		TemplateGroup group = loader.loadGroup("mygroup");
@@ -80,6 +79,7 @@ public class ClassPathTemplateLoaderTest {
 	
 	@Test
 	public void testLoadGroupIsCached() throws Exception {
+		ClassPathTemplateLoader loader = newClassPathTemplateLoaderWithMockedClassLoader();
 		when(classLoader.getResourceAsStream("mygroup.ctp")).thenReturn(new ByteArrayInputStream("template() ::= {template}".getBytes("UTF-8")));
 
 		TemplateGroup group1 = loader.loadGroup("mygroup");
@@ -91,6 +91,7 @@ public class ClassPathTemplateLoaderTest {
 	
 	@Test
 	public void testLoadGroupFailsWithNull() throws Exception {
+		ClassPathTemplateLoader loader = newClassPathTemplateLoaderWithMockedClassLoader();
 		when(classLoader.getResourceAsStream("mygroup.ctp")).thenReturn(null);
 		expected.expect(TemplateGroupNotFoundException.class);
 
@@ -99,6 +100,7 @@ public class ClassPathTemplateLoaderTest {
 	
 	@Test
 	public void testLoadGroupFailsWithException() throws Exception {
+		ClassPathTemplateLoader loader = newClassPathTemplateLoaderWithMockedClassLoader();
 		when(classLoader.getResourceAsStream("mygroup.ctp")).thenReturn(new InputStream() {
 			
 			@Override
@@ -109,6 +111,15 @@ public class ClassPathTemplateLoaderTest {
 		expected.expect(TemplateGroupNotFoundException.class);
 		
 		loader.loadGroup("mygroup");
+	}
+
+	@Test
+	public void testClassPathTemplateLoaderTemplateCompiler() throws Exception {
+		TemplateCompiler compiler = mock(TemplateCompiler.class);
+		ClassPathTemplateLoader loader = new ClassPathTemplateLoader(compiler);
+		loader.compile("unit", null);
+		
+		verify(compiler).compile("unit", null, loader);
 	}
 	
 }

@@ -19,10 +19,10 @@ public class ItemResolver extends FunctionResolver {
 		if (base instanceof ResolvedListLiteral) {
 			List<TemplateImmediateExpression> list = ((ResolvedListLiteral) base).getList();
 			int size = list.size();
-			if (size == 0) {
+			int index = arguments.get(0).as(BigInteger.class).intValue();
+			if (size <= index) {
 				return new ExpressionResolutionError(base, getName(), arguments, scope, this);
 			}
-			int index = arguments.get(0).as(BigInteger.class).intValue();
 			TemplateImmediateExpression element = list.get(index);
 			if (element == null) {
 				return new ExpressionResolutionError(base, getName(), arguments, scope, this);
