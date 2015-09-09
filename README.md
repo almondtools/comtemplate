@@ -2,10 +2,15 @@
 
 ComTemplate provides a template engine for composing text templates. 
 
-ComTemplate provides a **pure functional template language**:
+It utilizes an extensible **pure functional template language**: 
+- no mutable variables
+- no side effects (except those hidden in custom extensions)
+- users can extend the language by custom templates (args -> string) and functions (args -> any data type) 
 
- - There are no mutable variables and no side effects (except those hidden in the host language)
- - This makes mixing up layout and code very hard 
+Advantages:
+ - Mixing up layout and code very hard
+ - Template code can be easily tested (input of each test is the template arguments, output is the rendered template) 
+ 
 
 ## Starting with ComTemplate
 
@@ -21,7 +26,7 @@ If something does not work properly, open an issue. If you have patches for code
 
 ## Planned Features
 
- - adhoc templates (files with implicit rule & inline imports)
+ - main templates (implicit rule signature, imports at any position of the code)
  - better error reporting
  - reflective references to variables (experimental)
  - deploy in a maven repository 
