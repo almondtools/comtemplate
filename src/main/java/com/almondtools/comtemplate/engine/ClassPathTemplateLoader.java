@@ -45,10 +45,6 @@ public class ClassPathTemplateLoader extends AbstractTemplateLoader implements T
 		return getClassLoader().getResourceAsStream(pathOf(name) + ".ctp");
 	}
 
-	private String pathOf(String name) {
-		return name.replace('.', '/');
-	}
-
 	interface ClassPathUrls {
 		void addURL(URL url);
 	}

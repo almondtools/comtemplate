@@ -2,7 +2,7 @@ package com.almondtools.comtemplate.engine.resolvers;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +22,7 @@ public class BasicResolverTest {
 		assertThat(resolvers.getResolvers(), containsInAnyOrder(
 			instanceOf(EmptyResolver.class),
 			instanceOf(TrimResolver.class),
+			instanceOf(IndentResolver.class),
 			instanceOf(CompressResolver.class)));
 	}
 

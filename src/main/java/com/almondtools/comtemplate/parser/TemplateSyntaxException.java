@@ -12,8 +12,4 @@ public class TemplateSyntaxException extends RecognitionException {
 		setOffendingToken(ctx.getStart());
 	}
 
-	public TemplateSyntaxException(String message, Recognizer<?, ?> recognizer, IntStream input, ParserRuleContext ctx) {
-		super(message, recognizer, input, ctx);
-	}
-
 }

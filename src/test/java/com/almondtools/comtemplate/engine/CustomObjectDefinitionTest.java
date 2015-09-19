@@ -5,6 +5,7 @@ import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.DecimalLiteral.decimal;
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static com.almondtools.comtemplate.engine.expressions.MapLiteral.map;
+import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -15,17 +16,41 @@ import com.almondtools.comtemplate.engine.expressions.EvalVar;
 public class CustomObjectDefinitionTest {
 
 	@Test
+	public void testEvaluateConstant() throws Exception {
+		ValueDefinition object = new ValueDefinition("constant");
+		object.setValue(string("string"));
+
+		assertThat(object.evaluate(), equalTo("string"));
+	}
+
+	@Test
+	public void testToVariableConstant() throws Exception {
+		ValueDefinition object = new ValueDefinition("constant");
+		object.setValue(string("string"));
+		
+		assertThat(object.toVariable(), equalTo(TemplateVariable.var("constant", string("string"))));
+	}
+
+	@Test
+	public void testGetValue() throws Exception {
+		ValueDefinition object = new ValueDefinition("constant");
+		object.setValue(string("string"));
+
+		assertThat(object.getValue(), equalTo(string("string")));
+	}
+
+	@Test
 	public void testEvaluatePrimitiveType() throws Exception {
-		CustomObjectDefinition object = new CustomObjectDefinition("object", "dec");
-		object.setResult(new EvalVar("dec", object));
+		ValueDefinition object = new ValueDefinition("object", "dec");
+		object.setObjectValue(new EvalVar("dec", object));
 
 		assertThat(object.evaluate(var("dec", decimal(1.1))), equalTo("[_type=object, _value=1.1]"));
 	}
 
 	@Test
 	public void testEvaluateObjectType() throws Exception {
-		CustomObjectDefinition object = new CustomObjectDefinition("object", "dec", param("int", integer(2)));
-		object.setResult(map(var("dec", new EvalVar("dec", object)), var("int", new EvalVar("int", object))));
+		ValueDefinition object = new ValueDefinition("object", "dec", param("int", integer(2)));
+		object.setObjectValue(map(var("dec", new EvalVar("dec", object)), var("int", new EvalVar("int", object))));
 
 		assertThat(object.evaluate(var("dec", decimal(1.1))), equalTo("[_type=object, dec=1.1, int=2]"));
 	}

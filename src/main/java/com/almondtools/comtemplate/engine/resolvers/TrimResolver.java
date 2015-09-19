@@ -1,6 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
+import static com.almondtools.comtemplate.engine.resolvers.Normalizations.compact;
 import static com.almondtools.util.stream.ByIndex.byIndex;
 import static java.util.stream.Collectors.toList;
 
@@ -27,7 +28,7 @@ public class TrimResolver extends FunctionResolver {
 		} else if (base instanceof RawText) {
 			return new RawText(((RawText) base).getText().trim());
 		} else if (base instanceof Evaluated) {
-			List<TemplateImmediateExpression> evaluated = ((Evaluated) base).getEvaluated();
+			List<TemplateImmediateExpression> evaluated = compact(((Evaluated) base).getEvaluated());
 			if (evaluated.isEmpty()) {
 				return base;
 			} else if (evaluated.size() == 1) {

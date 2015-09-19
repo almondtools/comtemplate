@@ -47,7 +47,7 @@ public class TemplateGroupTest {
 	@Test
 	public void testGetConstantsNotEmpty() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
-		ConstantDefinition constant = group.defineConstant("constant");
+		ValueDefinition constant = group.defineConstant("constant");
 		constant.setValue(string("constant"));
 		assertThat(group.getDefinitions(), contains(constant));
 	}
@@ -99,7 +99,7 @@ public class TemplateGroupTest {
 	@Test
 	public void testDefineObject() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
-		CustomObjectDefinition object = group.defineObject("object", "c", "d");
+		ValueDefinition object = group.defineObject("object", "c", "d");
 
 		assertThat(group.getDefinition("object"), equalTo(object));
 		assertThat(object.getName(), equalTo("object"));

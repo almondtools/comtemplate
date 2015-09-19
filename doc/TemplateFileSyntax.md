@@ -2,7 +2,9 @@
 
 A template file (usually with file extension .ctp) is composed of two main sections 
 
+    ```
     <templateFile> = <imports> <definitions>
+    ```
 
 #Imports
 
@@ -10,11 +12,15 @@ Definitions from other template libraries/files can be imported in two ways:
 
  - import all definitions from another resource:
 
+    ```
     <importAll> = import <packageName>.*
+    ```
     
  - import one specific definition from another resource:
 
+    ```
     <importOne> = import <packageName>.<definitionName>
+    ```
 
 A package name (identifiers separated by `.`) maps to a specific resource. The packages are resolved by default from the java class loader.
 Yet a package defines a file not a directory:
@@ -39,7 +45,9 @@ As explained comtemplate is functional so each definition can be viewed as funct
 
 Value definitions define a function without parameters (or simply constants). They follow the pattern
 
-		<valueName> ::= <expression>
+    ```
+    <valueName> ::= <expression>
+    ```
 
 `valueName` is an identifier,  
 `expression` could be any expression (even a template or functional expression)
@@ -51,7 +59,9 @@ For example a value `pi` could be defined like this:
 ## Object Definition
 Object definitions define a function with parameters returning an expression (not a template expression). They follow the pattern
 
-		<valueName>(<paramList>?) ::= <expression>
+    ```
+    @<valueName>(<paramList>?) ::= <expression>
+    ```
 
 `valueName` is an Identifier,  
 `paramList` may contain a list of params (which is an Identifier optionally followed by a default value),  
@@ -64,11 +74,13 @@ For example a `tableItem` could be defined as followed:
 ## Template Definition
 Template definitions define a function with parameters returning a text. They follow the pattern
 
-		<valueName>(<paramList>?) ::= <template>
+    ```
+    <valueName>(<paramList>?) ::= <value>
+    ```
 
 `valueName` is an Identifier,  
 `paramList` may contain a list of params (which is an Identifier optionally followed by a default value),  
-`template` should contain the text template enclosed in braces
+`value` should contain the template value
 
 For example a template `add` could look like this:
 
@@ -98,7 +110,9 @@ A ground expression does not contains any function or template application.
 
 Templates contain the template text enclosed in braces, following the pattern
 
+    ```
     { <templateText> }
+    ```
 
 Template text allows following elements:
 
@@ -188,7 +202,9 @@ Arguments of an argument list are assigned to the parameters in their sequence. 
 
 A function application evaluates a builtin function on a base expression, following the pattern
 
+    ```
     <baseExpression>.<functionName>(<argumentList>)
+    ```
 
 Function applications do not support attribute lists (named arguments).
 
@@ -201,7 +217,9 @@ Functions can evaluate to any ground expression.
 
 Some data structures (maps, native objects) allow attribute access, written as 
     
+    ```
     <baseExpression>.<attributeName>`
+    ```
 
 Yet attributes are handled similar to functions, with the only difference that arguments are not allowed:
 

@@ -20,22 +20,24 @@ import com.almondtools.comtemplate.engine.expressions.UnexpectedTypeError;
 public class ForTemplate extends TemplateDefinition {
 
 	public static final String NAME = "for";
-	public static final String VAR = "var";
-	public static final String IVAR = "ivar";
+	public static final String ITEM = "item";
 	public static final String I = "i";
 	public static final String I0 = "i0";
 	public static final String DO = "do";
 
 	public ForTemplate() {
-		super(NAME, VAR, DO);
+		super(NAME, ITEM, DO);
 	}
 
 	@Override
 	public TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments) {
-		TemplateVariable var = findVariable(VAR, arguments)
-			.orElseThrow(() -> new ArgumentRequiredException(VAR));
 		TemplateVariable in = findVariable(DO, arguments)
 			.orElseThrow(() -> new ArgumentRequiredException(DO));
+		TemplateVariable var = arguments.stream()
+			.filter(argument -> !argument.getName().equals(DO))
+			.findFirst()
+			.orElseThrow(() -> new ArgumentRequiredException(ITEM));
+		String name = var.getName();
 		TemplateImmediateExpression evaluated = var.getValue().apply(interpreter, parent);
 		Scope scope = new Scope(parent, this, arguments);
 		if (evaluated instanceof ResolvedListLiteral) {
@@ -43,7 +45,7 @@ public class ForTemplate extends TemplateDefinition {
 			return list.stream()
 				.map(byIndex(list.size()))
 				.map(item -> {
-					TemplateVariable ivar = var(IVAR, item.value);
+					TemplateVariable ivar = var(name, item.value);
 					TemplateVariable i = var(I, integer(item.index + 1));
 					TemplateVariable i0 = var(I0, integer(item.index));
 					Scope iscope = new Scope(scope, this, asList(i, i0, ivar));

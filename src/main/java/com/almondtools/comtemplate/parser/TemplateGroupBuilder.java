@@ -25,15 +25,15 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
-import com.almondtools.comtemplate.engine.ConstantDefinition;
-import com.almondtools.comtemplate.engine.CustomObjectDefinition;
 import com.almondtools.comtemplate.engine.CustomTemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateExpression;
 import com.almondtools.comtemplate.engine.TemplateGroup;
+import com.almondtools.comtemplate.engine.TemplateGroupException;
 import com.almondtools.comtemplate.engine.TemplateLoader;
 import com.almondtools.comtemplate.engine.TemplateParameter;
 import com.almondtools.comtemplate.engine.TemplateVariable;
+import com.almondtools.comtemplate.engine.ValueDefinition;
 import com.almondtools.comtemplate.engine.expressions.Concat;
 import com.almondtools.comtemplate.engine.expressions.Defaulted;
 import com.almondtools.comtemplate.engine.expressions.EvalAnonymousTemplate;
@@ -43,8 +43,10 @@ import com.almondtools.comtemplate.engine.expressions.EvalFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
+import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Exists;
 import com.almondtools.comtemplate.engine.expressions.RawText;
+import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 import com.almondtools.comtemplate.parser.ComtemplateParser.AttributeContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.AttributesContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.BoolScalarContext;
@@ -52,6 +54,7 @@ import com.almondtools.comtemplate.parser.ComtemplateParser.ClauseContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ClausesContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.CodeChunkContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.DecScalarContext;
+import com.almondtools.comtemplate.parser.ComtemplateParser.DoubleQuoteTokenContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.FunctionClauseContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.FunctionContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ImportctpContext;
@@ -75,7 +78,9 @@ import com.almondtools.comtemplate.parser.ComtemplateParser.RefTemplateBySequenc
 import com.almondtools.comtemplate.parser.ComtemplateParser.RefTemplateEmptyContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.RefTemplateErrorContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.RefVariableContext;
+import com.almondtools.comtemplate.parser.ComtemplateParser.SingleQuoteTokenContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.StrScalarContext;
+import com.almondtools.comtemplate.parser.ComtemplateParser.StringLiteralContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.TemplateBodyContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.TemplateContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.TemplateDefinitionContext;
@@ -95,6 +100,7 @@ import com.almondtools.comtemplate.parser.ComtemplateParser.ValueListContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueMapContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueRefContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueScalarContext;
+import com.almondtools.comtemplate.parser.ComtemplateParser.ValueVirtualContext;
 import com.almondtools.util.stream.Unescaper;
 
 public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroupNode> implements ComtemplateVisitor<TemplateGroupNode> {
@@ -112,7 +118,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupBuilder(String name, InputStream stream) throws IOException {
 		this(name, stream, new UnsupportedLoader());
 	}
-	
+
 	public TemplateGroupBuilder(String name, String fileName) throws IOException {
 		this(name, fileName, new UnsupportedLoader());
 	}
@@ -124,19 +130,27 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupBuilder(String name, String fileName, TemplateLoader loader) throws IOException {
 		this(name, new ANTLRFileStream(fileName), loader);
 	}
-	
+
 	public TemplateGroupBuilder(String name, ANTLRInputStream stream, TemplateLoader loader) throws IOException {
 		this.name = name;
 		this.loader = loader;
-		this.root = parse(stream);
+		this.root = parse(name, stream);
 	}
 
-	private TemplateFileContext parse(ANTLRInputStream stream) {
+	private TemplateFileContext parse(String name, ANTLRInputStream stream) {
+		TemplateErrorListener errors = new TemplateErrorListener();
 		ComtemplateLexer lexer = new ComtemplateLexer(stream);
 		ComtemplateParser parser = new ComtemplateParser(new MultiChannelTokenStream(lexer));
 		parser.removeErrorListeners();
-		parser.addErrorListener(new TemplateErrorListener());
-		return parser.templateFile();
+		parser.addErrorListener(errors);
+		TemplateFileContext templateFile = parser.templateFile();
+		if (errors.isSuccesful()) {
+			return templateFile;
+		} else if (stream instanceof ANTLRFileStream){
+			throw new TemplateGroupException(name, stream.getSourceName(), errors.getMessages());
+		} else {
+			throw new TemplateGroupException(name, errors.getMessages());
+		}
 	}
 
 	@Override
@@ -202,11 +216,11 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	@Override
 	public TemplateGroupNode visitValueDefinition(ValueDefinitionContext ctx) {
 		String name = ctx.name.getText();
-		ConstantDefinition constantDefinition = activeGroup.defineConstant(name);
-		activeDefinition = constantDefinition;
+		ValueDefinition valueDefinition = activeGroup.defineConstant(name);
+		activeDefinition = valueDefinition;
 		TemplateExpression value = visit(ctx.value()).as(TemplateExpression.class);
-		constantDefinition.setValue(value);
-		return node(constantDefinition);
+		valueDefinition.setValue(value);
+		return node(valueDefinition);
 	}
 
 	@Override
@@ -219,11 +233,8 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 			.orElse(emptyList());
 		CustomTemplateDefinition templateDefinition = activeGroup.defineTemplate(name, templateParameters);
 		activeDefinition = templateDefinition;
-		EvalAnonymousTemplate template = visit(ctx.template()).as(EvalAnonymousTemplate.class);
-		template.stripEnclosingNewLines();
-		for (TemplateExpression expression : template.getExpressions()) {
-			templateDefinition.add(expression);
-		}
+		TemplateExpression template = visit(ctx.value()).as(TemplateExpression.class);
+		templateDefinition.add(template);
 		return node(templateDefinition);
 	}
 
@@ -235,10 +246,10 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 				.map(parameter -> visit(parameter).as(TemplateParameter.class))
 				.collect(toList()))
 			.orElse(emptyList());
-		CustomObjectDefinition objectDefinition = activeGroup.defineObject(name, templateParameters);
+		ValueDefinition objectDefinition = activeGroup.defineObject(name, templateParameters);
 		activeDefinition = objectDefinition;
 		TemplateExpression result = visit(ctx.value()).as(TemplateExpression.class);
-		objectDefinition.setResult(result);
+		objectDefinition.setObjectValue(result);
 		return node(objectDefinition);
 	}
 
@@ -247,7 +258,8 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		List<TemplateExpression> expressions = ctx.templateBody().templateChunk().stream()
 			.map(chunk -> visit(chunk).as(TemplateExpression.class))
 			.collect(toList());
-		return node(new EvalAnonymousTemplate(activeDefinition, expressions));
+		EvalAnonymousTemplate template = new EvalAnonymousTemplate(activeDefinition, expressions);
+		return node(template);
 	}
 
 	@Override
@@ -353,7 +365,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		TemplateExpression value = visit(ctx.value()).as(TemplateExpression.class);
 		return node(var(text, value));
 	}
-
+	
 	@Override
 	public TemplateGroupNode visitList(ListContext ctx) {
 		List<TemplateExpression> listItems = opt(ctx.items())
@@ -417,6 +429,13 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		String attribute = ctx.attr.getText();
 		return node(new EvalAttribute(base, attribute));
 	}
+	
+	@Override
+	public TemplateGroupNode visitValueVirtual(ValueVirtualContext ctx) {
+		TemplateExpression base = visit(ctx.value()).as(TemplateExpression.class);
+		TemplateExpression attribute = visit(ctx.ref()).as(TemplateExpression.class);
+		return node(new EvalVirtual(base, attribute));
+	}
 
 	@Override
 	public TemplateGroupNode visitValueExists(ValueExistsContext ctx) {
@@ -451,21 +470,31 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitStrScalar(StrScalarContext ctx) {
-		String unescaped = extractString(ctx.getText());
-		return node(string(unescaped));
-	}
-
-	private String extractString(String text) {
-		String quotesStripped = text.substring(1, text.length() - 1);
-		String unescaped = quotesStripped.chars()
-			.collect(() -> new Unescaper(ESCAPE_MAPPING_STRING), (u, c) -> u.consume((char) c), Unescaper::join)
-			.toString();
-		return unescaped;
+		return node(visit(ctx.stringLiteral()).as(StringLiteral.class));
 	}
 
 	@Override
 	public TemplateGroupNode visitBoolScalar(BoolScalarContext ctx) {
 		return node(bool(ctx.BooleanLiteral().getText()));
+	}
+	
+	@Override
+	public TemplateGroupNode visitStringLiteral(StringLiteralContext ctx) {
+		String text = ctx.getText();
+		String unescaped = text.substring(1, text.length() - 1).chars()
+			.collect(() -> new Unescaper(ESCAPE_MAPPING_STRING), (u, c) -> u.consume((char) c), Unescaper::join)
+			.toString();
+		return node(string(unescaped));
+	}
+	
+	@Override
+	public TemplateGroupNode visitSingleQuoteToken(SingleQuoteTokenContext ctx) {
+		throw new UnsupportedOperationException("group builder skips visiting single quote token node");
+	}
+	
+	@Override
+	public TemplateGroupNode visitDoubleQuoteToken(DoubleQuoteTokenContext ctx) {
+		throw new UnsupportedOperationException("group builder skips visiting double quote token node");
 	}
 
 	@Override
@@ -480,7 +509,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitInlineToken(InlineTokenContext ctx) {
 		throw new UnsupportedOperationException("group builder skips visiting inline token node");
 	}
-	
+
 	@Override
 	public TemplateGroupNode visitRefTemplateError(RefTemplateErrorContext ctx) {
 		throw new UnsupportedOperationException("group builder skips visiting error nodes");

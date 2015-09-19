@@ -48,30 +48,30 @@ All standard resolvers yet are implemented in this way.
 
 ComTemplate supports object inheritance. An object is defined as following:
 
-    Object(name, type) ::= [
+    @Object(name, type) ::= [
       name=name,
       type=type
     ]
 
 To inherit name and type from object, you can define another object:
 
-    InheritedObject(name, type) ::= Object(name, type)
+    @InheritedObject(name, type) ::= Object(name, type)
 
 One can also restrict inherited objects:
 
-    InheritedObject(name, type) ::= Object(name, "inherited")
+    @InheritedObject(name, type) ::= Object(name, "inherited")
 
 Or extend inherited objects with new attributes:
 
-    InheritedObject(name, type, description) ::= Object(name, type)~[description:description]
+    @InheritedObject(name, type, description) ::= Object(name, type)~[description:description]
 
 ComTemplate even supports multiple Inheritance:
 
-    WithDescription(description) ::= [
+    @WithDescription(description) ::= [
       description=description
     ]
     
-    MultipleInheritedObject(name, type, description) ::= Object(name, type)~WithDescription(description)
+    @MultipleInheritedObject(name, type, description) ::= Object(name, type)~WithDescription(description)
 
 ## Dealing with dependent sections
 
@@ -86,11 +86,11 @@ As already pointed out ComTemplate is pure functional. So it will not support pa
 
 For such problems ComTemplate provides a pure functional solution utilizing objects, e.g the HTML example:
 
-    Menu(items=[]) ::= [
+    @Menu(items=[]) ::= [
       items=items
     ]
     
-    MenuItem(id, label, content) ::= [
+    @MenuItem(id, label, content) ::= [
       id=id,
       label=label,
       content=content
@@ -102,11 +102,11 @@ For such problems ComTemplate provides a pure functional solution utilizing obje
     }
     
     renderMenu(items) ::= {
-      `for(items,{`@ivar.label` triggers `@ivar.id`})`
+      `for(items,{`@item.label` triggers `@item.id`})`
     }
     
     renderPanes(items) ::= {
-      `for(items,{`@ivar.id` contains `@ivar.content`})`
+      `for(items,{`@item.id` contains `@item.content`})`
     }
 
 ## ComTemplate Reflection
@@ -130,4 +130,4 @@ String template is strongly but dynamic typed. That means that many type problem
 Tests can be done in two ways:
 
  - write your tests in java, some examples are found in `com.almondtools.comtemplate.parser.files` (with template files in `src/test/resources`)
- - use ComTemplateUnit (coming soon)  
+ - use CTPUnit  

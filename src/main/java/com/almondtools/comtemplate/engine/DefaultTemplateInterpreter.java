@@ -30,6 +30,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
+import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.Exists;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
@@ -141,6 +142,15 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		TemplateImmediateExpression resolved = base.apply(this, scope);
 		Resolver resolver = resolvers.getResolverFor(resolved);
 		return resolver.resolve(resolved, attribute, emptyList(), scope);
+	}
+
+	@Override
+	public TemplateImmediateExpression visitEvalVirtual(EvalVirtual evalVirtual, Scope scope) {
+		TemplateExpression base = evalVirtual.getBase();
+		TemplateImmediateExpression resolved = base.apply(this, scope);
+		TemplateImmediateExpression attribute = evalVirtual.getAttribute().apply(this, scope);
+		Resolver resolver = resolvers.getResolverFor(resolved);
+		return resolver.resolve(resolved, attribute.getText(), emptyList(), scope);
 	}
 
 	@Override

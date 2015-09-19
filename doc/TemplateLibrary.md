@@ -63,6 +63,8 @@ An attribute description in the following sections is structured as:
 
 ### trim [string, text, evaluated, native object]
 
+### indent [text, evaluated]
+
 ### empty [string, text native object]
 
 ### not [boolean]

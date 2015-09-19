@@ -1,11 +1,11 @@
 forInList() ::= {
-  `for(var=['1','2'], do={ `@ivar`:`@ivar`})`
+  `for(number=['1','2'], do={ `@number`:`@number`})`
 }
 
 forInListI0() ::= {
-  `for(var=['a','b'], do={ `@i0`:`@ivar`})`
+  `for(char=['a','b'], do={ `@i0`:`@char`})`
 }
 
 forInListI() ::= {
-  `for(var=['a','b'], do={ `@i`:`@ivar`})`
+  `for(char=['a','b'], do={ `@i`:`@char`})`
 }

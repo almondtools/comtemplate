@@ -45,8 +45,8 @@ public class TemplateGroup {
 
 	public TemplateVariable resolveVariable(String variable) {
 		return definitions.stream()
-			.filter(def -> def instanceof ConstantDefinition)
-			.map(def -> ((ConstantDefinition) def).toVariable())
+			.filter(def -> def instanceof ValueDefinition)
+			.map(def -> ((ValueDefinition) def).toVariable())
 			.filter(constant -> variable.equals(constant.getName()))
 			.findFirst()
 			.orElse(null);
@@ -60,16 +60,16 @@ public class TemplateGroup {
 		return defineTemplate(name, toParams(parameters));
 	}
 
-	public CustomObjectDefinition defineObject(String name, List<TemplateParameter> parameters) {
-		return define(new CustomObjectDefinition(name, parameters));
+	public ValueDefinition defineObject(String name, List<TemplateParameter> parameters) {
+		return define(new ValueDefinition(name, parameters));
 	}
 
-	public CustomObjectDefinition defineObject(String name, Object... parameters) {
+	public ValueDefinition defineObject(String name, Object... parameters) {
 		return defineObject(name, toParams(parameters));
 	}
 
-	public ConstantDefinition defineConstant(String name) {
-		return define(new ConstantDefinition(name));
+	public ValueDefinition defineConstant(String name) {
+		return define(new ValueDefinition(name));
 	}
 
 	public <T extends TemplateDefinition> T define(T definition) {

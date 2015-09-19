@@ -13,35 +13,33 @@ public class ErrorsTest extends TemplateTests {
 	public void testInvalidCall() throws Exception {
 		List<String> errors = findErrors("src/test/resources/errors/invalidcall.ctp");
 		
-		assertThat(errors, contains("invalid syntax in line 2:1 <call(var=\"x\",secondvar)>"));
+		assertThat(errors, contains("error at 2:1 unexpected token <call(var=\"x\",secondvar)>"));
 	}
 
 	@Test
 	public void testIncompleteCall() throws Exception {
 		List<String> errors = findErrors("src/test/resources/errors/incompletecall.ctp");
 		
-		assertThat(errors, contains("invalid syntax in line 2:1 <call(var=\"x\",secondvar>"));
+		assertThat(errors, contains("error at 2:1 unexpected token <call(var=\"x\",secondvar>"));
 	}
 
 	@Test
 	public void testMissingParameterCommaCall() throws Exception {
 		List<String> errors = findErrors("src/test/resources/errors/missingparametercomma.ctp");
 		
-		assertThat(errors, contains("unexpected characters in line 1:18 was <var2>, expected <')', ',', ':', '='>"));
-		                            
+		assertThat(errors, contains("error at 1:18 unexpected token <var2>, expected <')', ','>"));
 	}
-
+	
 	@Test
 	public void testInvalidDefinitionOp() throws Exception {
 		List<String> errors = findErrors("src/test/resources/errors/invaliddefinitionop.ctp");
 		
 		assertThat(errors, contains(
-			"unexpected characters in line 1:23 was <:>, expected <'::='>",
-			"unexpected characters in line 7:23 was <:>, expected <'::='>",
-			"unexpected characters in line 13:23 was <=>, expected <'::='>",
-			"unexpected characters in line 19:23 was <:>, expected <'::='>"
+			"error at 1:23 unexpected token <:>, expected <'::='>",
+			"error at 7:23 unexpected token <:>, expected <'::='>",
+			"error at 13:23 unexpected token <=>, expected <'::='>",
+			"error at 19:23 unexpected token <:>, expected <'::='>"
 			));
 		
 	}
-	
 }

@@ -35,7 +35,7 @@ public class ClassPathTemplateLoaderTest {
 		ClassPathTemplateLoader loader = new ClassPathTemplateLoader();
 		loader.addClassPath("src/test/resources");
 		TemplateGroup group = loader.loadGroup("cp.test");
-		assertThat(group.getDefinition("test"), instanceOf(ConstantDefinition.class));
+		assertThat(group.getDefinition("test"), instanceOf(ValueDefinition.class));
 	}
 
 	@Test

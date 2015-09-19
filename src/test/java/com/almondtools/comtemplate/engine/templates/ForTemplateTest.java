@@ -3,8 +3,10 @@ package com.almondtools.comtemplate.engine.templates;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.ListLiteral.list;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
+import static com.almondtools.util.exceptions.ExceptionMatcher.matchesException;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
@@ -59,9 +61,9 @@ public class ForTemplateTest {
 	public void testEvaluateSingleElementListWithVariable() throws Exception {
 		ForTemplate template = new ForTemplate();
 		ResolvedListLiteral list = new ResolvedListLiteral(string("e"));
-		EvalAnonymousTemplate body = new EvalAnonymousTemplate(template, new EvalContextVar("ivar"), string("|"));
+		EvalAnonymousTemplate body = new EvalAnonymousTemplate(template, new EvalContextVar("element"), string("|"));
 
-		String result = template.evaluate(var("var", list), var("do", body));
+		String result = template.evaluate(var("element", list), var("do", body));
 
 		assertThat(result, equalTo("e|"));
 	}
@@ -70,9 +72,9 @@ public class ForTemplateTest {
 	public void testEvaluateMultiElementListWithVariable() throws Exception {
 		ForTemplate template = new ForTemplate();
 		ResolvedListLiteral list = new ResolvedListLiteral(string("e1"), string("e2"));
-		EvalAnonymousTemplate body = new EvalAnonymousTemplate(template, new EvalContextVar("ivar"), string("|"));
+		EvalAnonymousTemplate body = new EvalAnonymousTemplate(template, new EvalContextVar("element"), string("|"));
 
-		String result = template.evaluate(var("var", list), var("do", body));
+		String result = template.evaluate(var("element", list), var("do", body));
 
 		assertThat(result, equalTo("e1|e2|"));
 	}
@@ -90,8 +92,9 @@ public class ForTemplateTest {
 	@Test
 	public void testEvaluateVarIsNotDefined() throws Exception {
 		ForTemplate template = new ForTemplate();
-		EvalContextVar body = new EvalContextVar("ivar");
-		thrown.expect(ArgumentRequiredException.class);
+		EvalContextVar body = new EvalContextVar("var");
+		thrown.expect(matchesException(ArgumentRequiredException.class)
+			.withMessage(containsString("argument <item> is required")));
 		
 		String result = template.evaluate(var("do", body));
 		
@@ -101,7 +104,8 @@ public class ForTemplateTest {
 	@Test
 	public void testEvaluateDoIsNotList() throws Exception {
 		ForTemplate template = new ForTemplate();
-		thrown.expect(ArgumentRequiredException.class);
+		thrown.expect(matchesException(ArgumentRequiredException.class)
+			.withMessage(containsString("argument <do> is required")));
 		
 		String result = template.evaluate(var("var", list(string("a"))));
 

@@ -1,6 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.bool;
+import static com.almondtools.comtemplate.engine.resolvers.Normalizations.compact;
 import static java.lang.Boolean.TRUE;
 
 import java.util.Collection;
@@ -26,7 +27,7 @@ public class EmptyResolver extends FunctionResolver {
 		} else if (base instanceof RawText) {
 			return bool(((RawText) base).getText().isEmpty());
 		} else if (base instanceof Evaluated) {
-			List<TemplateImmediateExpression> evaluated = ((Evaluated) base).getEvaluated();
+			List<TemplateImmediateExpression> evaluated = compact(((Evaluated) base).getEvaluated());
 			return bool(evaluated.stream()
 				.map(expression -> resolve(expression, arguments, scope).as(Boolean.class))
 				.reduce(TRUE, (b1, b2) -> b1 && b2));

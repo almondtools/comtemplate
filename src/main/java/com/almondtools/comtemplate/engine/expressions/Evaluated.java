@@ -21,19 +21,19 @@ import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 public class Evaluated implements TemplateImmediateExpression {
 
 	private List<TemplateImmediateExpression> evaluated;
-	
+
 	public Evaluated(List<TemplateImmediateExpression> evaluated) {
 		this.evaluated = evaluated;
 	}
-	
+
 	public Evaluated(TemplateImmediateExpression... evaluated) {
 		this(asList(evaluated));
 	}
-	
+
 	public List<TemplateImmediateExpression> getEvaluated() {
 		return evaluated;
 	}
-	
+
 	@Override
 	public String getText() {
 		return evaluated.stream()
@@ -51,7 +51,7 @@ public class Evaluated implements TemplateImmediateExpression {
 	public <T> T apply(TemplateExpressionVisitor<T> visitor, Scope scope) {
 		return visitor.visitEvaluated(this, scope);
 	}
-	
+
 	@Override
 	public String toString() {
 		return evaluated.stream()
@@ -91,7 +91,7 @@ public class Evaluated implements TemplateImmediateExpression {
 			public Set<Collector.Characteristics> characteristics() {
 				return EnumSet.noneOf(Collector.Characteristics.class);
 			}
-			
+
 		};
 	}
 

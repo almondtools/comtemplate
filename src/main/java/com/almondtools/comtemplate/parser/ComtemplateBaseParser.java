@@ -7,6 +7,7 @@ public abstract class ComtemplateBaseParser extends Parser {
 
 	public ComtemplateBaseParser(TokenStream input) {
 		super(input);
+		setErrorHandler(new ComTemplateErrorStrategy());
 	}
 
 	public void enable(int channel) {

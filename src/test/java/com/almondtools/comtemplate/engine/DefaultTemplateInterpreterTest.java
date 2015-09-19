@@ -17,6 +17,7 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,6 +45,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
+import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.Exists;
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
@@ -207,6 +209,17 @@ public class DefaultTemplateInterpreterTest {
 		TemplateImmediateExpression result = interpreter.visitEvalAttribute(new EvalAttribute(base, "attribute"), scope);
 
 		assertThat(result, equalTo(string("[key='value'].attribute()")));
+	}
+
+	@Test
+	public void testVisitEvalVirtual() throws Exception {
+		TemplateDefinition definition = mock(TemplateDefinition.class, RETURNS_DEEP_STUBS);
+		when(scope.resolveVariable("var", definition)).thenReturn(TemplateVariable.var("var", string("key")));
+		TemplateExpression base = map(var("key", string("value")));
+		when(resolvers.getResolverFor(any(ResolvedMapLiteral.class))).thenReturn(new TestResolver());
+		TemplateImmediateExpression result = interpreter.visitEvalVirtual(new EvalVirtual(base, new EvalVar("var", definition)), scope);
+
+		assertThat(result, equalTo(string("[key='value'].key()")));
 	}
 
 	@Test

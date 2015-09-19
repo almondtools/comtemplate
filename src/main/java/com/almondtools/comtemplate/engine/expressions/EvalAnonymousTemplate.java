@@ -3,6 +3,7 @@ package com.almondtools.comtemplate.engine.expressions;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.almondtools.comtemplate.engine.Scope;
@@ -17,7 +18,7 @@ public class EvalAnonymousTemplate implements TemplateExpression {
 
 	public EvalAnonymousTemplate(TemplateDefinition definition, List<TemplateExpression> expressions) {
 		this.definition = definition;
-		this.expressions = expressions;
+		this.expressions = stripEnclosingNewLines(expressions);
 	}
 	
 	public EvalAnonymousTemplate(TemplateDefinition definition, TemplateExpression... expressions) {
@@ -37,7 +38,24 @@ public class EvalAnonymousTemplate implements TemplateExpression {
 		return visitor.visitEvalAnonymousTemplate(this, scope);
 	}
 
-	public <T> T firstExpression(Class<T> clazz) {
+	public static List<TemplateExpression> stripEnclosingNewLines(List<TemplateExpression> expressions) {
+		if (!expressions.isEmpty()) {
+			List<TemplateExpression> strippedExpressions = new ArrayList<TemplateExpression>(expressions);
+			RawText first = firstExpression(strippedExpressions, RawText.class);
+			if (first != null) {
+				first.setText(first.getText().replaceFirst("^[ \\t]*?(\\r?\\n|\\r)", ""));
+			}
+			RawText last = lastExpression(expressions, RawText.class);
+			if (last != null) {
+				last.setText(last.getText().replaceFirst("(\\r?\\n|\\r)[ \\t]*$", ""));
+			}
+			return strippedExpressions;
+		} else {
+			return expressions;
+		}
+	}
+	
+	public static <T> T firstExpression(List<TemplateExpression> expressions, Class<T> clazz) {
 		if (expressions.isEmpty()) {
 			return null;
 		} else {
@@ -50,7 +68,7 @@ public class EvalAnonymousTemplate implements TemplateExpression {
 		}
 	}
 
-	public <T> T lastExpression(Class<T> clazz) {
+	public static <T> T lastExpression(List<TemplateExpression> expressions, Class<T> clazz) {
 		if (expressions.isEmpty()) {
 			return null;
 		} else {
@@ -59,19 +77,6 @@ public class EvalAnonymousTemplate implements TemplateExpression {
 				return clazz.cast(lastExpression);
 			} else {
 				return null;
-			}
-		}
-	}
-	
-	public void stripEnclosingNewLines() {
-		if (!expressions.isEmpty()) {
-			RawText first = firstExpression(RawText.class);
-			if (first != null) {
-				first.setText(first.getText().replaceFirst("^[ \\t]*?(\\r?\\n|\\r)", ""));
-			}
-			RawText last = lastExpression(RawText.class);
-			if (last != null) {
-				last.setText(last.getText().replaceFirst("(\\r?\\n|\\r)[ \\t]*$", ""));
 			}
 		}
 	}

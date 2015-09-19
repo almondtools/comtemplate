@@ -1,22 +1,42 @@
 # ComTemplate
 
-ComTemplate provides a template engine for composing text templates. 
+ComTemplate is a component based static content generator and template engine. ComTemplate does not aim to win the battle of best separation of view and model, although it is more strict than most template engines for Java.
 
-It utilizes an extensible **pure functional template language**: 
+Its primary focus is the generation of static resources from parameterized template files. This simplifies the problem of separating view and model: The model is constant and could be inlined into the pages. ComTemplate supports both:
+- physically separated model (in Java) and view (in ComTemplate DSL)
+- integrated model and view (both in ComTemplate DSL)
+
+To keep the code clean and testible ComTemplate DSL is designed to be an extensible **pure functional template language**: 
 - no mutable variables
-- no side effects (except those hidden in custom extensions)
+- no side effects
 - users can extend the language by custom templates (args -> string) and functions (args -> any data type) 
 
-Advantages:
- - Mixing up layout and code very hard
- - Template code can be easily tested (input of each test is the template arguments, output is the rendered template) 
- 
+This brings some advantages: 
+- Testing gets quite simple: Because every template is a pure function tests can be specified as input-output-pairs
+- Debugging gets easy: Because no side effects can occur, each value has exactly one definition position, a false value should be easily tracked down
+- Separating model and view gets easy, mixing them up gets hard.
 
 ## Starting with ComTemplate
 
-ComTemplate is yet not sufficiently documented. But it is sufficiently tested - each feature has a corresponding unit test.
+You may start with a simple "Hello World"-Template, written in a file `hello.ctp`
 
-If something does not work properly, open an issue. If you have patches for code or documentation (even typos) then open a pull request.
+    hello(who) ::= {
+      Hello `who`!
+    }
+
+To evaluate this template in java write a simple main program:
+
+     public class Hello {
+       public static void main(String[] args) throws IOException {
+	    	TemplateGroup group = new TemplateGroupBuilder("hello", "hello.ctp").build();
+       	TemplateDefinition definition = group.getDefinition("hello");
+       	System.out.println(definition.evaluateNative("World")); //prints Hello World
+       }
+     }
+
+More advanced examples will be part of the [Tutorial](doc/Tutorial.md).
+
+## [ComTemplate Tutorial](doc/Tutorial.md)
 
 ## [ComTemplate Syntax](doc/TemplateFileSyntax.md)
 

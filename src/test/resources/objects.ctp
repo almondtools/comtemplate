@@ -1,17 +1,17 @@
-definedObject(name, type) ::= [
+@definedObject(name, type) ::= [
  name=name,
  type=type
 ]
 
-otherObject(description) ::= [
+@otherObject(description) ::= [
  description=description
 ]
 
-subObject(name, type, description) ::= definedObject(name,type)~[description=description]
+@subObject(name, type, description) ::= definedObject(name,type)~[description=description]
 
-subSubObject(name, type, description) ::= subObject(name,type, description)
+@subSubObject(name, type, description) ::= subObject(name,type, description)
 
-sub2Object(name, type, description) ::= definedObject(name,type)~otherObject(description)
+@sub2Object(name, type, description) ::= definedObject(name,type)~otherObject(description)
 
 printNameType(argument:definedObject) ::= {
 argument.name = `argument.name`

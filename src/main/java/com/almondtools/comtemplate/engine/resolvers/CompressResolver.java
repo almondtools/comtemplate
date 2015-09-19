@@ -29,7 +29,7 @@ public class CompressResolver extends FunctionResolver {
 		} else if (base instanceof RawText) {
 			return new RawText(((RawText) base).getText().trim().replaceAll("\\s+", " "));
 		} else if (base instanceof Evaluated) {
-			List<TemplateImmediateExpression> evaluated = ((Evaluated) base).getEvaluated();
+			List<TemplateImmediateExpression> evaluated = Normalizations.compact(((Evaluated) base).getEvaluated());
 			if (evaluated.isEmpty()) {
 				return base;
 			} else if (evaluated.size() == 1) {

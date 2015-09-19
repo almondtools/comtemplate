@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine.expressions;
 
+import static com.almondtools.comtemplate.engine.expressions.EvalAnonymousTemplate.firstExpression;
+import static com.almondtools.comtemplate.engine.expressions.EvalAnonymousTemplate.lastExpression;
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -60,7 +62,7 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition);
 
-		assertThat(eval.firstExpression(StringLiteral.class), nullValue());
+		assertThat(firstExpression(eval.getExpressions(), StringLiteral.class), nullValue());
 	}
 
 	@Test
@@ -68,7 +70,7 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, string("mismatch"), integer(2));
 
-		assertThat(eval.firstExpression(IntegerLiteral.class), nullValue());
+		assertThat(firstExpression(eval.getExpressions(), IntegerLiteral.class), nullValue());
 	}
 
 	@Test
@@ -76,7 +78,7 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, string("match"), integer(2));
 
-		assertThat(eval.firstExpression(StringLiteral.class), equalTo(string("match")));
+		assertThat(firstExpression(eval.getExpressions(), StringLiteral.class), equalTo(string("match")));
 	}
 
 	@Test
@@ -84,7 +86,7 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition);
 
-		assertThat(eval.lastExpression(StringLiteral.class), nullValue());
+		assertThat(lastExpression(eval.getExpressions(), StringLiteral.class), nullValue());
 	}
 
 	@Test
@@ -92,7 +94,7 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, integer(2), string("mismatch"));
 
-		assertThat(eval.lastExpression(IntegerLiteral.class), nullValue());
+		assertThat(lastExpression(eval.getExpressions(), IntegerLiteral.class), nullValue());
 	}
 
 	@Test
@@ -100,15 +102,13 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, integer(2), string("match"));
 
-		assertThat(eval.lastExpression(StringLiteral.class), equalTo(string("match")));
+		assertThat(lastExpression(eval.getExpressions(), StringLiteral.class), equalTo(string("match")));
 	}
 
 	@Test
 	public void testStripEnclosingNewLinesOnEmpty() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition);
-
-		eval.stripEnclosingNewLines();
 
 		assertThat(eval.getExpressions(), empty());
 	}
@@ -118,8 +118,6 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, new RawText("begin"), integer(2), new RawText("end"));
 
-		eval.stripEnclosingNewLines();
-
 		assertThat(eval.getExpressions(), contains(new RawText("begin"), integer(2), new RawText("end")));
 	}
 
@@ -127,8 +125,6 @@ public class EvalAnonymousTemplateTest {
 	public void testStripEnclosingNewLinesOnlyNewlines() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, new RawText("\n\nbegin"), integer(2), new RawText("end\n\n"));
-
-		eval.stripEnclosingNewLines();
 
 		assertThat(eval.getExpressions(), contains(new RawText("\nbegin"), integer(2), new RawText("end\n")));
 	}
@@ -138,8 +134,6 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, new RawText("\t\nbegin"), integer(2), new RawText("end\n  "));
 
-		eval.stripEnclosingNewLines();
-
 		assertThat(eval.getExpressions(), contains(new RawText("begin"), integer(2), new RawText("end")));
 	}
 
@@ -148,8 +142,6 @@ public class EvalAnonymousTemplateTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, new RawText("\r\nbegin"), integer(2), new RawText("end\r"));
 
-		eval.stripEnclosingNewLines();
-
 		assertThat(eval.getExpressions(), contains(new RawText("begin"), integer(2), new RawText("end")));
 	}
 
@@ -157,8 +149,6 @@ public class EvalAnonymousTemplateTest {
 	public void testStripEnclosingNewLinesMismatchedBorders() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		EvalAnonymousTemplate eval = new EvalAnonymousTemplate(definition, string("\nbegin"), integer(2), string("end\n"));
-		
-		eval.stripEnclosingNewLines();
 		
 		assertThat(eval.getExpressions(), contains(string("\nbegin"), integer(2), string("end\n")));
 	}

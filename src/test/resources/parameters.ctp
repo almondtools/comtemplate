@@ -1,5 +1,5 @@
 html(content='',attributes=[]) ::= {
-  <html`for(var=attributes,do={ `@ivar`})`>`content`</html>
+  <html`for(att=attributes,do={ `@att`})`>`content`</html>
 }
 
 testByName() ::= {`html(content="inhalt",attributes=['lang="de"'])`}

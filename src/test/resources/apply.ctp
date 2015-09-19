@@ -1,4 +1,4 @@
-myobject(name, type) ::= [
+@myobject(name, type) ::= [
  name=name,
  type=type
 ]

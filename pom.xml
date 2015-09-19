@@ -6,7 +6,7 @@
 	<artifactId>comtemplate</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>A Simple Pure Functional Template Engine</description>
+	<description>A Component-Based Text Generator And Template Engine</description>
 	<url>https://github.com/almondtools/comtemplate</url>
 
 
@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4-runtime</artifactId>
-			<version>4.5</version>
+			<version>4.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

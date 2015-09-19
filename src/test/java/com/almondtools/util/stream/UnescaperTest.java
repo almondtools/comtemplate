@@ -6,8 +6,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.almondtools.util.stream.Unescaper;
-
 public class UnescaperTest {
 
 	@Test(expected=IllegalArgumentException.class)

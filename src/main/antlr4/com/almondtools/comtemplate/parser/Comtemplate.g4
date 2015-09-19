@@ -44,8 +44,8 @@ valueDefinition
 	;
 
 functionDefinition
-	: name=Identifier '(' parameters? ')' '::=' template  # templateDefinition
-	| name=Identifier '(' parameters? ')' '::=' value # objectDefinition // value that is not a template
+	: name=Identifier '(' parameters? ')' '::=' value # templateDefinition
+	| EscapeMark name=Identifier '(' parameters? ')' '::=' value # objectDefinition
 	;
 
 template
@@ -118,6 +118,7 @@ value
 	| ref # valueRef
 	| value '.' function # valueFunction
 	| value '.' attr=Identifier # valueAttribute
+	| value '.' '(' ref ')' #valueVirtual
 	| value ('~' value)+ # valueConcat
 	| value '?' # valueExists
 	| value '?:' value # valueDefault
@@ -126,8 +127,53 @@ value
 scalar
 	: IntegerLiteral # intScalar
 	| DecimalLiteral # decScalar
-	| StringLiteral # strScalar
+	| stringLiteral # strScalar
 	| BooleanLiteral # boolScalar
+	;
+
+stringLiteral
+	: '"' {enable(ComtemplateLexer.WHITESPACE);} doubleQuoteToken* {disable(ComtemplateLexer.WHITESPACE);}'"'
+	| '\'' {enable(ComtemplateLexer.WHITESPACE);} singleQuoteToken* {disable(ComtemplateLexer.WHITESPACE);}'\''
+	;
+
+doubleQuoteToken
+	: Import
+	| Define
+	| '[' | ']'
+	| '(' | ')'
+	| '\''
+	| '='
+	| ':' | '.' | ';' | ',' | '?' | '!' | '~'
+	| IntegerLiteral
+	| DecimalLiteral
+	| BooleanLiteral
+	| Identifier
+	| Wildcard
+	| '\\'
+	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')' | '"')
+	| EscapedComment
+	| AnythingElse
+	| Whitespace
+	;
+
+singleQuoteToken
+	: Import
+	| Define
+	| '[' | ']'
+	| '(' | ')'
+	| '"'
+	| '='
+	| ':' | '.' | ';' | ',' | '?' | '!' | '~'
+	| IntegerLiteral
+	| DecimalLiteral
+	| BooleanLiteral
+	| Identifier
+	| Wildcard
+	| '\\'
+	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')' | '\'')
+	| EscapedComment
+	| AnythingElse
+	| Whitespace
 	;
 
 inlineText
@@ -139,11 +185,11 @@ inlineToken
 	| Define
 	| '[' | ']'
 	| '(' | ')'
+	| '"' | '\''
 	| '='
 	| ':' | '.' | ';' | ',' | '?' | '!' | '~'
 	| IntegerLiteral
 	| DecimalLiteral
-	| StringLiteral
 	| BooleanLiteral
 	| Identifier
 	| Wildcard
@@ -176,11 +222,6 @@ IntegerLiteral
 DecimalLiteral
     :   '-'? DEC_LITERAL '.' [0-9]+
 	;
-
-StringLiteral
-    :  '\'' ( ESCAPE_SEQUENCE | . )*? '\''
-    |  '"' ( ESCAPE_SEQUENCE | . )*? '"'
-    ;
 
 BooleanLiteral
     : 'true'
@@ -229,7 +270,7 @@ fragment UNICODE_ESCAPE
     ;
 
 fragment LETTER
-	: [a-zA-Z]
+	: [_a-zA-Z]
 	;
 
 fragment DIGIT

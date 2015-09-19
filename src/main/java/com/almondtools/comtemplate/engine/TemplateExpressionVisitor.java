@@ -13,6 +13,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
+import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.Exists;
 import com.almondtools.comtemplate.engine.expressions.IntegerLiteral;
@@ -40,6 +41,8 @@ public interface TemplateExpressionVisitor<T> {
 	T visitEvalAnonymousTemplate(EvalAnonymousTemplate evalAnonymousTemplate, Scope scope);
 
 	T visitEvalAttribute(EvalAttribute evalAttribute, Scope scope);
+
+	T visitEvalVirtual(EvalVirtual evalAttribute, Scope scope);
 
 	T visitEvalFunction(EvalFunction evalFunction, Scope scope);
 

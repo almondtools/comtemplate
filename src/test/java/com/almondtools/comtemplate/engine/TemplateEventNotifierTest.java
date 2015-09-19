@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.engine;
 
+import static com.almondtools.comtemplate.engine.GlobalTemplates.defaultTemplates;
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.TRUE;
 import static com.almondtools.comtemplate.engine.expressions.DecimalLiteral.decimal;
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
@@ -32,6 +33,7 @@ import com.almondtools.comtemplate.engine.expressions.NativeObject;
 import com.almondtools.comtemplate.engine.expressions.RawText;
 import com.almondtools.comtemplate.engine.expressions.ResolvedListLiteral;
 import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
+import com.almondtools.comtemplate.engine.expressions.TestError;
 import com.almondtools.comtemplate.engine.expressions.ToObject;
 
 
@@ -51,6 +53,18 @@ public class TemplateEventNotifierTest {
 		notifier.addListener(listener);
 	}
 	
+	@Test
+	public void testTemplateEventNotifierHandlingErrors() throws Exception {
+		ErrorHandler errors = mock(ErrorHandler.class);
+		Scope scope = mock(Scope.class);
+		TestError error = new TestError("test");
+		notifier = new TemplateEventNotifier(new ResolverRegistry(), defaultTemplates(), errors);
+
+		notifier.visitErrorExpression(error, scope);
+		
+		verify(errors).handle(error);
+	}
+
 	@Test
 	public void testVisitRawText() throws Exception {
 		verifyListenerIsNotified(notifier, new RawText("raw text"));

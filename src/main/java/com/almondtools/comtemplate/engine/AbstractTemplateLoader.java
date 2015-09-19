@@ -50,4 +50,8 @@ public abstract class AbstractTemplateLoader implements TemplateLoader {
 		return group.getDefinition(definition);
 	}
 
+	protected String pathOf(String name) {
+		return name.replace('.', '/');
+	}
+
 }
