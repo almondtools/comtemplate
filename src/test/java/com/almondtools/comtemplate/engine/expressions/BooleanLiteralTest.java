@@ -3,7 +3,7 @@ package com.almondtools.comtemplate.engine.expressions;
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.FALSE;
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.TRUE;
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.bool;
-import static com.almondtools.util.objects.EqualityMatcher.satisfiesDefaultEquality;
+import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.is;

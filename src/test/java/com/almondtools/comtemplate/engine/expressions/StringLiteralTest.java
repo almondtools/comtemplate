@@ -1,7 +1,7 @@
 package com.almondtools.comtemplate.engine.expressions;
 
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
-import static com.almondtools.util.objects.EqualityMatcher.satisfiesDefaultEquality;
+import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;

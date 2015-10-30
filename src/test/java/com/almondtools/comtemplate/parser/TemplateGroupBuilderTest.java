@@ -1,6 +1,6 @@
 package com.almondtools.comtemplate.parser;
 
-import static com.almondtools.util.exceptions.ExceptionMatcher.matchesException;
+import static com.almondtools.conmatch.exceptions.ExceptionMatcher.matchesException;
 import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.hasSize;

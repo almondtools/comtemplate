@@ -3,7 +3,7 @@ package com.almondtools.comtemplate.engine.templates;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.ListLiteral.list;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
-import static com.almondtools.util.exceptions.ExceptionMatcher.matchesException;
+import static com.almondtools.conmatch.exceptions.ExceptionMatcher.matchesException;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;

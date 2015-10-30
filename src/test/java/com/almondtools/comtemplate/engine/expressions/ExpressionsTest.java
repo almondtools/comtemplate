@@ -5,7 +5,7 @@ import static com.almondtools.comtemplate.engine.expressions.DecimalLiteral.deci
 import static com.almondtools.comtemplate.engine.expressions.Expressions.fromNative;
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
-import static com.almondtools.util.objects.UtilityClassMatcher.isUtilityClass;
+import static com.almondtools.conmatch.conventions.UtilityClassMatcher.isUtilityClass;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 

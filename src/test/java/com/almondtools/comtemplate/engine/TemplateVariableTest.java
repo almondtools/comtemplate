@@ -3,7 +3,7 @@ package com.almondtools.comtemplate.engine;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.DecimalLiteral.decimal;
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
-import static com.almondtools.util.objects.EqualityMatcher.satisfiesDefaultEquality;
+import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

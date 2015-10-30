@@ -1,6 +1,6 @@
 package com.almondtools.comtemplate.engine.expressions;
 
-import static com.almondtools.util.objects.EqualityMatcher.satisfiesDefaultEquality;
+import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;

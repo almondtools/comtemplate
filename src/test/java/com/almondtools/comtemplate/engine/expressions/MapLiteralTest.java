@@ -5,7 +5,7 @@ import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.TRUE
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.bool;
 import static com.almondtools.comtemplate.engine.expressions.MapLiteral.map;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
-import static com.almondtools.util.objects.EqualityMatcher.satisfiesDefaultEquality;
+import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.contains;

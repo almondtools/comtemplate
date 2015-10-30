@@ -1,7 +1,7 @@
 package com.almondtools.comtemplate.engine.expressions;
 
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
-import static com.almondtools.util.objects.EqualityMatcher.satisfiesDefaultEquality;
+import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static java.math.BigInteger.valueOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
