@@ -124,6 +124,9 @@ public class MultiChannelTokenStream extends BufferedTokenStream {
 	}
 
 	protected int previousTokenOnChannel(int i, int[] channels) {
+		if (i < 0) {
+			return i;
+		}
 		sync(i);
 		if (i >= size()) {
 			return size() - 1;
