@@ -119,7 +119,7 @@ public class ClassPathTemplateLoaderTest {
 		ClassPathTemplateLoader loader = new ClassPathTemplateLoader(compiler);
 		loader.compile("unit", null);
 		
-		verify(compiler).compile("unit", null, loader);
+		verify(compiler).compileLibrary("unit", null, loader);
 	}
 	
 }

@@ -1,6 +1,6 @@
 package com.almondtools.comtemplate.parser.files;
 
-import static com.almondtools.comtemplate.parser.files.TemplateTests.compileFile;
+import static com.almondtools.comtemplate.parser.files.TemplateTests.compileLibrary;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -15,7 +15,7 @@ public class ApplyTest {
 
 	@Before
 	public void before() throws Exception {
-		group = compileFile("src/test/resources/apply.ctp");
+		group = compileLibrary("src/test/resources/apply.ctp");
 	}
 
 	@Test

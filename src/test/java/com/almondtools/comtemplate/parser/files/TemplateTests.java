@@ -1,10 +1,12 @@
 package com.almondtools.comtemplate.parser.files;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 
+import com.almondtools.comtemplate.engine.TemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateGroup;
 import com.almondtools.comtemplate.parser.ComtemplateLexer;
 import com.almondtools.comtemplate.parser.ComtemplateParser;
@@ -14,8 +16,16 @@ import com.almondtools.comtemplate.parser.TemplateGroupBuilder;
 
 public class TemplateTests {
 
-	public static TemplateGroup compileFile(String fileName) throws IOException {
-		return new TemplateGroupBuilder(fileName, fileName).build();
+	public static TemplateGroup compileLibrary(String fileName) throws IOException {
+		return TemplateGroupBuilder.library(fileName, fileName).buildGroup();
+	}
+
+	public static TemplateDefinition compileMain(String fileName) throws IOException {
+		return TemplateGroupBuilder.main(fileName, fileName).buildMain();
+	}
+
+	public static TemplateDefinition compileMainFromText(String text) throws IOException {
+		return TemplateGroupBuilder.main("", new ByteArrayInputStream(text.getBytes())).buildMain();
 	}
 
 	public static List<String> findErrors(String fileName) throws IOException {

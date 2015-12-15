@@ -1,6 +1,6 @@
 package com.almondtools.comtemplate.parser.files;
 
-import static com.almondtools.comtemplate.parser.files.TemplateTests.compileFile;
+import static com.almondtools.comtemplate.parser.files.TemplateTests.compileLibrary;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -20,7 +20,7 @@ public class TestTest {
 
 	@Before
 	public void before() throws Exception {
-		group = compileFile("src/test/resources/test.ctp");
+		group = compileLibrary("src/test/resources/test.ctp");
 		interpreter = new DefaultTemplateInterpreter();
 	}
 

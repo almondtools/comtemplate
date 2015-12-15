@@ -7,11 +7,18 @@ import com.almondtools.comtemplate.parser.TemplateGroupBuilder;
 
 public class DefaultTemplateCompiler implements TemplateCompiler {
 
-	public TemplateGroup compile(String name, InputStream stream, TemplateLoader loader) throws IOException {
+	public TemplateGroup compileLibrary(String name, InputStream stream, TemplateLoader loader) throws IOException {
 		if (stream == null) {
 			throw new TemplateGroupNotFoundException(name);
 		}
-		return new TemplateGroupBuilder(name, stream, loader).build();
+		return TemplateGroupBuilder.library(name, stream, loader).buildGroup();
 	}
 
+	@Override
+	public TemplateDefinition compileMain(String name, InputStream stream, TemplateLoader loader) throws IOException {
+		if (stream == null) {
+			throw new TemplateGroupNotFoundException(name);
+		}
+		return TemplateGroupBuilder.main(name, stream, loader).buildMain();
+	}
 }

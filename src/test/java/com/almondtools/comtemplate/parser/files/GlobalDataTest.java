@@ -25,7 +25,7 @@ public class GlobalDataTest extends TemplateTests {
 
 	@Before
 	public void before() throws Exception {
-		group = compileFile("src/test/resources/globaldata.ctp");
+		group = compileLibrary("src/test/resources/globaldata.ctp");
 	}
 
 	@Test

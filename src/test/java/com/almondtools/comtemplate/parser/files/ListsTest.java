@@ -16,7 +16,7 @@ public class ListsTest extends TemplateTests {
 
 	@Before
 	public void before() throws IOException {
-		group = compileFile("src/test/resources/lists.ctp");
+		group = compileLibrary("src/test/resources/lists.ctp");
 	}
 	
 	@Test

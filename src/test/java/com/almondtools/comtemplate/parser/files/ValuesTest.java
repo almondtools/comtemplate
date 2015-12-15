@@ -14,7 +14,7 @@ public class ValuesTest extends TemplateTests {
 
 	@Before
 	public void before() throws Exception {
-		group = compileFile("src/test/resources/values.ctp");
+		group = compileLibrary("src/test/resources/values.ctp");
 	}
 
 	@Test

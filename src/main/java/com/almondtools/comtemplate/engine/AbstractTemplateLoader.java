@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.engine;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -21,7 +22,15 @@ public abstract class AbstractTemplateLoader implements TemplateLoader {
 	}
 	
 	public TemplateGroup compile(String name, InputStream stream) throws IOException {
-		return compiler.compile(name, stream, this);
+		return compiler.compileLibrary(name, stream, this);
+	}
+
+	public TemplateDefinition compileMain(String name, InputStream stream) throws IOException {
+		return compiler.compileMain(name, stream, this);
+	}
+
+	public TemplateDefinition compileText(String text) throws IOException {
+		return compileMain("", new ByteArrayInputStream(text.getBytes()));
 	}
 
 	@Override

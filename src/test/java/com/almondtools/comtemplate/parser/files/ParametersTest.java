@@ -17,7 +17,7 @@ public class ParametersTest extends TemplateTests {
 
 	@Before
 	public void before() throws Exception {
-		group = compileFile("src/test/resources/parameters.ctp");
+		group = compileLibrary("src/test/resources/parameters.ctp");
 	}
 
 	@Test

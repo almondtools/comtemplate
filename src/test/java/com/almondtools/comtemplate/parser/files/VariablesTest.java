@@ -16,7 +16,7 @@ public class VariablesTest extends TemplateTests {
 
 	@Before
 	public void before() throws IOException {
-		group = compileFile("src/test/resources/variables.ctp");
+		group = compileLibrary("src/test/resources/variables.ctp");
 	}
 	
 	@Test

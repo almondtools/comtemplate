@@ -58,7 +58,7 @@ public class CurrentPathTemplateLoaderTest {
 		CurrentPathTemplateLoader loader = new CurrentPathTemplateLoader(compiler);
 		loader.compile("unit", null);
 		
-		verify(compiler).compile("unit", null, loader);
+		verify(compiler).compileLibrary("unit", null, loader);
 	}
 	
 

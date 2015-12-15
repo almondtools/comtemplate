@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 public interface TemplateCompiler {
 	
-	TemplateGroup compile(String name, InputStream stream, TemplateLoader loader) throws IOException;
+	TemplateGroup compileLibrary(String name, InputStream stream, TemplateLoader loader) throws IOException;
+	TemplateDefinition compileMain(String name, InputStream stream, TemplateLoader loader) throws IOException;
 	
 }

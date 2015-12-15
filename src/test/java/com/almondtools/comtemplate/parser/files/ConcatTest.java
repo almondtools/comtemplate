@@ -16,7 +16,7 @@ public class ConcatTest extends TemplateTests {
 
 	@Before
 	public void before() throws IOException {
-		group = compileFile("src/test/resources/concat.ctp");
+		group = compileLibrary("src/test/resources/concat.ctp");
 	}
 	
 	@Test

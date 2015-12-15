@@ -34,16 +34,16 @@ public class TemplateGroupBuilderTest {
 	@Before
 	public void before() throws Exception {
 		File newFile = folder.newFile("name.ctp");
-		builder = new TemplateGroupBuilder("name", newFile.getAbsolutePath());
+		builder = TemplateGroupBuilder.library("name", newFile.getAbsolutePath());
 	}
 	
 	@Test
 	public void testTemplateGroupBuilderStringInputStream() throws Exception {
 		InputStream stream = new ByteArrayInputStream("template ::= {}".getBytes());
 
-		builder = new TemplateGroupBuilder("name", stream);
+		builder = TemplateGroupBuilder.library("name", stream);
 		
-		assertThat(builder.build().getDefinitions(), hasSize(1));
+		assertThat(builder.buildGroup().getDefinitions(), hasSize(1));
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class TemplateGroupBuilderTest {
 			.withMessage(containsString("template group 'name'")));
 		
 		InputStream stream = new ByteArrayInputStream("broken template ::= {}".getBytes());
-		builder = new TemplateGroupBuilder("name", stream);
+		builder = TemplateGroupBuilder.library("name", stream);
 	}
 
 	@Test
@@ -60,9 +60,9 @@ public class TemplateGroupBuilderTest {
 		Path file = Paths.get(folder.getRoot().getPath()).resolve("name.ctp");
 		Files.write(file, "template ::= {}".getBytes());
 		
-		builder = new TemplateGroupBuilder("name", file.toString());
+		builder = TemplateGroupBuilder.library("name", file.toString());
 		
-		assertThat(builder.build().getDefinitions(), hasSize(1));
+		assertThat(builder.buildGroup().getDefinitions(), hasSize(1));
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class TemplateGroupBuilderTest {
 		
 		Path file = Paths.get(folder.getRoot().getPath()).resolve("name.ctp");
 		Files.write(file, "broken template ::= {}".getBytes());
-		builder = new TemplateGroupBuilder("name", file.toString());
+		builder = TemplateGroupBuilder.library("name", file.toString());
 		
 	}
 
@@ -94,11 +94,6 @@ public class TemplateGroupBuilderTest {
 	@Test(expected=UnsupportedOperationException.class)
 	public void testVisitClauses() throws Exception {
 		builder.visitClauses(null);
-	}
-
-	@Test(expected=UnsupportedOperationException.class)
-	public void testVisitTemplateBody() throws Exception {
-		builder.visitTemplateBody(null);
 	}
 
 	@Test(expected=UnsupportedOperationException.class)

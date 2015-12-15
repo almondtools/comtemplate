@@ -9,7 +9,7 @@ import com.almondtools.comtemplate.parser.TemplateGroupBuilder;
 public class Hello {
 	
 	public static void main(String[] args) throws IOException {
-		TemplateGroup group = new TemplateGroupBuilder("hello", "src/test/resources/examples/hello.ctp").build();
+		TemplateGroup group = TemplateGroupBuilder.library("hello", "src/test/resources/examples/hello.ctp").buildGroup();
 		TemplateDefinition definition = group.getDefinition("hello");
 		System.out.println(definition.evaluateNative("World")); //prints Hello World
 	}

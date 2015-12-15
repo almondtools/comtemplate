@@ -15,10 +15,12 @@ import static java.util.stream.Collectors.toMap;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -115,39 +117,90 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	private TemplateGroup activeGroup;
 	private TemplateDefinition activeDefinition;
 
-	public TemplateGroupBuilder(String name, InputStream stream) throws IOException {
-		this(name, stream, new UnsupportedLoader());
-	}
-
-	public TemplateGroupBuilder(String name, String fileName) throws IOException {
-		this(name, fileName, new UnsupportedLoader());
-	}
-
-	public TemplateGroupBuilder(String name, InputStream stream, TemplateLoader loader) throws IOException {
-		this(name, new ANTLRInputStream(stream), loader);
-	}
-
-	public TemplateGroupBuilder(String name, String fileName, TemplateLoader loader) throws IOException {
-		this(name, new ANTLRFileStream(fileName), loader);
-	}
-
-	public TemplateGroupBuilder(String name, ANTLRInputStream stream, TemplateLoader loader) throws IOException {
+	public TemplateGroupBuilder(String name, TemplateLoader loader) throws IOException {
 		this.name = name;
 		this.loader = loader;
-		this.root = parse(name, stream);
 	}
 
-	private TemplateFileContext parse(String name, ANTLRInputStream stream) {
+	public String getName() {
+		return name;
+	}
+
+	public static TemplateGroupBuilder library(String name, InputStream stream) throws IOException {
+		return library(name, stream, new UnsupportedLoader());
+	}
+
+	public static TemplateGroupBuilder library(String name, InputStream stream, TemplateLoader loader) throws IOException {
+		return new TemplateGroupBuilder(name, loader)
+			.parseGroup(new ANTLRInputStream(stream));
+	}
+
+	public static TemplateGroupBuilder library(String name, String fileName) throws IOException {
+		return library(name, fileName, new UnsupportedLoader());
+	}
+
+	public static TemplateGroupBuilder library(String name, String fileName, TemplateLoader loader) throws IOException {
+		return new TemplateGroupBuilder(name, loader)
+			.parseGroup(new ANTLRFileStream(fileName));
+	}
+
+	public static TemplateGroupBuilder main(String name, InputStream stream) throws IOException {
+		return main(name, stream, new UnsupportedLoader());
+	}
+
+	public static TemplateGroupBuilder main(String name, InputStream stream, TemplateLoader loader) throws IOException {
+		return new TemplateGroupBuilder(name, loader)
+			.parseMain(new ANTLRInputStream(stream));
+	}
+
+	public static TemplateGroupBuilder main(String name, String fileName) throws IOException {
+		return main(name, fileName, new UnsupportedLoader());
+	}
+
+	public static TemplateGroupBuilder main(String name, String fileName, TemplateLoader loader) throws IOException {
+		return new TemplateGroupBuilder(name, loader)
+			.parseMain(new ANTLRFileStream(fileName));
+	}
+
+	public TemplateGroupBuilder parseGroup(ANTLRInputStream stream) {
+		this.root = parse(stream, parser -> parser.templateFile());
+		return this;
+	}
+
+	public TemplateGroupBuilder parseGroup(ANTLRFileStream stream) {
+		try {
+			this.root = parse(stream, parser -> parser.templateFile());
+			return this;
+		} catch (TemplateGroupException e) {
+			e.setFileName(stream.getSourceName());
+			throw e;
+		}
+	}
+
+	public TemplateGroupBuilder parseMain(ANTLRInputStream stream) {
+		this.root = parse(stream, parser -> parser.templateBody());
+		return this;
+	}
+
+	public TemplateGroupBuilder parseMain(ANTLRFileStream stream) {
+		try {
+			this.root = parse(stream, parser -> parser.templateBody());
+			return this;
+		} catch (TemplateGroupException e) {
+			e.setFileName(stream.getSourceName());
+			throw e;
+		}
+	}
+
+	private ParserRuleContext parse(ANTLRInputStream stream, Function<ComtemplateParser, ParserRuleContext> parse) {
 		TemplateErrorListener errors = new TemplateErrorListener();
 		ComtemplateLexer lexer = new ComtemplateLexer(stream);
 		ComtemplateParser parser = new ComtemplateParser(new MultiChannelTokenStream(lexer));
 		parser.removeErrorListeners();
 		parser.addErrorListener(errors);
-		TemplateFileContext templateFile = parser.templateFile();
+		ParserRuleContext root = parse.apply(parser);
 		if (errors.isSuccesful()) {
-			return templateFile;
-		} else if (stream instanceof ANTLRFileStream){
-			throw new TemplateGroupException(name, stream.getSourceName(), errors.getMessages());
+			return root;
 		} else {
 			throw new TemplateGroupException(name, errors.getMessages());
 		}
@@ -264,7 +317,25 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitTemplateBody(TemplateBodyContext ctx) {
-		throw new UnsupportedOperationException("group builder skips visiting template body node");
+		if (activeGroup == null) {
+			activeGroup = new TemplateGroup(name);
+		}
+		List<TemplateParameter> templateParameters = new ArrayList<>();
+		CustomTemplateDefinition templateDefinition = activeGroup.defineTemplate("", templateParameters);
+		activeDefinition = templateDefinition;
+
+		List<TemplateExpression> expressions = ctx.templateChunk().stream()
+			.map(chunk -> visit(chunk).as(TemplateExpression.class))
+			.collect(toList());
+
+		VariableCollector collector = new VariableCollector();
+		for (TemplateExpression expression : expressions) {
+			templateDefinition.add(expression.apply(collector, null));
+		}
+		templateParameters.addAll(collector.getVariables().stream()
+			.map(name -> TemplateParameter.param(name))
+			.collect(toList()));
+		return node(templateDefinition);
 	}
 
 	@Override
@@ -365,7 +436,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		TemplateExpression value = visit(ctx.value()).as(TemplateExpression.class);
 		return node(var(text, value));
 	}
-	
+
 	@Override
 	public TemplateGroupNode visitList(ListContext ctx) {
 		List<TemplateExpression> listItems = opt(ctx.items())
@@ -429,7 +500,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		String attribute = ctx.attr.getText();
 		return node(new EvalAttribute(base, attribute));
 	}
-	
+
 	@Override
 	public TemplateGroupNode visitValueVirtual(ValueVirtualContext ctx) {
 		TemplateExpression base = visit(ctx.value()).as(TemplateExpression.class);
@@ -477,7 +548,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitBoolScalar(BoolScalarContext ctx) {
 		return node(bool(ctx.BooleanLiteral().getText()));
 	}
-	
+
 	@Override
 	public TemplateGroupNode visitStringLiteral(StringLiteralContext ctx) {
 		String text = ctx.getText();
@@ -486,12 +557,12 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 			.toString();
 		return node(string(unescaped));
 	}
-	
+
 	@Override
 	public TemplateGroupNode visitSingleQuoteToken(SingleQuoteTokenContext ctx) {
 		throw new UnsupportedOperationException("group builder skips visiting single quote token node");
 	}
-	
+
 	@Override
 	public TemplateGroupNode visitDoubleQuoteToken(DoubleQuoteTokenContext ctx) {
 		throw new UnsupportedOperationException("group builder skips visiting double quote token node");
@@ -515,8 +586,12 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		throw new UnsupportedOperationException("group builder skips visiting error nodes");
 	}
 
-	public TemplateGroup build() {
+	public TemplateGroup buildGroup() {
 		return visit(root).as(TemplateGroup.class);
+	}
+
+	public TemplateDefinition buildMain() {
+		return visit(root).as(TemplateDefinition.class);
 	}
 
 	private TemplateGroupNode node(Object payload) {
