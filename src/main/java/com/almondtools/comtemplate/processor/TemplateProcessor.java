@@ -89,12 +89,12 @@ public class TemplateProcessor {
 			TemplateProcessor processor = new TemplateProcessor(args[0], args[1], properties());
 			System.out.println("processing templates started");
 			processor.run();
+			System.out.println("processing templates finished");
 		} catch (ArrayIndexOutOfBoundsException | FileNotFoundException e) {
 			System.err.println("signature: java " + TemplateProcessor.class.getName() + " <source path> <target path>");
 		} catch (IOException e) {
 			System.err.println("generation of files failed: " + e.getMessage());
 		} finally {
-			System.out.println("processing templates finished");
 		}
 	}
 
