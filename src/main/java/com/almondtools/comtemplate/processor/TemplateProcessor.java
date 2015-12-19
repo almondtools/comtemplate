@@ -86,7 +86,7 @@ public class TemplateProcessor {
 
 	public static void main(String[] args) {
 		try {
-			TemplateProcessor processor = new TemplateProcessor(args[0], args[1], properties());
+			TemplateProcessor processor = new TemplateProcessor(args[0], args[1], properties(args[0]));
 			System.out.println("processing templates started");
 			processor.run();
 			System.out.println("processing templates finished");
@@ -98,8 +98,10 @@ public class TemplateProcessor {
 		}
 	}
 
-	private static Properties properties() {
-		return new Properties();
+	private static Properties properties(String source) throws IOException {
+		Properties properties = new Properties();
+		properties.load(Files.newBufferedReader(Paths.get(source).resolve("template.properties")));
+		return properties;
 	}
 
 	public void run() throws IOException {
