@@ -223,9 +223,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitImportpackage(ImportpackageContext ctx) {
 		String groupName = ctx.qualifiedWildcard().qualifiedName().getText();
 		TemplateGroup group = loader.loadGroup(groupName);
-		for (TemplateDefinition definition : group.getDefinitions()) {
-			activeGroup.addImport(definition);
-		}
+		activeGroup.addImports(group.getDefinitions());
 		return node(group);
 	}
 

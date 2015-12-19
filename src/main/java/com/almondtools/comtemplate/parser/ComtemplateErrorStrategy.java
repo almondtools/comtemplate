@@ -19,7 +19,7 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.Transition;
 import org.antlr.v4.runtime.misc.IntervalSet;
 
-public class ComTemplateErrorStrategy extends DefaultErrorStrategy {
+public class ComtemplateErrorStrategy extends DefaultErrorStrategy {
 
 	@Override
 	public void reportError(Parser recognizer, RecognitionException e) {

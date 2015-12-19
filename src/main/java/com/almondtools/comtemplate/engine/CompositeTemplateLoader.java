@@ -3,21 +3,21 @@ package com.almondtools.comtemplate.engine;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
-public abstract class AbstractTemplateLoader implements TemplateLoader {
+public class CompositeTemplateLoader implements TemplateLoader {
 
 	private TemplateCompiler compiler;
-	private Map<String, TemplateGroup> resolvedGroups;
+	private TemplateGroupLoader group;
+	private TemplateMainLoader main;
 
-	public AbstractTemplateLoader(TemplateCompiler compiler) {
+	public CompositeTemplateLoader(TemplateCompiler compiler, TemplateGroupLoader group, TemplateMainLoader main) {
 		this.compiler = compiler;
-		this.resolvedGroups = new HashMap<String, TemplateGroup>();
+		this.group = group;
+		this.main = main;
 	}
 
-	public AbstractTemplateLoader() {
-		this(new DefaultTemplateCompiler());
+	public CompositeTemplateLoader(TemplateLoader group, TemplateLoader main) {
+		this(new DefaultTemplateCompiler(), group, main);
 	}
 
 	public TemplateGroup compile(String name, InputStream stream) throws IOException {
@@ -34,29 +34,12 @@ public abstract class AbstractTemplateLoader implements TemplateLoader {
 
 	@Override
 	public TemplateGroup loadGroup(String name) {
-		TemplateGroup resolved = resolvedGroups.get(name);
-		if (resolved == null) {
-			try {
-				InputStream stream = loadSource(name);
-				resolved = compile(name, stream);
-				resolvedGroups.put(name, resolved);
-			} catch (IOException e) {
-				throw new TemplateGroupNotFoundException(name);
-			}
-		}
-		return resolved;
+		return group.loadGroup(name);
 	}
-
-	public abstract InputStream loadSource(String name);
 
 	@Override
 	public TemplateDefinition loadMain(String name) {
-		try {
-			InputStream stream = loadSource(name);
-			return compileMain(name, stream);
-		} catch (IOException e) {
-			throw new TemplateGroupNotFoundException(name);
-		}
+		return main.loadMain(name);
 	}
 
 	@Override

@@ -25,6 +25,10 @@ public class TemplateGroup {
 		imports.add(definition);
 	}
 
+	public void addImports(List<TemplateDefinition> definitions) {
+		imports.addAll(definitions);
+	}
+
 	public List<TemplateDefinition> getImports() {
 		return imports;
 	}

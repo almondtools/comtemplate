@@ -8,12 +8,17 @@ public class UnsupportedLoader implements TemplateLoader {
 
 	@Override
 	public TemplateDefinition loadDefinition(String name) {
-		throw new UnsupportedOperationException("cannot import definitions, use a valid import resolver");
+		throw new UnsupportedOperationException("cannot load definitions, use a valid loader");
 	}
 
 	@Override
 	public TemplateGroup loadGroup(String name) {
-		throw new UnsupportedOperationException("cannot import group, use a valid import resolver");
+		throw new UnsupportedOperationException("cannot load group, use a valid loader");
+	}
+
+	@Override
+	public TemplateDefinition loadMain(String name) {
+		throw new UnsupportedOperationException("cannot load main, use a valid loader");
 	}
 
 }
