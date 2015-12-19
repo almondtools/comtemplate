@@ -3,6 +3,7 @@ package com.almondtools.comtemplate.engine.resolvers;
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.bool;
 import static com.almondtools.comtemplate.engine.resolvers.Normalizations.compact;
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,6 +46,11 @@ public class EmptyResolver extends FunctionResolver {
 		} else {
 			return bool(false);
 		}
+	}
+
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(TemplateImmediateExpression.class);
 	}
 
 }

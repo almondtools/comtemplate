@@ -30,6 +30,11 @@ public class FunctionResolverTest {
 			public TemplateImmediateExpression resolve(TemplateImmediateExpression base, List<TemplateImmediateExpression> arguments, Scope scope) {
 				return TRUE;
 			}
+			
+			@Override
+			public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+				return asList(TemplateImmediateExpression.class);
+			}
 
 		};
 	}

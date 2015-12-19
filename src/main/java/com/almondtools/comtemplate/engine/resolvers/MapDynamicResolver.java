@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
+import static java.util.Arrays.asList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,11 @@ public class MapDynamicResolver extends ExclusiveTypeResolver<ResolvedMapLiteral
 				.orElseGet(() ->  new ExpressionResolutionError(base, attribute, arguments, scope, this));
 		}
 		return new ExpressionResolutionError(base, attribute, arguments, scope, this);
+	}
+	
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(ResolvedMapLiteral.class);
 	}
 
 }

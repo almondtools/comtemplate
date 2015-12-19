@@ -1,6 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
 import static com.almondtools.comtemplate.engine.resolvers.Normalizations.compact;
+import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.MULTILINE;
 
 import java.util.ArrayList;
@@ -250,6 +251,11 @@ public class IndentResolver extends FunctionResolver {
 		} else {
 			return text;
 		}
+	}
+
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(TemplateImmediateExpression.class);
 	}
 
 }

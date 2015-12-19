@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
+import static java.util.Arrays.asList;
+
 import java.util.List;
 
 import com.almondtools.comtemplate.engine.Resolver;
@@ -24,4 +26,9 @@ public abstract class ExclusiveTypeResolver<T extends TemplateImmediateExpressio
 	}
 
 	public abstract TemplateImmediateExpression resolveTyped(T base, String function, List<TemplateImmediateExpression> arguments, Scope scope);
+	
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(clazz);
+	}
 }

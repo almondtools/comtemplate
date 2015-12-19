@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
+import static java.util.Arrays.asList;
+
 import java.math.BigInteger;
 import java.util.List;
 
@@ -34,4 +36,8 @@ public class ItemResolver extends FunctionResolver {
 		}
 	}
 
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(ResolvedListLiteral.class);
+	}
 }

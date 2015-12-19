@@ -38,8 +38,8 @@ public class ResolverRegistryTest {
 	@Test
 	public void testRegisterResolveExactMatch() throws Exception {
 		ResolverRegistry registry = new ResolverRegistry();
-		Resolver resolver = new TestResolver();
-		registry.register(StringLiteral.class, resolver);
+		Resolver resolver = new TestResolver(StringLiteral.class);
+		registry.register(resolver);
 		assertThat(registry.getResolverFor(string("abc")), sameInstance(resolver));
 	}
 
@@ -52,24 +52,24 @@ public class ResolverRegistryTest {
 	@Test
 	public void testRegisterResolveGeneralizedMatch() throws Exception {
 		ResolverRegistry registry = new ResolverRegistry();
-		Resolver resolver = new TestResolver();
-		registry.register(TemplateImmediateExpression.class, resolver);
+		Resolver resolver = new TestResolver(TemplateImmediateExpression.class);
+		registry.register(resolver);
 		assertThat(registry.getResolverFor(string("abc")), sameInstance(resolver));
 	}
 	
 	@Test
 	public void testRegisterResolveMultipleMatch() throws Exception {
 		ResolverRegistry registry = new ResolverRegistry();
-		registry.register(TemplateImmediateExpression.class, new TestResolver());
-		registry.register(StringLiteral.class, new TestResolver());
+		registry.register(new TestResolver(TemplateImmediateExpression.class));
+		registry.register(new TestResolver(StringLiteral.class));
 		assertThat(registry.getResolverFor(string("abc")), instanceOf(CompoundResolver.class));
 	}
 	
 	@Test
 	public void testRegisterResolveTwoRegisters() throws Exception {
 		ResolverRegistry registry = new ResolverRegistry();
-		registry.register(StringLiteral.class, new TestResolver());
-		registry.register(StringLiteral.class, new TestResolver());
+		registry.register(new TestResolver(StringLiteral.class));
+		registry.register(new TestResolver(StringLiteral.class));
 		assertThat(registry.getResolverFor(string("abc")), instanceOf(CompoundResolver.class));
 		CompoundResolver resolver = (CompoundResolver) registry.getResolverFor(string("abc"));
 		assertThat(resolver.getResolvers(), hasSize(2));
@@ -78,9 +78,9 @@ public class ResolverRegistryTest {
 	@Test
 	public void testRegisterResolveThreeRegisters() throws Exception {
 		ResolverRegistry registry = new ResolverRegistry();
-		registry.register(StringLiteral.class, new TestResolver());
-		registry.register(StringLiteral.class, new TestResolver());
-		registry.register(StringLiteral.class, new TestResolver());
+		registry.register(new TestResolver(StringLiteral.class));
+		registry.register(new TestResolver(StringLiteral.class));
+		registry.register(new TestResolver(StringLiteral.class));
 		assertThat(registry.getResolverFor(string("abc")), instanceOf(CompoundResolver.class));
 		CompoundResolver resolver = (CompoundResolver) registry.getResolverFor(string("abc"));
 		assertThat(resolver.getResolvers(), hasSize(3));

@@ -1,11 +1,18 @@
 package com.almondtools.comtemplate.engine;
 
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 
 public class TestResolver implements Resolver {
+
+	private Class<? extends TemplateImmediateExpression> clazz;
+
+	public TestResolver(Class<? extends TemplateImmediateExpression> clazz) {
+		this.clazz = clazz;
+	}
 
 	@Override
 	public TemplateImmediateExpression resolve(TemplateImmediateExpression base, String function, List<TemplateImmediateExpression> arguments, Scope scope) {
@@ -14,4 +21,8 @@ public class TestResolver implements Resolver {
 			.collect(joining(",","(",")")));
 	}
 
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(clazz);
+	}
 }

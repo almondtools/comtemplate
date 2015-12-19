@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
+import static java.util.Arrays.asList;
+
 import java.util.List;
 
 import com.almondtools.comtemplate.engine.Scope;
@@ -20,6 +22,11 @@ public class NotResolver extends FunctionResolver {
 		} else {
 			return new ExpressionResolutionError(base, "not", arguments, scope, this);
 		}
+	}
+	
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(BooleanLiteral.class);
 	}
 	
 }

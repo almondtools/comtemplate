@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
+import static java.util.Arrays.asList;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -34,6 +36,11 @@ public class BeanDynamicResolver extends ExclusiveTypeResolver<NativeObject> {
 
 	private String getterFor(String attribute) {
 		return "get" + Character.toUpperCase(attribute.charAt(0)) + attribute.substring(1);
+	}
+	
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(NativeObject.class);
 	}
 
 }

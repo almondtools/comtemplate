@@ -3,6 +3,7 @@ package com.almondtools.comtemplate.engine.resolvers;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static com.almondtools.comtemplate.engine.resolvers.Normalizations.compact;
 import static com.almondtools.util.stream.ByIndex.byIndex;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -74,6 +75,11 @@ public class TrimResolver extends FunctionResolver {
 		} else {
 			return base;
 		}
+	}
+
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(TemplateImmediateExpression.class);
 	}
 
 }

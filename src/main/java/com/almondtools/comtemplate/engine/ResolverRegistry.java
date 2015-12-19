@@ -3,12 +3,9 @@ package com.almondtools.comtemplate.engine;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 
-import com.almondtools.comtemplate.engine.expressions.BooleanLiteral;
-import com.almondtools.comtemplate.engine.expressions.NativeObject;
-import com.almondtools.comtemplate.engine.expressions.ResolvedListLiteral;
-import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 import com.almondtools.comtemplate.engine.resolvers.BasicResolver;
 import com.almondtools.comtemplate.engine.resolvers.BeanDynamicResolver;
 import com.almondtools.comtemplate.engine.resolvers.CompoundResolver;
@@ -28,19 +25,26 @@ public class ResolverRegistry {
 		resolvers = new HashMap<>();
 	}
 
-	public void register(Class<? extends TemplateImmediateExpression> clazz, Resolver functionResolver) {
+	private void register(Class<? extends TemplateImmediateExpression> clazz, Resolver functionResolver) {
 		Resolver resolver = resolvers.get(clazz);
 		if (resolver == null) {
 			resolvers.put(clazz, functionResolver);
 		} else if (resolver instanceof CompoundResolver) {
 			((CompoundResolver) resolver).add(functionResolver);
 		} else {
-			resolvers.put(clazz, new CompoundResolver(resolver, functionResolver));
+			resolvers.put(clazz, new CompoundResolver(clazz, resolver, functionResolver));
 		}
 	}
 
+	public void register(Resolver functionResolver) {
+		for (Class<? extends TemplateImmediateExpression> clazz : functionResolver.getResolvedClasses()) {
+			register(clazz, functionResolver);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	public Resolver getResolverFor(TemplateImmediateExpression expression) {
-		Class<?> clazz = expression.getClass();
+		Class<? extends TemplateImmediateExpression>  clazz = expression.getClass();
 		Set<Resolver> foundresolvers = new LinkedHashSet<>();
 		while (clazz != null) {
 			Resolver resolver = resolvers.get(clazz);
@@ -53,33 +57,38 @@ public class ResolverRegistry {
 					foundresolvers.add(resolver);
 				}
 			}
-			clazz = clazz.getSuperclass();
+		    Class<?> superclass = clazz.getSuperclass();
+			clazz = TemplateImmediateExpression.class.isAssignableFrom(superclass) ? (Class<? extends TemplateImmediateExpression>) superclass : null;
 		}
 		if (foundresolvers.isEmpty()) {
 			return Resolver.NULL;
 		} else if (foundresolvers.size() == 1) {
 			return foundresolvers.iterator().next();
 		} else {
-			return new CompoundResolver(foundresolvers.toArray(new Resolver[0]));
+			return new CompoundResolver(clazz, foundresolvers.toArray(new Resolver[0]));
 		}
 	}
 
 	public static ResolverRegistry defaultRegistry() {
 		ResolverRegistry registry = new ResolverRegistry();
 
-		registry.register(ResolvedMapLiteral.class, new MapDynamicResolver());
-		registry.register(NativeObject.class, new BeanDynamicResolver());
+		registry.register(new MapDynamicResolver());
+		registry.register(new BeanDynamicResolver());
 
-		registry.register(TemplateImmediateExpression.class, new BasicResolver());
-		registry.register(ResolvedListLiteral.class, new ListResolver());
-		registry.register(ResolvedMapLiteral.class, new MapResolver());
-		registry.register(BooleanLiteral.class, new NotResolver());
+		registry.register(new BasicResolver());
+		registry.register(new ListResolver());
+		registry.register(new MapResolver());
+		registry.register(new NotResolver());
 		
-		registry.register(ResolvedListLiteral.class, new SeparatedResolver());
-		registry.register(ResolvedListLiteral.class, new ItemResolver());
+		registry.register(new SeparatedResolver());
+		registry.register(new ItemResolver());
 
-		registry.register(TemplateImmediateExpression.class, new EqualsResolver());
+		registry.register(new EqualsResolver());
 
+		ServiceLoader<Resolver> resolverService = ServiceLoader.load(Resolver.class);
+		for (Resolver resolver : resolverService) {
+			registry.register(resolver);
+		}
 		return registry;
 	}
 

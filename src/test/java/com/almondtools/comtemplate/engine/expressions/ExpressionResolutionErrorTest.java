@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.almondtools.comtemplate.engine.Resolver;
 import com.almondtools.comtemplate.engine.Scope;
+import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.TestResolver;
 
 public class ExpressionResolutionErrorTest {
@@ -27,7 +28,7 @@ public class ExpressionResolutionErrorTest {
 
 	@Test
 	public void testGetMessageResolver() throws Exception {
-		Resolver resolver = new TestResolver();
+		Resolver resolver = new TestResolver(TemplateImmediateExpression.class);
 
 		ExpressionResolutionError error = new ExpressionResolutionError(string("base"), "function", asList(string("a"), string("b")), null, resolver);
 

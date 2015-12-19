@@ -1,14 +1,17 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
+import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
+
 
 
 public class BasicResolver extends CompoundResolver {
 
 	public BasicResolver() {
-		add(new TrimResolver());
-		add(new IndentResolver());
-		add(new CompressResolver());
-		add(new EmptyResolver());
+		super(TemplateImmediateExpression.class, 
+			new TrimResolver(),
+			new IndentResolver(),
+			new CompressResolver(),
+			new EmptyResolver());
 	}
 
 }

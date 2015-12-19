@@ -22,7 +22,7 @@ public class CompoundResolverTest {
 
 	@Before
 	public void before() throws Exception {
-		resolver = new CompoundResolver();
+		resolver = new CompoundResolver(TemplateImmediateExpression.class);
 	}
 
 	@Test

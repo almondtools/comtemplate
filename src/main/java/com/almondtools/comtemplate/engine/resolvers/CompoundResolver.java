@@ -13,9 +13,11 @@ import com.almondtools.comtemplate.engine.expressions.ResolutionErrors;
 
 public class CompoundResolver implements Resolver {
 
+	private Class<? extends TemplateImmediateExpression> clazz;
 	private List<Resolver> resolvers;
 
-	public CompoundResolver(Resolver... init) {
+	public CompoundResolver(Class<? extends TemplateImmediateExpression> clazz, Resolver... init) {
+		this.clazz = clazz;
 		this.resolvers = new ArrayList<>(asList(init));
 	}
 
@@ -40,6 +42,11 @@ public class CompoundResolver implements Resolver {
 			}
 		}
 		return new ResolutionErrors(errors);
+	}
+	
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(clazz);
 	}
 
 }

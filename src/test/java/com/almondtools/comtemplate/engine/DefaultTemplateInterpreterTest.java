@@ -205,7 +205,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalAttribute() throws Exception {
 		TemplateExpression base = map(var("key", string("value")));
-		when(resolvers.getResolverFor(any(ResolvedMapLiteral.class))).thenReturn(new TestResolver());
+		when(resolvers.getResolverFor(any(ResolvedMapLiteral.class))).thenReturn(new TestResolver(ResolvedMapLiteral.class));
 		TemplateImmediateExpression result = interpreter.visitEvalAttribute(new EvalAttribute(base, "attribute"), scope);
 
 		assertThat(result, equalTo(string("[key='value'].attribute()")));
@@ -216,7 +216,7 @@ public class DefaultTemplateInterpreterTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class, RETURNS_DEEP_STUBS);
 		when(scope.resolveVariable("var", definition)).thenReturn(TemplateVariable.var("var", string("key")));
 		TemplateExpression base = map(var("key", string("value")));
-		when(resolvers.getResolverFor(any(ResolvedMapLiteral.class))).thenReturn(new TestResolver());
+		when(resolvers.getResolverFor(any(ResolvedMapLiteral.class))).thenReturn(new TestResolver(ResolvedMapLiteral.class));
 		TemplateImmediateExpression result = interpreter.visitEvalVirtual(new EvalVirtual(base, new EvalVar("var", definition)), scope);
 
 		assertThat(result, equalTo(string("[key='value'].key()")));
@@ -225,7 +225,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalFunction() throws Exception {
 		TemplateExpression base = map(var("key", string("value")));
-		when(resolvers.getResolverFor(Mockito.any(ResolvedMapLiteral.class))).thenReturn(new TestResolver());
+		when(resolvers.getResolverFor(Mockito.any(ResolvedMapLiteral.class))).thenReturn(new TestResolver(ResolvedMapLiteral.class));
 		TemplateImmediateExpression result = interpreter.visitEvalFunction(new EvalFunction(base, "attribute", integer(1), integer(2)), scope);
 
 		assertThat(result, equalTo(string("[key='value'].attribute(1,2)")));

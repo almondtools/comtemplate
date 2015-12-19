@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class SeparatedResolver extends FunctionResolver {
 			return base;
 		}
 	}
-
+	
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(ResolvedListLiteral.class);
+	}
 	
 }

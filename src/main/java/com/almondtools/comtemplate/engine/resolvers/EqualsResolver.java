@@ -1,6 +1,7 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.bool;
+import static java.util.Arrays.asList;
 
 import java.util.List;
 
@@ -15,9 +16,13 @@ public class EqualsResolver extends FunctionResolver {
 
 	@Override
 	public TemplateImmediateExpression resolve(TemplateImmediateExpression base, List<TemplateImmediateExpression> arguments, Scope scope) {
-		String actual = base.getText();		
+		String actual = base.getText();
 		String expected = arguments.get(0).getText();
 		return bool(actual.equals(expected));
 	}
 
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(TemplateImmediateExpression.class);
+	}
 }

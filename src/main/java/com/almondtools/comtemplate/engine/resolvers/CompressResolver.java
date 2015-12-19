@@ -3,6 +3,7 @@ package com.almondtools.comtemplate.engine.resolvers;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static com.almondtools.util.stream.WithWindow.withWindow;
 import static java.lang.Character.isWhitespace;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -67,6 +68,11 @@ public class CompressResolver extends FunctionResolver {
 
 	private boolean endsWithWhitespace(String text) {
 		return isWhitespace(text.charAt(text.length() - 1));
+	}
+	
+	@Override
+	public List<Class<? extends TemplateImmediateExpression>> getResolvedClasses() {
+		return asList(TemplateImmediateExpression.class);
 	}
 
 }
