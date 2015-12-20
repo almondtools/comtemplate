@@ -18,6 +18,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalContextVar;
 import com.almondtools.comtemplate.engine.expressions.EvalFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
+import com.almondtools.comtemplate.engine.expressions.EvalTemplateMixed;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
@@ -39,7 +40,7 @@ public class VariableCollector implements TemplateExpressionVisitor<TemplateExpr
 	public VariableCollector() {
 		this.variables = new LinkedHashSet<String>();
 	}
-	
+
 	public Set<String> getVariables() {
 		return variables;
 	}
@@ -62,7 +63,8 @@ public class VariableCollector implements TemplateExpressionVisitor<TemplateExpr
 
 	@Override
 	public TemplateExpression visitEvalTemplate(EvalTemplate evalTemplate, Scope scope) {
-		evalTemplate.getArguments().stream().map(variable -> variable.getValue())
+		evalTemplate.getArguments().stream()
+			.map(variable -> variable.getValue())
 			.forEach(expression -> expression.apply(this, scope));
 		return evalTemplate;
 	}
@@ -72,6 +74,16 @@ public class VariableCollector implements TemplateExpressionVisitor<TemplateExpr
 		evalTemplateFunction.getArguments().stream()
 			.forEach(expression -> expression.apply(this, scope));
 		return evalTemplateFunction;
+	}
+
+	@Override
+	public TemplateExpression visitEvalTemplateMixed(EvalTemplateMixed evalTemplateMixed, Scope scope) {
+		evalTemplateMixed.getArguments().stream()
+			.forEach(expression -> expression.apply(this, scope));
+		evalTemplateMixed.getNamedArguments().stream()
+			.map(variable -> variable.getValue())
+			.forEach(expression -> expression.apply(this, scope));
+		return evalTemplateMixed;
 	}
 
 	@Override

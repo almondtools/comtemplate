@@ -44,6 +44,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalContextVar;
 import com.almondtools.comtemplate.engine.expressions.EvalFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
+import com.almondtools.comtemplate.engine.expressions.EvalTemplateMixed;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Exists;
@@ -75,6 +76,7 @@ import com.almondtools.comtemplate.parser.ComtemplateParser.ParameterContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ParametersContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.QualifiedNameContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.QualifiedWildcardContext;
+import com.almondtools.comtemplate.parser.ComtemplateParser.RefTemplateByMixedContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.RefTemplateByNameContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.RefTemplateBySequenceContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.RefTemplateEmptyContext;
@@ -400,6 +402,22 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 				.collect(toList()))
 			.orElse(emptyList());
 		return node(new EvalTemplateFunction(template, activeDefinition, templateItems));
+	}
+	
+	@Override
+	public TemplateGroupNode visitRefTemplateByMixed(RefTemplateByMixedContext ctx) {
+		String template = ctx.name.getText();
+		List<TemplateExpression> templateItems = opt(ctx.items())
+			.map(items -> items.item().stream()
+				.map(item -> visit(item).as(TemplateExpression.class))
+				.collect(toList()))
+			.orElse(emptyList());
+		List<TemplateVariable> templateAssignments = opt(ctx.attributes())
+			.map(attributes -> attributes.attribute().stream()
+				.map(attribute -> visit(attribute).as(TemplateVariable.class))
+				.collect(toList()))
+			.orElse(emptyList());
+		return node(new EvalTemplateMixed(template, activeDefinition, templateItems, templateAssignments));
 	}
 
 	@Override

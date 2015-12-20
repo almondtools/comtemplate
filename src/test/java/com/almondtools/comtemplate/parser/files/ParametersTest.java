@@ -44,4 +44,10 @@ public class ParametersTest extends TemplateTests {
 		assertThat(rendered, equalTo("  <html lang=\"en\">content</html>"));
 	}
 
+	@Test
+	public void testArgumentsByMixed() throws Exception {
+		String rendered = group.getDefinition("testByMixed").evaluate();
+		assertThat(rendered, equalTo("  <html lang=\"fr\">not available</html>"));
+	}
+	
 }

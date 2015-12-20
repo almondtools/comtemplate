@@ -29,6 +29,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalContextVar;
 import com.almondtools.comtemplate.engine.expressions.EvalFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
+import com.almondtools.comtemplate.engine.expressions.EvalTemplateMixed;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
@@ -123,6 +124,29 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 			.limit(arguments.size())
 			.map(byIndex(arguments.size()))
 			.map(item -> var(item.value.getName(), arguments.get(item.index)))
+			.collect(toList());
+		return template.evaluate(this, scope, assignedArguments);
+	}
+
+	@Override
+	public TemplateImmediateExpression visitEvalTemplateMixed(EvalTemplateMixed evalTemplateMixed, Scope scope) {
+		String name = evalTemplateMixed.getTemplate();
+		TemplateDefinition definition = evalTemplateMixed.getDefinition();
+		List<TemplateExpression> arguments = evalTemplateMixed.getArguments();
+		List<TemplateVariable> namedArguments = evalTemplateMixed.getNamedArguments();
+		TemplateDefinition template = templates.resolve(name);
+		if (template == null) {
+			template = scope.resolveTemplate(name, definition);
+		}
+		if (template == null) {
+			return new TemplateResolutionError(name, definition);
+		}
+		List<TemplateVariable> assignedArguments = Stream.concat(
+			template.getParameters().stream()
+				.limit(arguments.size())
+				.map(byIndex(arguments.size()))
+				.map(item -> var(item.value.getName(), arguments.get(item.index))),
+			namedArguments.stream())
 			.collect(toList());
 		return template.evaluate(this, scope, assignedArguments);
 	}

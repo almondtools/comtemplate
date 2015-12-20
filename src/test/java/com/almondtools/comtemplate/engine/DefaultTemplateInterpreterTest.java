@@ -44,6 +44,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalContextVar;
 import com.almondtools.comtemplate.engine.expressions.EvalFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
+import com.almondtools.comtemplate.engine.expressions.EvalTemplateMixed;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
@@ -195,6 +196,33 @@ public class DefaultTemplateInterpreterTest {
 	}
 
 	@Test
+	public void testVisitEvalTemplateMixedResolvedGlobally() throws Exception {
+		TemplateDefinition definition = mock(TemplateDefinition.class);
+		when(globals.resolve("template")).thenReturn(new TestTemplateDefinition("template", param("param"), param("named")));
+		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(2) }, var("named", integer(3))), scope);
+
+		assertThat(result, equalTo(string("test: param=2,named=3")));
+	}
+
+	@Test
+	public void testVisitEvalTemplateMixedResolvedInScope() throws Exception {
+		TemplateDefinition definition = mock(TemplateDefinition.class);
+		when(scope.resolveTemplate("template", definition)).thenReturn(new TestTemplateDefinition("template", param("param"), param("named")));
+		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(3) }, var("named", integer(4))), scope);
+
+		assertThat(result, equalTo(string("test: param=3,named=4")));
+	}
+
+	@Test
+	public void testVisitEvalTemplateMixedNotResolved() throws Exception {
+		TemplateDefinition definition = mock(TemplateDefinition.class);
+
+		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(4) }), scope);
+
+		assertThat(result, instanceOf(TemplateResolutionError.class));
+	}
+
+	@Test
 	public void testVisitEvalAnonymousTemplate() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		TemplateImmediateExpression result = interpreter.visitEvalAnonymousTemplate(new EvalAnonymousTemplate(definition, string("test:"), integer(33)), scope);
@@ -265,7 +293,7 @@ public class DefaultTemplateInterpreterTest {
 	public void testVisitExistsOnVariableResolutionError() throws Exception {
 		VariableResolutionError error = new VariableResolutionError(null, scope);
 		when(handler.handle(any(ErrorExpression.class))).thenReturn(error);
-		
+
 		TemplateImmediateExpression result = interpreter.visitExists(new Exists(error), scope);
 
 		assertThat(result, equalTo(FALSE));
@@ -275,7 +303,7 @@ public class DefaultTemplateInterpreterTest {
 	public void testVisitExistsOnExpressionResolutionError() throws Exception {
 		ExpressionResolutionError error = new ExpressionResolutionError(null, null, null, scope, null);
 		when(handler.handle(any(ErrorExpression.class))).thenReturn(error);
-		
+
 		TemplateImmediateExpression result = interpreter.visitExists(new Exists(error), scope);
 
 		assertThat(result, equalTo(FALSE));
@@ -315,22 +343,22 @@ public class DefaultTemplateInterpreterTest {
 	public void testVisitDefaultedOnVariableResolutionError() throws Exception {
 		VariableResolutionError error = new VariableResolutionError(null, scope);
 		when(handler.handle(any(ErrorExpression.class))).thenReturn(error);
-		
+
 		TemplateImmediateExpression result = interpreter.visitDefaulted(new Defaulted(error, string("default")), scope);
-		
+
 		assertThat(result, equalTo(string("default")));
 	}
-	
+
 	@Test
 	public void testVisitDefaultedOnExpressionResolutionError() throws Exception {
 		ExpressionResolutionError error = new ExpressionResolutionError(null, null, null, scope, null);
 		when(handler.handle(any(ErrorExpression.class))).thenReturn(error);
-		
+
 		TemplateImmediateExpression result = interpreter.visitDefaulted(new Defaulted(error, string("default")), scope);
-		
+
 		assertThat(result, equalTo(string("default")));
 	}
-	
+
 	@Test
 	public void testVisitDefaultedOnStaticUnresolved() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
@@ -492,14 +520,14 @@ public class DefaultTemplateInterpreterTest {
 
 	@Test
 	public void testVisitCastAcceptsObjectsWithType() throws Exception {
-		ResolvedMapLiteral map = new ResolvedMapLiteral(var("a", string("b")),var("_type", string("object")));
+		ResolvedMapLiteral map = new ResolvedMapLiteral(var("a", string("b")), var("_type", string("object")));
 		TemplateImmediateExpression result = interpreter.visitCast(new Cast(map, "object"), scope);
 		assertThat(result, sameInstance(map));
 	}
 
 	@Test
 	public void testVisitCastAcceptsObjectsWithSuperType() throws Exception {
-		ResolvedMapLiteral map = new ResolvedMapLiteral(var("a", string("b")),var("_supertypes", new ResolvedListLiteral(string("object"))));
+		ResolvedMapLiteral map = new ResolvedMapLiteral(var("a", string("b")), var("_supertypes", new ResolvedListLiteral(string("object"))));
 		TemplateImmediateExpression result = interpreter.visitCast(new Cast(map, "object"), scope);
 		assertThat(result, sameInstance(map));
 	}
