@@ -19,6 +19,12 @@ public class ForTest {
 	}
 	
 	@Test
+	public void testForInDefault() throws Exception {
+		String rendered = group.getDefinition("forInDefault").evaluate();
+		assertThat(rendered, equalTo("  :a:b"));
+	}
+	
+	@Test
 	public void testForInList() throws Exception {
 		String rendered = group.getDefinition("forInList").evaluate();
 		assertThat(rendered, equalTo("   1:1 2:2"));

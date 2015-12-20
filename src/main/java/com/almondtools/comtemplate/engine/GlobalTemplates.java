@@ -3,9 +3,12 @@ package com.almondtools.comtemplate.engine;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.almondtools.comtemplate.engine.templates.AllTemplate;
+import com.almondtools.comtemplate.engine.templates.AnyTemplate;
 import com.almondtools.comtemplate.engine.templates.ApplyTemplate;
 import com.almondtools.comtemplate.engine.templates.ForTemplate;
 import com.almondtools.comtemplate.engine.templates.IfTemplate;
+import com.almondtools.comtemplate.engine.templates.NotTemplate;
 
 public class GlobalTemplates {
 
@@ -43,6 +46,9 @@ public class GlobalTemplates {
 		templates.register(new IfTemplate());
 		templates.register(new ForTemplate());
 		templates.register(new ApplyTemplate());
+		templates.register(new NotTemplate());
+		templates.register(new AllTemplate());
+		templates.register(new AnyTemplate());
 		
 		return templates;
 	}

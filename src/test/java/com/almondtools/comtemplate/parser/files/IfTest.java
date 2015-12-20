@@ -1,6 +1,7 @@
 package com.almondtools.comtemplate.parser.files;
 
 import static com.almondtools.comtemplate.parser.files.TemplateTests.compileLibrary;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -28,6 +29,37 @@ public class IfTest {
 	public void testIfThen() throws Exception {
 		String rendered = group.getDefinition("ifThen").evaluate();
 		assertThat(rendered, equalTo("cond was true"));
+	}
+
+	@Test
+	public void testIfWithAny() throws Exception {
+		String rendered = group.getDefinition("ifWithAny").evaluate();
+		assertThat(rendered, equalTo("any(true,false)=true"));
+	}
+
+	@Test
+	public void testIfWithNotAny() throws Exception {
+		String rendered = group.getDefinition("ifWithNotAny").evaluate();
+		assertThat(rendered, equalTo("any(false,false)=false"));
+	}
+
+	@Test
+	public void testIfWithAll() throws Exception {
+		String rendered = group.getDefinition("ifWithAll").evaluate();
+		assertThat(rendered, equalTo("all(true,true)=true"));
+	}
+
+	@Test
+	public void testIfWithNotAll() throws Exception {
+		String rendered = group.getDefinition("ifWithNotAll").evaluate();
+		assertThat(rendered, equalTo("all(true,false)=false"));
+	}
+
+	@Test
+	public void testIfWithNot() throws Exception {
+		String rendered = group.getDefinition("ifWithNot").evaluate();
+		assertThat(rendered, containsString("not(true)=false"));
+		assertThat(rendered, containsString("not(false)=true"));
 	}
 
 }
