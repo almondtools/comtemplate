@@ -33,17 +33,18 @@ public class IfTemplate extends TemplateDefinition {
 
 	@Override
 	public TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments) {
-		TemplateVariable cond = findVariable(COND, arguments)
+		List<TemplateVariable> variables = createVariables(arguments);
+		TemplateVariable cond = findVariable(COND, variables)
 			.orElseThrow(() -> new ArgumentRequiredException(COND));
 		TemplateImmediateExpression evaluated = cond.getValue().apply(interpreter, parent);
 		Boolean value = evaluated.as(Boolean.class);
 		if (value == null) {
 			return new UnexpectedTypeError("boolean", evaluated);
 		}
-		Scope scope = new Scope(parent, this, arguments);
+		Scope scope = new Scope(parent, this, variables);
 		return CONDITIONS.stream()
 			.filter(condition -> condition.getValue().equals(value))
-			.map(block -> findVariable(block.getKey(), arguments).orElseThrow(() -> new ArgumentRequiredException(block.getKey())))
+			.map(block -> findVariable(block.getKey(), variables).orElseThrow(() -> new ArgumentRequiredException(block.getKey())))
 			.map(variable -> variable.getValue().apply(interpreter, scope))
 			.findFirst()
 			.get();

@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.engine.resolvers;
 
+import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -15,6 +16,8 @@ import com.almondtools.comtemplate.engine.expressions.BooleanLiteral;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.NativeObject;
 import com.almondtools.comtemplate.engine.expressions.RawText;
+import com.almondtools.comtemplate.engine.expressions.ResolvedListLiteral;
+import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 
 public class EmptyResolverTest {
 
@@ -65,6 +68,22 @@ public class EmptyResolverTest {
 		assertThat(resolver.resolve(new NativeObject(new Object()), emptyList(), scope).as(Boolean.class), is(false));
 	}
 
+	@Test
+	public void testResolveListLiteral() throws Exception {
+		Scope scope = mock(Scope.class);
+
+		assertThat(resolver.resolve(new ResolvedListLiteral(string("str")), emptyList(), scope).as(Boolean.class), is(false));
+		assertThat(resolver.resolve(new ResolvedListLiteral(), emptyList(), scope).as(Boolean.class), is(true));
+	}
+
+	@Test
+	public void testResolvemapLiteral() throws Exception {
+		Scope scope = mock(Scope.class);
+		
+		assertThat(resolver.resolve(new ResolvedMapLiteral(var("str", string("str"))), emptyList(), scope).as(Boolean.class), is(false));
+		assertThat(resolver.resolve(new ResolvedMapLiteral(), emptyList(), scope).as(Boolean.class), is(true));
+	}
+	
 	@Test
 	public void testResolveOther() throws Exception {
 		Scope scope = mock(Scope.class);

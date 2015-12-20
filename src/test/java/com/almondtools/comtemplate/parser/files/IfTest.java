@@ -24,4 +24,10 @@ public class IfTest {
 		assertThat(rendered, equalTo("cond was false"));
 	}
 
+	@Test
+	public void testIfThen() throws Exception {
+		String rendered = group.getDefinition("ifThen").evaluate();
+		assertThat(rendered, equalTo("cond was true"));
+	}
+
 }

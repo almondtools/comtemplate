@@ -7,12 +7,15 @@ import static java.util.Arrays.asList;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.NativeObject;
 import com.almondtools.comtemplate.engine.expressions.RawText;
+import com.almondtools.comtemplate.engine.expressions.ResolvedListLiteral;
+import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 
 public class EmptyResolver extends FunctionResolver {
@@ -43,6 +46,12 @@ public class EmptyResolver extends FunctionResolver {
 			} else {
 				return bool(false);
 			}
+		} else if (base instanceof ResolvedListLiteral) {
+			List<TemplateImmediateExpression> list = ((ResolvedListLiteral) base).getList();
+			return bool(list.isEmpty());
+		} else if (base instanceof ResolvedMapLiteral) {
+			Map<String, TemplateImmediateExpression> map = ((ResolvedMapLiteral) base).getMap();
+			return bool(map.isEmpty());
 		} else {
 			return bool(false);
 		}
