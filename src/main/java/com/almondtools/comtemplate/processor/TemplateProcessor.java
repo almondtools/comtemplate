@@ -114,7 +114,7 @@ public class TemplateProcessor {
 			.filter(path -> Files.isRegularFile(path))
 			.map(path -> source.relativize(path))
 			.map(path -> path.toString())
-			.filter(path -> path.endsWith(".ctp"))
+			.filter(path -> path.endsWith(".ctp") && !path.startsWith("_"))
 			.map(path -> path.substring(0, path.length() - 4))
 			.collect(toList());
 		for (String templateName : templateNames) {
