@@ -17,7 +17,7 @@ public class CurrentPathTemplateLoader extends AbstractTemplateLoader implements
 	@Override
 	public InputStream loadSource(String name) {
 		try {
-			return Files.newInputStream(Paths.get(pathOf(name) + ".ctp"));
+			return Files.newInputStream(Paths.get(pathOf(name)));
 		} catch (IOException e) {
 			return null;
 		}

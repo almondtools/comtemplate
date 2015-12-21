@@ -403,7 +403,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 			.orElse(emptyList());
 		return node(new EvalTemplateFunction(template, activeDefinition, templateItems));
 	}
-	
+
 	@Override
 	public TemplateGroupNode visitRefTemplateByMixed(RefTemplateByMixedContext ctx) {
 		String template = ctx.name.getText();

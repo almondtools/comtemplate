@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.almondtools.comtemplate.engine.ClassPathTemplateLoader;
+import com.almondtools.comtemplate.engine.ConfigurableTemplateLoader;
 import com.almondtools.comtemplate.engine.TemplateGroup;
 import com.almondtools.comtemplate.engine.TemplateLoader;
 
@@ -17,20 +17,22 @@ public class CyclicImportsTest extends TemplateTests {
 
 	@Before
 	public void before() throws Exception {
-		loader = new ClassPathTemplateLoader().addClassPath("src/test/resources");
+		loader = new ConfigurableTemplateLoader()
+			.withClasspath(true)
+			.forPaths("src/test/resources");
 		group = loader.loadGroup("cyclicimports");
 	}
-	
+
 	@Test
 	public void testAdd() throws Exception {
 		String rendered = group.getDefinition("testadd").evaluate();
 		assertThat(rendered, equalTo("3 = 1 + 2"));
 	}
-	
+
 	@Test
 	public void testMul() throws Exception {
 		String rendered = group.getDefinition("testmul").evaluate();
 		assertThat(rendered, equalTo("2 = 1 * 2"));
 	}
-	
+
 }

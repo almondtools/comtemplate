@@ -44,7 +44,7 @@ public class TemplateGroup {
 			.orElseGet(() -> imports.stream()
 				.filter(def -> template.equals(def.getName()))
 				.findFirst()
-				.orElse(null));
+				.orElseThrow(() -> new TemplateDefinitionNotFoundException(name, template)));
 	}
 
 	public TemplateVariable resolveVariable(String variable) {

@@ -47,8 +47,8 @@ public class TemplateProcessorTest {
 
 	public Properties createProperties() {
 		Properties properties = new Properties();
-		properties.setProperty("library", "src/test/resources/processorlib");
-		properties.setProperty("imports", "html");
+		properties.setProperty("classpath", "true");
+		properties.setProperty("libraries", "src/test/resources/processorlib");
 		return properties;
 	}
 

@@ -9,9 +9,14 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class TemplateGroupTest {
+
+	@Rule
+	public ExpectedException expected = ExpectedException.none();
 
 	@Test
 	public void testGetName() throws Exception {
@@ -55,7 +60,9 @@ public class TemplateGroupTest {
 	@Test
 	public void testGetDefinitionNotFound() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
-		assertThat(group.getDefinition("template"), nullValue());
+		expected.expect(TemplateDefinitionNotFoundException.class);
+
+		group.getDefinition("template");
 	}
 
 	@Test

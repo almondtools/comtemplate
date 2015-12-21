@@ -22,7 +22,7 @@ public class BasePathTemplateLoader extends AbstractTemplateLoader implements Te
 	@Override
 	public InputStream loadSource(String name) {
 		try {
-			return Files.newInputStream(base.resolve(pathOf(name) + ".ctp"));
+			return Files.newInputStream(base.resolve(pathOf(name)));
 		} catch (IOException e) {
 			return null;
 		}

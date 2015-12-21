@@ -85,6 +85,7 @@
 			<groupId>com.github.almondtools</groupId>
 			<artifactId>picklock</artifactId>
 			<version>0.2.6</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
