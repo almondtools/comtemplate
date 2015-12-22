@@ -1,14 +1,10 @@
 package com.almondtools.comtemplate.engine;
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public abstract class AbstractTemplateLoader implements TemplateLoader {
 
@@ -52,26 +48,6 @@ public abstract class AbstractTemplateLoader implements TemplateLoader {
 	}
 
 	public abstract InputStream loadSource(String name);
-
-	@Override
-	public TemplateDefinition loadMain(String name) {
-		try {
-			InputStream stream = loadSource(name);
-			TemplateDefinition main = compileMain(name, stream);
-			InputStream groupStream = loadSource("_group");
-			if (groupStream != null) {
-				TemplateGroup group = compile("", groupStream);
-				List<TemplateDefinition> imports = Stream.concat(
-					group.getDefinitions().stream(), 
-					group.getImports().stream())
-					.collect(toList());
-				main.getGroup().addImports(imports);
-			}
-			return main;
-		} catch (IOException e) {
-			throw new TemplateGroupNotFoundException(name);
-		}
-	}
 
 	@Override
 	public TemplateDefinition loadDefinition(String name) {

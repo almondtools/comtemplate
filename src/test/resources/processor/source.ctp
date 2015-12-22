@@ -1,3 +1,6 @@
+import html.*
+
+main() ::= {
 `html(content={
   `head(content={
   })`
@@ -6,3 +9,4 @@
     `p(content={Some Text})`
   })`
 })`
+}

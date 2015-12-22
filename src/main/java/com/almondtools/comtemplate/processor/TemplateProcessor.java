@@ -119,7 +119,7 @@ public class TemplateProcessor {
 			.collect(toList());
 		for (String templateName : templateNames) {
 			Path targetPath = target.resolve(templateName + extension);
-			TemplateDefinition main = loader.loadMain(templateName);
+			TemplateDefinition main = loader.loadDefinition(templateName + ".main");
 			Files.createDirectories(targetPath.getParent());
 			String evaluate = main.evaluate();
 			Files.write(targetPath, evaluate.getBytes());

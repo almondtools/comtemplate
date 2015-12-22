@@ -16,9 +16,4 @@ public class UnsupportedLoader implements TemplateLoader {
 		throw new UnsupportedOperationException("cannot load group, use a valid loader");
 	}
 
-	@Override
-	public TemplateDefinition loadMain(String name) {
-		throw new UnsupportedOperationException("cannot load main, use a valid loader");
-	}
-
 }
