@@ -63,10 +63,16 @@ public class CompressResolver extends FunctionResolver {
 	}
 
 	private boolean startsWithWhitespace(String text) {
+		if (text == null || text.isEmpty()) {
+			return false;
+		}
 		return isWhitespace(text.charAt(0));
 	}
 
 	private boolean endsWithWhitespace(String text) {
+		if (text == null || text.isEmpty()) {
+			return false;
+		}
 		return isWhitespace(text.charAt(text.length() - 1));
 	}
 	

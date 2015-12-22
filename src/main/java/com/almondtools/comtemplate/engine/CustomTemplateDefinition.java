@@ -32,4 +32,5 @@ public class CustomTemplateDefinition extends TemplateDefinition {
 			.collect(Evaluated.assembling());
 	}
 
+
 }

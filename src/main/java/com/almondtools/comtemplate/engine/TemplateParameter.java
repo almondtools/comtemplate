@@ -112,7 +112,7 @@ public class TemplateParameter {
 
 	@Override
 	public String toString() {
-		return name + "=>" + defaultValue.toString();
+		return name + (defaultValue != null ? "=>" + defaultValue.toString() : "");
 	}
 
 }

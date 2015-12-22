@@ -83,8 +83,18 @@ public class Scope {
 		return group.getDefinition(template);
 	}
 
+	public TemplateDefinition resolveValue(TemplateDefinition definition, String template) {
+		TemplateGroup group = definition.getGroup();
+		if (group == null) {
+			return null;
+		}
+		return group.getDefinition(template);
+	}
+
 	public TemplateDefinition resolveTemplate(String template, TemplateDefinition definition) {
-		if (this.definition == definition) {
+		if (definition instanceof ValueDefinition) {
+			return resolveValue(definition, template);
+		} else if (this.definition == definition) {
 			return resolveTemplate(template);
 		} else if (parent == null) {
 			return null;

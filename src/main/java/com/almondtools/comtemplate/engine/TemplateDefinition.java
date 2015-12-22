@@ -5,6 +5,7 @@ import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.Expressions.fromNative;
 import static com.almondtools.util.stream.ByIndex.byIndex;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -87,6 +88,13 @@ public abstract class TemplateDefinition {
 		return arguments.stream()
 			.filter(variable -> name.equals(variable.getName()))
 			.findFirst();
+	}
+
+	@Override
+	public String toString() {
+		return name + parameters.stream()
+			.map(param -> param.toString())
+			.collect(joining(", ", "(", ")"));
 	}
 
 }

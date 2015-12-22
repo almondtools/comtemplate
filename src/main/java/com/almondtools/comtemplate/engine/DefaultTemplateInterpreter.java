@@ -221,6 +221,8 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 			.collect(toList());
 		boolean isMap = evaluated.stream()
 			.allMatch(expression -> expression instanceof ResolvedMapLiteral);
+		boolean isList = evaluated.stream()
+			.anyMatch(expression -> expression instanceof ResolvedListLiteral);
 		List<TemplateImmediateExpression> allSuperTypes = evaluated.stream()
 			.filter(expression -> expression instanceof ResolvedMapLiteral)
 			.map(expression -> (ResolvedMapLiteral) expression)
@@ -237,7 +239,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 				map.put(SUPERTYPE, new ResolvedListLiteral(allSuperTypes));
 			}
 			return new ResolvedMapLiteral(map);
-		} else {
+		} else if (isList) {
 			List<TemplateImmediateExpression> list = evaluated.stream()
 				.flatMap(element -> {
 					if (element instanceof ResolvedListLiteral) {
@@ -248,6 +250,8 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 				})
 				.collect(toList());
 			return new ResolvedListLiteral(list);
+		} else {
+			return new Evaluated(evaluated);
 		}
 	}
 

@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import com.almondtools.comtemplate.engine.ComtemplateException;
 import com.almondtools.comtemplate.engine.ConfigurableTemplateLoader;
 import com.almondtools.comtemplate.engine.TemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateLoader;
@@ -42,7 +43,7 @@ public class TemplateProcessor {
 	private TemplateLoader loaderFor(Path source, Properties properties) {
 		List<Path> paths = libraries(properties);
 		boolean useClassPath = useClasspath(properties);
-		
+
 		return new ConfigurableTemplateLoader()
 			.withSource(source)
 			.withClasspath(useClassPath)
@@ -118,11 +119,15 @@ public class TemplateProcessor {
 			.map(path -> path.substring(0, path.length() - 4))
 			.collect(toList());
 		for (String templateName : templateNames) {
-			Path targetPath = target.resolve(templateName + extension);
-			TemplateDefinition main = loader.loadDefinition(templateName + ".main");
-			Files.createDirectories(targetPath.getParent());
-			String evaluate = main.evaluate();
-			Files.write(targetPath, evaluate.getBytes());
+			try {
+				Path targetPath = target.resolve(templateName + extension);
+				TemplateDefinition main = loader.loadDefinition(templateName + ".main");
+				Files.createDirectories(targetPath.getParent());
+				String evaluate = main.evaluate();
+				Files.write(targetPath, evaluate.getBytes());
+			} catch (ComtemplateException e) {
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 

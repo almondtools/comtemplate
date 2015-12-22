@@ -371,6 +371,20 @@ public class DefaultTemplateInterpreterTest {
 	public void testVisitConcatElements() throws Exception {
 		TemplateImmediateExpression result = interpreter.visitConcat(new Concat(string("1"), string("2")), scope);
 
+		assertThat(result.getText(), equalTo("12"));
+	}
+
+	@Test
+	public void testVisitConcatListAndElement() throws Exception {
+		TemplateImmediateExpression result = interpreter.visitConcat(new Concat(list(string("1")), string("2")), scope);
+
+		assertThat(result, equalTo(new ResolvedListLiteral(string("1"), string("2"))));
+	}
+
+	@Test
+	public void testVisitConcatElementAndList() throws Exception {
+		TemplateImmediateExpression result = interpreter.visitConcat(new Concat(string("1"), list(string("2"))), scope);
+
 		assertThat(result, equalTo(new ResolvedListLiteral(string("1"), string("2"))));
 	}
 
