@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.processor;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
 
 import java.io.FileNotFoundException;
@@ -128,6 +129,17 @@ public class TemplateProcessor {
 			} catch (ComtemplateException e) {
 				System.err.println(e.getMessage());
 			}
+		}
+		List<Path> otherfiles = Files.walk(source)
+			.filter(path -> Files.isRegularFile(path))
+			.map(path -> source.relativize(path))
+			.filter(path -> !path.toString().endsWith(".ctp"))
+			.collect(toList());
+		for (Path file : otherfiles) {
+			Path sourcePath = source.resolve(file);
+			Path targetPath = target.resolve(file);
+			Files.createDirectories(targetPath.getParent());
+			Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
 		}
 	}
 
