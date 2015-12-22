@@ -28,7 +28,7 @@ public final class Normalizations {
 					lastText = null;
 				}
 				if (expression instanceof Evaluated) {
-					compact.add(new Evaluated(new Evaluated(compact(((Evaluated) expression).getEvaluated()))));
+					compact.add(new Evaluated(compact(((Evaluated) expression).getEvaluated())));
 				} else {
 					compact.add(expression);
 				}

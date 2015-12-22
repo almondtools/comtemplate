@@ -115,6 +115,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	private String name;
 	private ParserRuleContext root;
 	private TemplateLoader loader;
+	private String tab;
 
 	private TemplateGroup activeGroup;
 	private TemplateDefinition activeDefinition;
@@ -122,6 +123,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupBuilder(String name, TemplateLoader loader) throws IOException {
 		this.name = name;
 		this.loader = loader;
+		this.tab = "    ";
 	}
 
 	public String getName() {
@@ -350,7 +352,9 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitTextWhitespace(TextWhitespaceContext ctx) {
-		return node(new RawText(ctx.getText()));
+		String text = ctx.getText()
+			.replace("\t", tab);
+		return node(new RawText(text));
 	}
 
 	@Override
@@ -588,7 +592,8 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitInlineText(InlineTextContext ctx) {
 		String unescaped = ctx.getText().chars()
 			.collect(() -> new Unescaper(ESCAPE_MAPPING_RAWTEXT), (u, c) -> u.consume((char) c), Unescaper::join)
-			.toString();
+			.toString()
+			.replace("\t", tab);
 		return node(new RawText(unescaped));
 	}
 
