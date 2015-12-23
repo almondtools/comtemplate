@@ -4,6 +4,8 @@ import static com.almondtools.comtemplate.engine.expressions.StringLiteral.strin
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class TestTemplateDefinition extends TemplateDefinition {
 
@@ -17,9 +19,18 @@ public class TestTemplateDefinition extends TemplateDefinition {
 
 	@Override
 	public TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments) {
-		return string("test: " + arguments.stream()
-			.map(TemplateVariable::toString)
-			.collect(joining(",")));
+		if (arguments.isEmpty()) {
+			return string("test: " + Optional.ofNullable(parent)
+				.map(mapper -> mapper.getVariables())
+				.map(var -> var.stream())
+				.orElse(Stream.empty())
+				.map(TemplateVariable::toString)
+				.collect(joining(",")));
+		} else {
+			return string("test: " + arguments.stream()
+				.map(TemplateVariable::toString)
+				.collect(joining(",")));
+		}
 	}
 
 }

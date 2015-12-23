@@ -47,7 +47,7 @@ public class ApplyTemplateTest {
 		
 		String result = template.evaluate(interpreter, scope, asList(var("name", string("template")))).getText();
 		
-		assertThat(result, equalTo("test: "));
+		assertThat(result, equalTo("test: name='template'"));
 	}
 
 	@Test

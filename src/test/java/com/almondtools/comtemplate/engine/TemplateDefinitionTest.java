@@ -9,7 +9,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -58,7 +57,11 @@ public class TemplateDefinitionTest {
 
 	@Test
 	public void testEvaluateWithScope() throws Exception {
-		fail();
+		TestTemplateDefinition def = new TestTemplateDefinition("name", "a", param("b", integer(2)));
+
+		String evaluated = def.evaluate(new Scope(def, var("a", integer(1))));
+
+		assertThat(evaluated, equalTo("test: a=1"));
 	}
 
 	@Test

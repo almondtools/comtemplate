@@ -49,7 +49,7 @@ public class TemplateGroupBuilderTest {
 	@Test
 	public void testTemplateGroupBuilderStringInputStreamWithErrors() throws Exception {
 		thrown.expect(matchesException(TemplateGroupException.class)
-			.withMessage(containsString("template group 'name'")));
+			.withMessage(containsString("parsing template group <name> failed")));
 		
 		InputStream stream = new ByteArrayInputStream("broken template ::= {}".getBytes());
 		builder = TemplateGroupBuilder.library("name", stream);
@@ -67,10 +67,10 @@ public class TemplateGroupBuilderTest {
 
 	@Test
 	public void testTemplateGroupBuilderStringStringWithErrors() throws Exception {
-		thrown.expect(matchesException(TemplateGroupException.class)
-			.withMessage(both(containsString("name.ctp")).and(containsString("template group 'name'"))));
-		
 		Path file = Paths.get(folder.getRoot().getPath()).resolve("name.ctp");
+		thrown.expect(matchesException(TemplateGroupException.class)
+			.withMessage(both(containsString("name.ctp")).and(containsString("parsing template group <name> in file '" + file.toString() + "' failed"))));
+		
 		Files.write(file, "broken template ::= {}".getBytes());
 		builder = TemplateGroupBuilder.library("name", file.toString());
 		
