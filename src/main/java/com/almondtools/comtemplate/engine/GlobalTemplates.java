@@ -2,6 +2,7 @@ package com.almondtools.comtemplate.engine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import com.almondtools.comtemplate.engine.templates.AllTemplate;
 import com.almondtools.comtemplate.engine.templates.AnyTemplate;
@@ -50,6 +51,10 @@ public class GlobalTemplates {
 		templates.register(new AllTemplate());
 		templates.register(new AnyTemplate());
 		
+		ServiceLoader<TemplateDefinition> definitionService = ServiceLoader.load(TemplateDefinition.class);
+		for (TemplateDefinition definition : definitionService) {
+			templates.register(definition);
+		}
 		return templates;
 	}
 

@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.processor;
 
+import static com.almondtools.comtemplate.engine.TemplateVariable.var;
+import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
 
@@ -15,10 +17,14 @@ import java.util.stream.Stream;
 
 import com.almondtools.comtemplate.engine.ComtemplateException;
 import com.almondtools.comtemplate.engine.ConfigurableTemplateLoader;
+import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateLoader;
 
 public class TemplateProcessor {
+
+	public static final String SOURCE = "source";
+	public static final String TARGET = "target";
 
 	private static final String LIBRARIES = "libraries";
 	private static final String CLASSPATH = "classpath";
@@ -33,7 +39,7 @@ public class TemplateProcessor {
 	public TemplateProcessor(String source, String target, Properties properties) throws IOException {
 		this.source = validPath(source);
 		this.target = validTargetPath(target);
-		this.loader = loaderFor(this.source, properties);
+		this.loader = loaderFor(this.source, this.target, properties);
 		this.extension = extensionFrom(properties);
 	}
 
@@ -41,7 +47,7 @@ public class TemplateProcessor {
 		return properties.getProperty(EXTENSION, ".html");
 	}
 
-	private TemplateLoader loaderFor(Path source, Properties properties) {
+	private TemplateLoader loaderFor(Path source, Path target, Properties properties) {
 		List<Path> paths = libraries(properties);
 		boolean useClassPath = useClasspath(properties);
 
@@ -115,8 +121,8 @@ public class TemplateProcessor {
 		List<String> templateNames = Files.walk(source)
 			.filter(path -> Files.isRegularFile(path))
 			.map(path -> source.relativize(path))
+			.filter(path -> path.getFileName().toString().endsWith(".ctp") && !path.getFileName().toString().startsWith("_"))
 			.map(path -> path.toString())
-			.filter(path -> path.endsWith(".ctp") && !path.startsWith("_"))
 			.map(path -> path.substring(0, path.length() - 4))
 			.collect(toList());
 		for (String templateName : templateNames) {
@@ -124,7 +130,8 @@ public class TemplateProcessor {
 				Path targetPath = target.resolve(templateName + extension);
 				TemplateDefinition main = loader.loadDefinition(templateName + ".main");
 				Files.createDirectories(targetPath.getParent());
-				String evaluate = main.evaluate();
+				Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
+				String evaluate = main.evaluate(globalScope);
 				Files.write(targetPath, evaluate.getBytes());
 			} catch (ComtemplateException e) {
 				System.err.println(e.getMessage());

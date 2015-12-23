@@ -32,6 +32,7 @@ import com.almondtools.comtemplate.engine.TemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateExpression;
 import com.almondtools.comtemplate.engine.TemplateGroup;
 import com.almondtools.comtemplate.engine.TemplateGroupException;
+import com.almondtools.comtemplate.engine.TemplateGroupNotFoundException;
 import com.almondtools.comtemplate.engine.TemplateLoader;
 import com.almondtools.comtemplate.engine.TemplateParameter;
 import com.almondtools.comtemplate.engine.TemplateVariable;
@@ -217,18 +218,28 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitImportrule(ImportruleContext ctx) {
-		String definitionName = ctx.qualifiedName().getText();
-		TemplateDefinition definition = loader.loadDefinition(definitionName);
-		activeGroup.addImport(definition);
-		return node(definition);
+		try {
+			String definitionName = ctx.qualifiedName().getText();
+			TemplateDefinition definition = loader.loadDefinition(definitionName);
+			activeGroup.addImport(definition);
+			return node(definition);
+		} catch (TemplateGroupNotFoundException e) {
+			e.setFileName(name);
+			throw e;
+		}
 	}
 
 	@Override
 	public TemplateGroupNode visitImportpackage(ImportpackageContext ctx) {
-		String groupName = ctx.qualifiedWildcard().qualifiedName().getText();
-		TemplateGroup group = loader.loadGroup(groupName);
-		activeGroup.addImports(group.getDefinitions());
-		return node(group);
+		try {
+			String groupName = ctx.qualifiedWildcard().qualifiedName().getText();
+			TemplateGroup group = loader.loadGroup(groupName);
+			activeGroup.addImports(group.getDefinitions());
+			return node(group);
+		} catch (TemplateGroupNotFoundException e) {
+			e.setFileName(name);
+			throw e;
+		}
 	}
 
 	@Override

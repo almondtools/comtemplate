@@ -5,6 +5,7 @@ import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.Expressions.fromNative;
 import static com.almondtools.util.stream.ByIndex.byIndex;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -73,6 +74,10 @@ public abstract class TemplateDefinition {
 
 	public String evaluate(List<TemplateVariable> arguments) {
 		return evaluate(new DefaultTemplateInterpreter(), null, arguments).getText();
+	}
+
+	public String evaluate(Scope scope) {
+		return evaluate(new DefaultTemplateInterpreter(), scope, emptyList()).getText();
 	}
 
 	public abstract TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments);

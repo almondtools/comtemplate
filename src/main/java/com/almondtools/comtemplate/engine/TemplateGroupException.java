@@ -15,25 +15,20 @@ public class TemplateGroupException extends ComtemplateException {
 		this.messages = messages;
 	}
 
-	public TemplateGroupException(String name, String fileName, List<String> messages) {
-		this.name = name;
-		this.fileName = fileName;
-		this.messages = messages;
-	}
-	
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
 
 	@Override
 	public String getMessage() {
-		if (fileName != null) {
-			return "parsing template group '" + name + "' in file '" + fileName + "' failed:\n"
-				+ messages.stream().collect(joining("\n- ", "- ", ""));
-		} else {
-			return "parsing template group '" + name + "' failed:\n"
-				+ messages.stream().collect(joining("\n- ", "- ", ""));
-		}
+		return "parsing template group <" + name + ">" + getContext() + " failed:\n"
+			+ messages.stream().collect(joining("\n- ", "- ", ""));
+	}
+
+	private String getContext() {
+		return fileName != null 
+			? " in file '" + fileName + "'"
+			: "";
 	}
 
 }
