@@ -35,4 +35,16 @@ public class RuleImportsTest extends TemplateTests {
 		assertThat(rendered, equalTo("braces: {content}"));
 	}
 
+	@Test
+	public void testLocalImport() throws Exception {
+		String rendered = group.getDefinition("testlocal1").evaluate();
+		assertThat(rendered, equalTo("local1"));
+	}
+
+	@Test
+	public void testNotLocalImport() throws Exception {
+		String rendered = group.getDefinition("testlocal2").evaluate();
+		assertThat(rendered, equalTo(""));
+	}
+
 }

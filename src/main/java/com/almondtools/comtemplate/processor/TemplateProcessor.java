@@ -5,6 +5,7 @@ import static com.almondtools.comtemplate.engine.expressions.StringLiteral.strin
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -118,16 +119,16 @@ public class TemplateProcessor {
 	}
 
 	public void run() throws IOException {
-		List<String> templateNames = Files.walk(source)
+		List<String> templateFileNames = Files.walk(source)
 			.filter(path -> Files.isRegularFile(path))
 			.map(path -> source.relativize(path))
 			.filter(path -> path.getFileName().toString().endsWith(".ctp") && !path.getFileName().toString().startsWith("_"))
 			.map(path -> path.toString())
-			.map(path -> path.substring(0, path.length() - 4))
 			.collect(toList());
-		for (String templateName : templateNames) {
+		for (String templateFileName : templateFileNames) {
 			try {
-				Path targetPath = target.resolve(templateName + extension);
+				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar,'.');
+				Path targetPath = target.resolve(templateFileName + extension);
 				TemplateDefinition main = loader.loadDefinition(templateName + ".main");
 				Files.createDirectories(targetPath.getParent());
 				Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));

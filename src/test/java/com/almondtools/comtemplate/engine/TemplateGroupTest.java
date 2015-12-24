@@ -113,4 +113,16 @@ public class TemplateGroupTest {
 		assertThat(object.getParameters(), contains(param("c"), param("d")));
 	}
 
+	@Test
+	public void testRelativeReference() throws Exception {
+		TemplateGroup group = new TemplateGroup("path.group");
+		assertThat(group.relativeReference("other"), equalTo("path.other"));
+	}
+
+	@Test
+	public void testRelativeReferenceWithoutPath() throws Exception {
+		TemplateGroup group = new TemplateGroup("group");
+		assertThat(group.relativeReference("other"), equalTo("other"));
+	}
+	
 }

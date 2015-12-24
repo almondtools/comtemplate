@@ -18,8 +18,8 @@ imports
 	;
 
 importctp
-	: Import qualifiedName #importrule
-	| Import qualifiedWildcard #importpackage
+	: Import (local='.')? qualifiedName #importrule
+	| Import (local='.')? qualifiedWildcard #importpackage
 	;
 
 qualifiedWildcard

@@ -22,6 +22,12 @@ public class TemplateGroup {
 		return name;
 	}
 
+	public String relativeReference(String reference) {
+		int lastSlash = name.lastIndexOf('.');
+		String base = name.substring(0, lastSlash + 1);
+		return base + reference;
+	}
+
 	public void addImport(TemplateDefinition definition) {
 		imports.add(definition);
 	}

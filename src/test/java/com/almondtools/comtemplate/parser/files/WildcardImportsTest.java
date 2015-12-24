@@ -41,4 +41,16 @@ public class WildcardImportsTest extends TemplateTests {
 		assertThat(rendered, equalTo("parentheses: (content)"));
 	}
 
+	@Test
+	public void testLocal1Import() throws Exception {
+		String rendered = group.getDefinition("testlocal1").evaluate();
+		assertThat(rendered, equalTo("local1"));
+	}
+
+	@Test
+	public void testLocal2Import() throws Exception {
+		String rendered = group.getDefinition("testlocal2").evaluate();
+		assertThat(rendered, equalTo("local2"));
+	}
+
 }

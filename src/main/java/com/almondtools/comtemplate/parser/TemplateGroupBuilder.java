@@ -220,6 +220,9 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitImportrule(ImportruleContext ctx) {
 		try {
 			String definitionName = ctx.qualifiedName().getText();
+			if (ctx.local != null) {
+				definitionName = activeGroup.relativeReference(definitionName);
+			}
 			TemplateDefinition definition = loader.loadDefinition(definitionName);
 			activeGroup.addImport(definition);
 			return node(definition);
@@ -233,6 +236,9 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	public TemplateGroupNode visitImportpackage(ImportpackageContext ctx) {
 		try {
 			String groupName = ctx.qualifiedWildcard().qualifiedName().getText();
+			if (ctx.local != null) {
+				groupName = activeGroup.relativeReference(groupName);
+			}
 			TemplateGroup group = loader.loadGroup(groupName);
 			activeGroup.addImports(group.getDefinitions());
 			return node(group);
