@@ -128,7 +128,7 @@ public class TemplateProcessor {
 		for (String templateFileName : templateFileNames) {
 			try {
 				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar,'.');
-				Path targetPath = target.resolve(templateFileName + extension);
+				Path targetPath = target.resolve(templateFileName.replace(".ctp", extension));
 				TemplateDefinition main = loader.loadDefinition(templateName + ".main");
 				Files.createDirectories(targetPath.getParent());
 				Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
