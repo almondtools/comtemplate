@@ -151,7 +151,7 @@ doubleQuoteToken
 	| Identifier
 	| Wildcard
 	| '\\'
-	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')' | '"')
+	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')' | '"' | '@')
 	| EscapedComment
 	| AnythingElse
 	| Whitespace
@@ -171,7 +171,7 @@ singleQuoteToken
 	| Identifier
 	| Wildcard
 	| '\\'
-	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')' | '\'')
+	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')' | '\'' | '@')
 	| EscapedComment
 	| AnythingElse
 	| Whitespace
