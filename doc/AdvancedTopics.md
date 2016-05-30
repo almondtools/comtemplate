@@ -14,7 +14,7 @@ Sometimes we want to access variables that were not passed to the root template,
     
 This interpreter can also resolve global context variables:
 
-     `@myModelObject.property`
+     <<@myModelObject.property>>
    
 
 ## Advanced Templates
@@ -97,16 +97,16 @@ For such problems ComTemplate provides a pure functional solution utilizing obje
     ]
 
     render(menu) ::= {
-      `renderMenu(menu.items)`
-      `renderPanes(menu.items)`
+      <<renderMenu(menu.items)>>
+      <<renderPanes(menu.items)>>
     }
     
     renderMenu(items) ::= {
-      `for(items,{`@item.label` triggers `@item.id`})`
+      <<for(items,{<<@item.label>> triggers <<@item.id>>})>>
     }
     
     renderPanes(items) ::= {
-      `for(items,{`@item.id` contains `@item.content`})`
+      <<for(items,{<<@item.id>> contains <<@item.content>>})>>
     }
 
 ## ComTemplate Reflection
@@ -116,11 +116,11 @@ ComTemplate will support applying templates reflectively, i.e. at writing time t
 A typical reflective call would look like the following:
 
     mytemplate(content) ::= {
-      `content`
+      <<content>>
     }
     
     applyTemplate() ::= {
-      `apply(name="mytemplate",arguments=[content='mycontent'])`
+      <<apply(name="mytemplate",arguments=[content='mycontent'])>>
     }
     
 ## Testing ComTemplate

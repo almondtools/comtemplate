@@ -21,7 +21,7 @@ This brings some advantages:
 You may start with a simple "Hello World"-Template, written in a file `hello.ctp`
 
     hello(who) ::= {
-      Hello `who`!
+      Hello <<who>>!
     }
 
 To evaluate this template in java write a simple main program:

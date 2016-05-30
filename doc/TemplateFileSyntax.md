@@ -69,7 +69,7 @@ Object definitions define a function with parameters returning an expression (no
 
 For example a `tableItem` could be defined as followed:
 
-		tableItem(header,style) ::= [header=`header`, style=`style`]
+		tableItem(header,style) ::= [header=header, style=style]
 
 ## Template Definition
 Template definitions define a function with parameters returning a text. They follow the pattern
@@ -84,7 +84,7 @@ Template definitions define a function with parameters returning a text. They fo
 
 For example a template `add` could look like this:
 
-		add(summand1, summand2) ::= {`summand1` + `summand2`}
+		add(summand1, summand2) ::= {<<summand1>> + <<summand2>>}
 
 #Expressions and Templates
 
@@ -117,7 +117,7 @@ Templates contain the template text enclosed in braces, following the pattern
 Template text allows following elements:
 
  - raw text (sequence of characters, some have to be escaped)
- - expression evaluations, these are limited with backticks, like `` `<expression>` `` where expression is an arbitrary expression
+ - expression evaluations, these are limited with double brackets, like `` <<expression>> `` where expression is an arbitrary expression
 
 ## Local Variable References
 
@@ -239,7 +239,7 @@ Concatenation evaluates to a list or map ground expression (two maps resolve to 
 
 In some cases (context) variable references cannot be resolved in a template. The template can handle these cases either by checking for existence (with `?`) or by setting a default value (with `?:`)
 
- - `` `@variable?` `` is an existence check => `true` if `variable` can be resolved from the context, else `false`
- - `` `@variable?:'default'` `` is a default value definition => the value of `variable` or `'default'` if it cannot be resolved
+ - `` <<@variable?>> `` is an existence check => `true` if `variable` can be resolved from the context, else `false`
+ - `` <<@variable?:'default'>> `` is a default value definition => the value of `variable` or `'default'` if it cannot be resolved
 
 Existence checks resolve to a Boolean Literal, default value definitions resolve to the base expression value or the default value.

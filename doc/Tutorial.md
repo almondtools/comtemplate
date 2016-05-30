@@ -44,7 +44,7 @@ We start with creating a file `html.ctp` containing:
 ```
 html(content) ::= {
   <html>
-    `content`
+    <<content>>
   </html>
 }
 ```
@@ -64,7 +64,7 @@ You probably note that the template code is indented by two chars. Common html f
 ```
 html(content) ::= {
   <html>
-    `content`
+    <<content>>
   </html>
 }.indent()
 ```
@@ -86,13 +86,13 @@ To have a full html document we shall need also a `head` and `body` tag. These w
 ```
 head(content) ::= {
   <head>
-    `content`
+    <<content>>
   </head>
 }
 
 body(content) ::= {
   <body>
-    `content`
+    <<content>>
   </body>
 }
 ```
@@ -113,10 +113,10 @@ Now that a minimal template set is provided we can start and write a 'Hello Worl
  
 ```
 helloworld() ::= {
-  `html({
-    `head()`
-    `body("Hello World")`
-  })`
+  <<html({
+    <<head()>>
+    <<body("Hello World")>>
+  })>>
 }.indent()
 ```
 
@@ -143,10 +143,10 @@ The HTMLGenerator does yet not handle errors. To verify this change `helloworld.
  
 ```
 hello world() ::= {
-  `html({
-    `head()`
-    `body("Hello World")`
-  })`
+  <<html({
+    <<head()>>
+    <<body("Hello World")>>
+  })>>
 }.indent()
 ```
 
@@ -181,11 +181,11 @@ Our minimal html file should contains a headline and a paragraph, so let's defin
 
 ```
 h1(content="") ::= {
-  <h1>`content`</h1>
+  <h1><<content>></h1>
 }
 
 p(content="") ::= {
-  <p>`content`</p>
+  <p><<content>></p>
 }
 ```
 
@@ -193,13 +193,13 @@ and edit `helloworld.ctp` and create a new template helloworld2:
 
 ```
 helloworld2() ::= {
-  `html({
-    `head()`
-    `body({
-      `h1("Hello World")`
-      `p("My first static Template")`
-     })`
-  })`
+  <<html({
+    <<head()>>
+    <<body({
+      <<h1("Hello World")>>
+      <<p("My first static Template")>>
+     })>>
+  })>>
 }.indent()
 ```
 
@@ -223,11 +223,11 @@ Yet the markup for `p` and `h1` is very short and do not support important featu
 
 ```
 h1(content="", attributes=[]) ::= {
-  <h1`for(att=attributes,do={ `@att`})`>`content`</h1>
+  <h1<<for(att=attributes,do={ <<@att>>})>>><<content>></h1>
 }
 
 p(content="", attributes=[]) ::= {
-  <p`for(att=attributes,do={ `@att`})`>`content`</p>
+  <p<<for(att=attributes,do={ <<@att>>})>>><<content>></p>
 }
 ```
 
@@ -235,13 +235,13 @@ then we change `helloworld.ctp`:
 
 ```
 helloworld2() ::= {
-  `html({
-    `head()`
-    `body({
-      `h1(content="Hello World",attributes=["id=\"hello\"", "class=\"headline\""])`
-      `p(content="My first static Template",attributes=["class=\"paragraph\""])`
-     })`
-  })`
+  <<html({
+    <<head()>>
+    <<body({
+      <<h1(content="Hello World",attributes=["id=\"hello\"", "class=\"headline\""])>>
+      <<p(content="My first static Template",attributes=["class=\"paragraph\""])>>
+     })>>
+  })>>
 }.indent()
 ```
 
@@ -264,22 +264,22 @@ Call `java HtmlGenerator helloworld.helloworld2` and you get
 As you can see the arguments of the template call of `h1` and `p1` make the example quite long. One also can get easily confused with the double quotes. So we start a refactoring. This is based on the idea that attributes like `id` or `class` are commonly used in html, so we could extract them to their own templates in `attributes.ctp`:
  
 ```
-id(value="") ::= {id="`value`"}
+id(value="") ::= {id="<<value>>"}
 
-class(value="") ::= {class="`value`"}
+class(value="") ::= {class="<<value>>"}
 ```
 
 then we change `helloworld.ctp`:
 
 ```
 helloworld2() ::= {
-  `html({
-    `head()`
-    `body({
-      `h1(content="Hello World",attributes=[id("hello"), class("headline")])`
-      `p(content="My first static Template",attributes=[class("paragraph")])`
-     })`
-  })`
+  <<html({
+    <<head()>>
+    <<body({
+      <<h1(content="Hello World",attributes=[id("hello"), class("headline")])>>
+      <<p(content="My first static Template",attributes=[class("paragraph")])>>
+     })>>
+  })>>
 }.indent()
 ```
  
@@ -291,16 +291,15 @@ Maybe you want to generate similar html files for different languages. Using a d
 
 ```
 helloworld3(lang="en") ::= {
-  `html({
-    `head()`
-    `body({
-      `h1(content=msg.(lang).HELLO_WORLD,attributes=[id("hello"), class("headline")])`
-      `p(content=msg.(lang).MY_FIRST_TEMPLATE,attributes=[class("paragraph")])`
-     })`
-  })`
+  <<html({
+    <<head()>>
+    <<body({
+      <<h1(content=msg.(lang).HELLO_WORLD,attributes=[id("hello"), class("headline")])>>
+      <<p(content=msg.(lang).MY_FIRST_TEMPLATE,attributes=[class("paragraph")])>>
+     })>>
+  })>>
 }.indent()
 ``` 
 
 This would yet not compile, but we can add a message import:
 
-````
