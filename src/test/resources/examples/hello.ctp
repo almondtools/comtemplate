@@ -1,3 +1,3 @@
 hello(who) ::= {
-  Hello `who`!
+  Hello <<who>>!
 }

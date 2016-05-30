@@ -5,8 +5,8 @@ main() ::= {
   `head(content={
   })`
   `body(content={
-    `h1(content={Hello Nested World})`
-    `p(content={Some Text})`
+    <<h1(content={Hello Nested World})>>
+    <<p(content={Some Text})>>
   })`
 })`
 }

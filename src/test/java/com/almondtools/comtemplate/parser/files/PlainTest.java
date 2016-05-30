@@ -20,7 +20,7 @@ public class PlainTest {
 
 	@Test
 	public void testString() throws Exception {
-		TemplateDefinition plain = TemplateTests.compileMainFromText("Hello `name`");
+		TemplateDefinition plain = TemplateTests.compileMainFromText("Hello <<name>>");
 		String rendered = plain.evaluate(var("name", string("Next Name")));
 		assertThat(rendered, equalTo("Hello Next Name"));
 	}

@@ -1,3 +1,3 @@
 errorcalltemplate() ::= {
-`call(var="x",secondvar`
+<<call(var="x",secondvar>>
 }

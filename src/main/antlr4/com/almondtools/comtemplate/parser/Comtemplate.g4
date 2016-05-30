@@ -63,7 +63,7 @@ templateChunk
 	;
 
 templateReference
-	: ReferenceMark value ReferenceMark
+	: ReferenceOpen value ReferenceClose
 	;
 
 parameters
@@ -140,6 +140,8 @@ stringLiteral
 doubleQuoteToken
 	: Import
 	| Define
+	| ReferenceOpen | ReferenceClose
+	| '<' | '>'
 	| '[' | ']'
 	| '(' | ')'
 	| '\''
@@ -160,6 +162,8 @@ doubleQuoteToken
 singleQuoteToken
 	: Import
 	| Define
+	| ReferenceOpen | ReferenceClose
+	| '<' | '>'
 	| '[' | ']'
 	| '(' | ')'
 	| '"'
@@ -184,6 +188,7 @@ inlineText
 inlineToken
 	: Import
 	| Define
+	| '<' | '>'
 	| '[' | ']'
 	| '(' | ')'
 	| '"' | '\''
@@ -196,6 +201,7 @@ inlineToken
 	| Wildcard
 	| '\\'
 	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')')
+	| EscapedReferenceMark
 	| EscapedComment
 	| AnythingElse
 	;
@@ -212,8 +218,17 @@ EscapeMark
 	: '@'
 	;
 
-ReferenceMark
-	: '`'
+ReferenceOpen
+	: '<<'
+	;
+
+ReferenceClose
+	: '>>'
+	;
+
+EscapedReferenceMark
+	: '\\<'
+	| '\\>'
 	;
 
 IntegerLiteral

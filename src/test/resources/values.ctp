@@ -18,25 +18,25 @@ dec ::= -0.2
 bool ::= true
 
 rendermap() ::= {
-map = [name=`map.name`,type=`map.type`]
+map = [name=<<map.name>>,type=<<map.type>>]
 }
 
 renderduplicatemap() ::= {
-map = [name=`duplicatemap.key`,type=`duplicatemap.type`]
+map = [name=<<duplicatemap.key>>,type=<<duplicatemap.type>>]
 }
 
 renderlist() ::= {
-list = [`list.separated(',')`]
+list = [<<list.separated(',')>>]
 }
 
 renderint() ::= {
-int = `int`
+int = <<int>>
 }
 
 renderdec() ::= {
-dec = `dec`
+dec = <<dec>>
 }
 
 renderbool() ::= {
-bool = `bool.not()`
+bool = <<bool.not()>>
 }

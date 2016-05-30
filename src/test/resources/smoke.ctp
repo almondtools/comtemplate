@@ -17,5 +17,5 @@ boolconst ::= false
 strconst ::= 'string'
 
 html(content='',attributes=[]) ::= {
-  <html `for(att=attributes,do=att,separator=' ')`>`content`</html>
+  <html <<for(att=attributes,do=att,separator=' ')>>><<content>></html>
 }

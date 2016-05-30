@@ -13,14 +13,14 @@ public class ErrorsTest extends TemplateTests {
 	public void testInvalidCall() throws Exception {
 		List<String> errors = findErrors("src/test/resources/errors/invalidcall.ctp");
 		
-		assertThat(errors, contains("error at 2:1 unexpected token <call(var=\"x\",secondvar)>"));
+		assertThat(errors, contains("error at 2:2 unexpected token <call(var=\"x\",secondvar)>"));
 	}
 
 	@Test
 	public void testIncompleteCall() throws Exception {
 		List<String> errors = findErrors("src/test/resources/errors/incompletecall.ctp");
 		
-		assertThat(errors, contains("error at 2:1 unexpected token <call(var=\"x\",secondvar>"));
+		assertThat(errors, contains("error at 2:2 unexpected token <call(var=\"x\",secondvar>"));
 	}
 
 	@Test

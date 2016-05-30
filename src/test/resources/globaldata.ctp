@@ -1,3 +1,3 @@
 globalDataRule() ::= {
-this data is global: `@global.mystring`
+this data is global: <<@global.mystring>>
 }

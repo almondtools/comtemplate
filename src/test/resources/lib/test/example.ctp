@@ -1,5 +1,5 @@
-parentheses(content) ::= {(`content`)}
+parentheses(content) ::= {(<<content>>)}
 
-braces(content) ::= {\{`content`\}}
+braces(content) ::= {\{<<content>>\}}
 
-brackets(content) ::= {[`content`]}
+brackets(content) ::= {[<<content>>]}
