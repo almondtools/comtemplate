@@ -283,9 +283,9 @@ helloworld2() ::= {
 }.indent()
 ```
  
- ## Advanced Topics
+## Advanced Topics
  
- ### Messages in different Languages
+### Messages in different Languages
  
 Maybe you want to generate similar html files for different languages. Using a different set of messages. For this purpose we first rewrite our main template:  
 
