@@ -17,9 +17,9 @@ body(content="") ::= {
 }
 
 h1(content="", attributes=[]) ::= {
-  <h1<<for(att=attributes,do={ >>@att<<})>>><<content>></h1>
+  <h1<<for(att=attributes,do={ <<@att>>})>>><<content>></h1>
 }
 
 p(content="", attributes=[]) ::= {
-  <p<<for(att=attributes,do={ >>@att<<})>>><<content>></p>
+  <p<<for(att=attributes,do={ <<@att>>})>>><<content>></p>
 }
