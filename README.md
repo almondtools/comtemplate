@@ -1,5 +1,7 @@
 # ComTemplate
 
+[![Build Status](https://api.travis-ci.org/comtemplate/comtemplate.svg)](https://travis-ci.org/comtemplate/comtemplate)
+
 ComTemplate is a component based static content generator and template engine. ComTemplate does not aim to win the battle of best separation of view and model, although it is more strict than most template engines for Java.
 
 Its primary focus is the generation of static resources from parameterized template files. This simplifies the problem of separating view and model: The model is constant and could be inlined into the pages. ComTemplate supports both:
