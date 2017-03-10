@@ -27,7 +27,7 @@ public class ErrorsTest extends TemplateTests {
 	public void testMissingParameterCommaCall() throws Exception {
 		List<String> errors = findErrors("src/test/resources/errors/missingparametercomma.ctp");
 		
-		assertThat(errors, contains("error at 1:18 unexpected token <var2>, expected <')', ','>"));
+		assertThat(errors, contains("error at 1:18 unexpected token <var2>, expected <')', ',', ':', '='>"));
 	}
 	
 	@Test

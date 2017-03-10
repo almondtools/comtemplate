@@ -253,11 +253,11 @@ Wildcard
     ;
 
 Whitespace
-	: [ \t\n\r] -> channel(WHITESPACE)
+	: [ \t\n\r] -> channel(1)
 	;
 
 Comment
-    : '#' ~[\n\r]* -> channel(COMMENTS) 
+    : '#' ~[\n\r]* -> channel(2) 
     ;
 
 EscapedComment

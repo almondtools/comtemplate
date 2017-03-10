@@ -22,9 +22,13 @@ public class ResolvedMapLiteral implements TemplateImmediateExpression {
 	}
 
 	public ResolvedMapLiteral(List<TemplateVariable> entries) {
-		this(entries.stream()
-			.collect(toMap(entry -> entry.getName(), entry -> (TemplateImmediateExpression) entry.getValue(), (o, n) -> n, LinkedHashMap::new)));
+		this(variableMap(entries));
 	}
+
+    private static Map<String, TemplateImmediateExpression> variableMap(List<TemplateVariable> entries) {
+        return entries.stream()
+			.collect(toMap(entry -> entry.getName(), entry -> (TemplateImmediateExpression) entry.getValue(), (o, n) -> n, LinkedHashMap::new));
+    }
 
 	public ResolvedMapLiteral(TemplateVariable... entries) {
 		this(asList(entries));
