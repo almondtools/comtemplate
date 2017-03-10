@@ -42,7 +42,7 @@ public class IfTemplate extends TemplateDefinition {
 			return new UnexpectedTypeError("boolean", evaluated);
 		}
 		Scope scope = new Scope(parent, this, variables);
-		return CONDITIONS.stream()
+        return CONDITIONS.stream()
 			.filter(condition -> condition.getValue().equals(value))
 			.map(block -> findVariable(block.getKey(), variables).orElseThrow(() -> new ArgumentRequiredException(block.getKey())))
 			.map(variable -> variable.getValue().apply(interpreter, scope))
