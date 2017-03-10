@@ -1,6 +1,6 @@
 # ComTemplate
 
-[![Build Status](https://api.travis-ci.org/comtemplate/comtemplate.svg)](https://travis-ci.org/comtemplate/comtemplate)
+[![Build Status](https://api.travis-ci.org/almondtools/comtemplate.svg)](https://travis-ci.org/almondtools/comtemplate)
 
 ComTemplate is a component based static content generator and template engine. ComTemplate does not aim to win the battle of best separation of view and model, although it is more strict than most template engines for Java.
 
