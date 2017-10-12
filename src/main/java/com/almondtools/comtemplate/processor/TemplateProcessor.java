@@ -8,8 +8,10 @@ import static java.util.stream.Collectors.toList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
@@ -30,22 +32,34 @@ public class TemplateProcessor {
 	private static final String LIBRARIES = "libraries";
 	private static final String CLASSPATH = "classpath";
 	private static final String EXTENSION = "extension";
+	private static final String EXTENSIONS = "extensions";
 
 	private Path source;
 	private Path target;
 	private TemplateLoader loader;
 
 	private String extension;
+	private PathMatcher resources;
 
 	public TemplateProcessor(String source, String target, Properties properties) throws IOException {
 		this.source = validPath(source);
 		this.target = validTargetPath(target);
 		this.loader = loaderFor(this.source, this.target, properties);
 		this.extension = extensionFrom(properties);
+		this.resources = resourceExtensionsFrom(properties);
 	}
 
 	private String extensionFrom(Properties properties) {
-		return properties.getProperty(EXTENSION, ".html");
+		return "." + properties.getProperty(EXTENSION, "html");
+	}
+
+	private PathMatcher resourceExtensionsFrom(Properties properties) {
+		String extensions = properties.getProperty(EXTENSIONS);
+		if (extensions == null) {
+			return FileSystems.getDefault().getPathMatcher("glob:*");
+		} else {
+			return FileSystems.getDefault().getPathMatcher("glob:*.{" + extensions + "}");
+		}
 	}
 
 	private TemplateLoader loaderFor(Path source, Path target, Properties properties) {
@@ -127,7 +141,7 @@ public class TemplateProcessor {
 			.collect(toList());
 		for (String templateFileName : templateFileNames) {
 			try {
-				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar,'.');
+				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar, '.');
 				Path targetPath = target.resolve(templateFileName.replace(".ctp", extension));
 				TemplateDefinition main = loader.loadDefinition(templateName + ".main");
 				Files.createDirectories(targetPath.getParent());
@@ -142,6 +156,7 @@ public class TemplateProcessor {
 			.filter(path -> Files.isRegularFile(path))
 			.map(path -> source.relativize(path))
 			.filter(path -> !path.toString().endsWith(".ctp"))
+			.filter(path -> resources.matches(path))
 			.collect(toList());
 		for (Path file : otherfiles) {
 			Path sourcePath = source.resolve(file);
