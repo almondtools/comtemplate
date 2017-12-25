@@ -69,7 +69,7 @@ Object definitions define a function with parameters returning an expression (no
 
 For example a `tableItem` could be defined as followed:
 
-		tableItem(header,style) ::= [header=header, style=style]
+		@tableItem(header,style) ::= [header=header, style=style]
 
 ## Template Definition
 Template definitions define a function with parameters returning a text. They follow the pattern
@@ -104,7 +104,7 @@ In the following text we sometimes refer to the term **ground expression**. A gr
  - a map of ground expressions
  - a list of ground expressions
 
-A ground expression does not contains any function or template application.
+A ground expression does not contain any function or template application.
 
 ## Templates
 
