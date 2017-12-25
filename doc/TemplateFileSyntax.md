@@ -1,4 +1,4 @@
-#Template File
+# Template File
 
 A template file (usually with file extension .ctp) is composed of two main sections 
 
@@ -6,7 +6,7 @@ A template file (usually with file extension .ctp) is composed of two main secti
     <templateFile> = <imports> <definitions>
     ```
 
-#Imports
+# Imports
 
 Definitions from other template libraries/files can be imported in two ways:
 
@@ -28,7 +28,7 @@ Yet a package defines a file not a directory:
  - `import lib.test.module.*` maps to all definitions of `lib/test/module.ctp` (looked up in the class path)
  - `import lib.test.module.def` maps to the definition of `def` in `lib/test/module.ctp` (looked up in the class path)
 
-#Definitions
+# Definitions
 
 The definitions section allows to define:
 
@@ -86,7 +86,7 @@ For example a template `add` could look like this:
 
 		add(summand1, summand2) ::= {<<summand1>> + <<summand2>>}
 
-#Expressions and Templates
+# Expressions and Templates
 
 Basic items in a template file are the templates and the expressions. Expressions represent a functional value:
  

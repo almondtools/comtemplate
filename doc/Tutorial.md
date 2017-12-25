@@ -1,15 +1,15 @@
-#Tutorial
+# Tutorial
 
 To demonstrate the facilities of ComTemplate this tutorial demonstrates creating a web site generator step by step.
 
-##Setting Up the Basics 
+## Setting Up the Basics 
 
 To generate a website we first need a library of templates we could generate. For the first we will provide
 - html scaffold tags (html, head, body)
 - h1
 - p
 
-###Starting with the Generator
+### Starting with the Generator
 
 Our generator should be very simple. The command line would look like this: 
 
@@ -37,7 +37,7 @@ public class HtmlGenerator {
 Now we need a template to generate. So let's start.
  
 
-###Starting with the html-Tag
+### Starting with the html-Tag
 
 We start with creating a file `html.ctp` containing:
 
@@ -57,7 +57,7 @@ Call `java HtmlGenerator html.html myContent` and you get
   </html>
 ```
 
-###Adding Auto Indentation
+### Adding Auto Indentation
 
 You probably note that the template code is indented by two chars. Common html files do not indent the top level element. So let's find a way to skip the initial indentation. Change `html.ctp` to
 
@@ -79,7 +79,7 @@ Call `java HtmlGenerator html.html myContent` and you get
 
 Auto indentation asserts that each called template (even anonymous ones) is indented by the number given as argument. Individual indentations in called templates are discarded.
 
-###Writing more tags
+### Writing more tags
 
 To have a full html document we shall need also a `head` and `body` tag. These would look like this:
 
@@ -107,7 +107,7 @@ Call `java HtmlGenerator html.head myContent` and you get
 
 Analogous with `java HtmlGenerator html.body myContent`
 
-###Generating a 'Hello World' html file
+### Generating a 'Hello World' html file
 
 Now that a minimal template set is provided we can start and write a 'Hello World' in `helloworld.ctp` example:
  
@@ -137,7 +137,7 @@ Call `java HtmlGenerator helloworld.helloworld` and you get
 
 Now that we have a working example we can continue to do some more interesting tasks.
 
-###Dealing with errors
+### Dealing with errors
 
 The HTMLGenerator does yet not handle errors. To verify this change `helloworld.ctp` to:
  
@@ -175,7 +175,7 @@ public class HtmlGenerator {
 
 Now the stack trace is gone and the message is displayed.
 
-###Adding Headlines and Paragraphs
+### Adding Headlines and Paragraphs
 
 Our minimal html file should contains a headline and a paragraph, so let's define
 
@@ -217,7 +217,7 @@ Call `java HtmlGenerator helloworld.helloworld` and you get
 </html>
 ```
 
-###Adding HTML Attributes
+### Adding HTML Attributes
 
 Yet the markup for `p` and `h1` is very short and do not support important features of html: html attributes. We start with adding html attribute support:
 
