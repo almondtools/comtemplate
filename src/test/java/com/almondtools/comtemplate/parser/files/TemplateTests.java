@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
-import org.antlr.v4.runtime.ANTLRFileStream;
+import org.antlr.v4.runtime.CharStreams;
 
 import com.almondtools.comtemplate.engine.TemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateGroup;
@@ -29,12 +29,12 @@ public class TemplateTests {
 	}
 
 	public static List<String> findErrors(String fileName) throws IOException {
-		ComtemplateLexer lexer = new ComtemplateLexer(new ANTLRFileStream(fileName));
+		ComtemplateLexer lexer = new ComtemplateLexer(CharStreams.fromFileName(fileName));
 		ComtemplateParser parser = new ComtemplateParser(new MultiChannelTokenStream(lexer));
 		TemplateErrorListener errors = new TemplateErrorListener();
 		parser.addErrorListener(errors);
 		parser.templateFile();
 		return errors.getMessages();
 	}
-	
+
 }

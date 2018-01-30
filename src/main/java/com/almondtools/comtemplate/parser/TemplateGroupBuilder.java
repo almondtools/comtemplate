@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -137,7 +137,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	public static TemplateGroupBuilder library(String name, InputStream stream, TemplateLoader loader) throws IOException {
 		return new TemplateGroupBuilder(name, loader)
-			.parseGroup(new ANTLRInputStream(stream));
+			.parseGroup(CharStreams.fromStream(stream));
 	}
 
 	public static TemplateGroupBuilder library(String name, String fileName) throws IOException {
@@ -146,7 +146,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	public static TemplateGroupBuilder library(String name, String fileName, TemplateLoader loader) throws IOException {
 		return new TemplateGroupBuilder(name, loader)
-			.parseGroup(new ANTLRFileStream(fileName));
+			.parseGroup(CharStreams.fromFileName(fileName));
 	}
 
 	public static TemplateGroupBuilder main(String name, InputStream stream) throws IOException {
@@ -155,7 +155,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	public static TemplateGroupBuilder main(String name, InputStream stream, TemplateLoader loader) throws IOException {
 		return new TemplateGroupBuilder(name, loader)
-			.parseMain(new ANTLRInputStream(stream));
+			.parseMain(CharStreams.fromStream(stream));
 	}
 
 	public static TemplateGroupBuilder main(String name, String fileName) throws IOException {
@@ -164,15 +164,10 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	public static TemplateGroupBuilder main(String name, String fileName, TemplateLoader loader) throws IOException {
 		return new TemplateGroupBuilder(name, loader)
-			.parseMain(new ANTLRFileStream(fileName));
+			.parseMain(CharStreams.fromFileName(fileName));
 	}
 
-	public TemplateGroupBuilder parseGroup(ANTLRInputStream stream) {
-		this.root = parse(stream, parser -> parser.templateFile());
-		return this;
-	}
-
-	public TemplateGroupBuilder parseGroup(ANTLRFileStream stream) {
+	public TemplateGroupBuilder parseGroup(CharStream stream) {
 		try {
 			this.root = parse(stream, parser -> parser.templateFile());
 			return this;
@@ -182,12 +177,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		}
 	}
 
-	public TemplateGroupBuilder parseMain(ANTLRInputStream stream) {
-		this.root = parse(stream, parser -> parser.templateBody());
-		return this;
-	}
-
-	public TemplateGroupBuilder parseMain(ANTLRFileStream stream) {
+	public TemplateGroupBuilder parseMain(CharStream stream) {
 		try {
 			this.root = parse(stream, parser -> parser.templateBody());
 			return this;
@@ -197,7 +187,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		}
 	}
 
-	private ParserRuleContext parse(ANTLRInputStream stream, Function<ComtemplateParser, ParserRuleContext> parse) {
+	private ParserRuleContext parse(CharStream stream, Function<ComtemplateParser, ParserRuleContext> parse) {
 		TemplateErrorListener errors = new TemplateErrorListener();
 		ComtemplateLexer lexer = new ComtemplateLexer(stream);
 		ComtemplateParser parser = new ComtemplateParser(new MultiChannelTokenStream(lexer));

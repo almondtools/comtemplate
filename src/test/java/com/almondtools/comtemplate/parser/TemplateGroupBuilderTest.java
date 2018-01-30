@@ -49,7 +49,7 @@ public class TemplateGroupBuilderTest {
 	@Test
 	public void testTemplateGroupBuilderStringInputStreamWithErrors() throws Exception {
 		thrown.expect(matchesException(TemplateGroupException.class)
-			.withMessage(containsString("parsing template group <name> failed")));
+			.withMessage(containsString("parsing template group <name> in file '<unknown>' failed")));
 		
 		InputStream stream = new ByteArrayInputStream("broken template ::= {}".getBytes());
 		builder = TemplateGroupBuilder.library("name", stream);
