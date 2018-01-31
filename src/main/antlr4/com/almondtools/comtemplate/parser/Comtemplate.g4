@@ -277,7 +277,7 @@ fragment ESCAPED_COMMENT
     ;
 
 fragment ESCAPE_SEQUENCE
-    :   '\\' [btnfr\"\'\\]
+    :   '\\' [btnfr"'\\]
     |   UNICODE_ESCAPE
     ;
 
