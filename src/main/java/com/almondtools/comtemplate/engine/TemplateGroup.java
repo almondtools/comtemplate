@@ -4,6 +4,7 @@ import static com.almondtools.comtemplate.engine.TemplateParameter.toParams;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class TemplateGroup {
@@ -54,13 +55,12 @@ public class TemplateGroup {
 				.orElseThrow(() -> new TemplateDefinitionNotFoundException(name, template)));
 	}
 
-	public TemplateVariable resolveVariable(String variable) {
+	public Optional<TemplateVariable> resolveVariable(String variable) {
 		return Stream.concat(definitions.stream(),imports.stream())
 			.filter(def -> def instanceof ValueDefinition)
 			.map(def -> ((ValueDefinition) def).toVariable())
 			.filter(constant -> variable.equals(constant.getName()))
-			.findFirst()
-			.orElse(null);
+			.findFirst();
 	}
 
 	public CustomTemplateDefinition defineTemplate(String name, List<TemplateParameter> parameters) {

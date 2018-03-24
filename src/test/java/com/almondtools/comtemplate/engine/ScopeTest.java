@@ -6,6 +6,7 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class ScopeTest {
 
 	@Test
 	public void testResolveVariableInScope() throws Exception {
-		assertThat(new Scope(definition, var("param", string("string"))).resolveVariable("param").getValue(), equalTo(string("string")));
+		assertThat(new Scope(definition, var("param", string("string"))).resolveVariable("param").get().getValue(), equalTo(string("string")));
 	}
 
 	@Test
@@ -51,45 +52,45 @@ public class ScopeTest {
 		ValueDefinition definedConstant = group.defineConstant("constant");
 		definedConstant.setValue(string("string"));
 		definition = definedConstant;
-		assertThat(new Scope(definition).resolveVariable("constant").getValue(), equalTo(string("string")));
+		assertThat(new Scope(definition).resolveVariable("constant").get().getValue(), equalTo(string("string")));
 	}
 
 	@Test
 	public void testResolveVariableInDistantDefinedScope() throws Exception {
 		TemplateDefinition parentDefinition = new TestTemplateDefinition("parent");
 		Scope parent = new Scope(parentDefinition, var("param", string("parentstring")));
-		assertThat(new Scope(parent, definition, var("param", string("string"))).resolveVariable("param", parentDefinition).getValue(), equalTo(string("parentstring")));
+		assertThat(new Scope(parent, definition, var("param", string("string"))).resolveVariable("param", parentDefinition).get().getValue(), equalTo(string("parentstring")));
 	}
 
 	@Test
 	public void testResolveVariableInFailingDefinedScope() throws Exception {
 		TemplateDefinition parentDefinition = new TestTemplateDefinition("parent");
 		Scope parent = new Scope(parentDefinition, var("param", string("string")));
-		assertThat(new Scope(parent, definition).resolveVariable("param", definition), nullValue());
+		assertThat(new Scope(parent, definition).resolveVariable("param", definition).isPresent(), is(false));
 	}
 
 	@Test
 	public void testResolveVariableFailsWithoutDefinitionAndParent() throws Exception {
-		assertThat(new Scope(null).resolveVariable("param", definition), nullValue());
+		assertThat(new Scope(null).resolveVariable("param", definition).isPresent(), is(false));
 	}
 
 	@Test
 	public void testResolveContextVariable() throws Exception {
-		assertThat(new Scope(definition, var("param", string("string"))).resolveContextVariable("param").getValue(), equalTo(string("string")));
+		assertThat(new Scope(definition, var("param", string("string"))).resolveContextVariable("param").get().getValue(), equalTo(string("string")));
 	}
 
 	@Test
 	public void testResolveContextVariableInDistantDefinedScope() throws Exception {
 		TemplateDefinition parentDefinition = new TestTemplateDefinition("parent");
 		Scope parent = new Scope(parentDefinition, var("param", string("string")));
-		assertThat(new Scope(parent, definition).resolveContextVariable("param").getValue(), equalTo(string("string")));
+		assertThat(new Scope(parent, definition).resolveContextVariable("param").get().getValue(), equalTo(string("string")));
 	}
 
 	@Test
 	public void testResolveContextVariableFails() throws Exception {
 		TemplateDefinition parentDefinition = new TestTemplateDefinition("parent");
 		Scope parent = new Scope(parentDefinition);
-		assertThat(new Scope(parent, definition).resolveContextVariable("param"), nullValue());
+		assertThat(new Scope(parent, definition).resolveContextVariable("param").isPresent(), is(false));
 	}
 
 	@Test

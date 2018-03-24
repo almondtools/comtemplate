@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -94,7 +95,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalVarSuccessful() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
-		when(scope.resolveVariable("var", definition)).thenReturn(var("var", string("string")));
+		when(scope.resolveVariable("var", definition)).thenReturn(Optional.of(var("var", string("string"))));
 
 		TemplateImmediateExpression result = interpreter.visitEvalVar(new EvalVar("var", definition), scope);
 
@@ -104,7 +105,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalVarFailed() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
-		when(scope.resolveVariable("var", definition)).thenReturn(null);
+		when(scope.resolveVariable("var", definition)).thenReturn(Optional.empty());
 
 		TemplateImmediateExpression result = interpreter.visitEvalVar(new EvalVar("var", definition), scope);
 
@@ -113,8 +114,8 @@ public class DefaultTemplateInterpreterTest {
 
 	@Test
 	public void testVisitEvalContextVarGlobal() throws Exception {
-		when(scope.resolveContextVariable("var")).thenReturn(null);
-		when(globals.resolveGlobal("var")).thenReturn(var("var", integer(22)));
+		when(scope.resolveContextVariable("var")).thenReturn(Optional.empty());
+		when(globals.resolveGlobal("var")).thenReturn(Optional.of(var("var", integer(22))));
 
 		TemplateImmediateExpression result = interpreter.visitEvalContextVar(new EvalContextVar("var"), scope);
 
@@ -123,7 +124,7 @@ public class DefaultTemplateInterpreterTest {
 
 	@Test
 	public void testVisitEvalContextVarSuccesful() throws Exception {
-		when(scope.resolveContextVariable("var")).thenReturn(var("var", integer(22)));
+		when(scope.resolveContextVariable("var")).thenReturn(Optional.of(var("var", integer(22))));
 
 		TemplateImmediateExpression result = interpreter.visitEvalContextVar(new EvalContextVar("var"), scope);
 
@@ -132,7 +133,7 @@ public class DefaultTemplateInterpreterTest {
 
 	@Test
 	public void testVisitEvalContextVarFailed() throws Exception {
-		when(scope.resolveContextVariable("var")).thenReturn(null);
+		when(scope.resolveContextVariable("var")).thenReturn(Optional.empty());
 
 		TemplateImmediateExpression result = interpreter.visitEvalContextVar(new EvalContextVar("var"), scope);
 
@@ -242,7 +243,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalVirtual() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class, RETURNS_DEEP_STUBS);
-		when(scope.resolveVariable("var", definition)).thenReturn(TemplateVariable.var("var", string("key")));
+		when(scope.resolveVariable("var", definition)).thenReturn(Optional.of(var("var", string("key"))));
 		TemplateExpression base = map(var("key", string("value")));
 		when(resolvers.getResolverFor(any(ResolvedMapLiteral.class))).thenReturn(new TestResolver(ResolvedMapLiteral.class));
 		TemplateImmediateExpression result = interpreter.visitEvalVirtual(new EvalVirtual(base, new EvalVar("var", definition)), scope);
@@ -276,7 +277,7 @@ public class DefaultTemplateInterpreterTest {
 
 	@Test
 	public void testVisitExistsOnResolved() throws Exception {
-		when(scope.resolveContextVariable("resolvable")).thenReturn(var("resolvable", string("exists")));
+		when(scope.resolveContextVariable("resolvable")).thenReturn(Optional.of(var("resolvable", string("exists"))));
 		TemplateImmediateExpression result = interpreter.visitExists(new Exists(new EvalContextVar("resolvable")), scope);
 
 		assertThat(result, equalTo(TRUE));
@@ -326,7 +327,7 @@ public class DefaultTemplateInterpreterTest {
 
 	@Test
 	public void testVisitDefaultedOnResolved() throws Exception {
-		when(scope.resolveContextVariable("resolvable")).thenReturn(var("resolvable", string("exists")));
+		when(scope.resolveContextVariable("resolvable")).thenReturn(Optional.of(var("resolvable", string("exists"))));
 		TemplateImmediateExpression result = interpreter.visitDefaulted(new Defaulted(new EvalContextVar("resolvable"), string("default")), scope);
 
 		assertThat(result, equalTo(string("exists")));

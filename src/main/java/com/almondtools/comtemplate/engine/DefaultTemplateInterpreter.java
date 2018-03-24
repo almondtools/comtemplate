@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
 
@@ -73,24 +74,20 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 	public TemplateImmediateExpression visitEvalVar(EvalVar evalVar, Scope scope) {
 		String name = evalVar.getName();
 		TemplateDefinition definition = evalVar.getDefinition();
-		TemplateVariable value = scope.resolveVariable(name, definition);
-		if (value == null) {
-			return new VariableResolutionError(name, definition);
-		}
-		return value.getValue().apply(this, scope);
+		return scope.resolveVariable(name, definition)
+			.map(v -> v.getValue().apply(this, scope))
+			.orElseGet(() -> new VariableResolutionError(name, definition));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalContextVar(EvalContextVar evalContextVar, Scope scope) {
 		String name = evalContextVar.getName();
-		TemplateVariable value = scope.resolveContextVariable(name);
-		if (value == null) {
+		Optional<TemplateVariable> value = scope.resolveContextVariable(name);
+		if (!value.isPresent()) {
 			value = templates.resolveGlobal(name);
 		}
-		if (value == null) {
-			return new VariableResolutionError(name, scope);
-		}
-		return value.getValue().apply(this, scope);
+		return value.map(v -> v.getValue().apply(this, scope))
+			.orElseGet(() -> new VariableResolutionError(name, scope));
 	}
 
 	@Override

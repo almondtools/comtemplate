@@ -2,6 +2,7 @@ package com.almondtools.comtemplate.engine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 import com.almondtools.comtemplate.engine.templates.AllTemplate;
@@ -37,8 +38,8 @@ public class GlobalTemplates {
 		return templates.get(name);
 	}
 
-	public TemplateVariable resolveGlobal(String name) {
-		return globals.get(name);
+	public Optional<TemplateVariable> resolveGlobal(String name) {
+		return Optional.ofNullable(globals.get(name));
 	}
 
 	public static GlobalTemplates defaultTemplates() {

@@ -3,6 +3,7 @@ package com.almondtools.comtemplate.engine;
 import static java.util.Arrays.asList;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Scope {
 
@@ -42,33 +43,34 @@ public class Scope {
 		return variables;
 	}
 
-	public TemplateVariable resolveVariable(String name) {
-		return variables.stream()
+	public Optional<TemplateVariable> resolveVariable(String name) {
+		Optional<TemplateVariable> resolved = variables.stream()
 			.filter(variable -> variable.hasName(name))
-			.findFirst()
-			.orElseGet(() -> {
-				TemplateGroup group = definition.getGroup();
-				if (group == null) {
-					return null;
-				}
-				return group.resolveVariable(name);
-			});
+			.findFirst();
+		if (resolved.isPresent()) {
+			return resolved;
+		}
+		TemplateGroup group = definition.getGroup();
+		if (group == null) {
+			return Optional.empty();
+		}
+		return group.resolveVariable(name);
 	}
 
-	public TemplateVariable resolveVariable(String name, TemplateDefinition definition) {
+	public Optional<TemplateVariable> resolveVariable(String name, TemplateDefinition definition) {
 		if (this.definition == definition) {
 			return resolveVariable(name);
 		} else if (parent == null) {
-			return null;
+			return Optional.empty();
 		} else {
 			return parent.resolveVariable(name, definition);
 		}
 	}
 
-	public TemplateVariable resolveContextVariable(String name) {
-		TemplateVariable value = resolveVariable(name);
+	public Optional<TemplateVariable> resolveContextVariable(String name) {
+		Optional<TemplateVariable> value = resolveVariable(name);
 		Scope current = parent;
-		while (value == null && current != null) {
+		while (!value.isPresent() && current != null) {
 			value = current.resolveVariable(name);
 			current = current.parent;
 		}

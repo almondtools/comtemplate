@@ -33,7 +33,7 @@ public class GlobalTemplatesTest {
 	public void testRegisterResolveGlobal() throws Exception {
 		GlobalTemplates global = new GlobalTemplates();
 		global.register("global", string("string"));
-		assertThat(global.resolveGlobal("global"), equalTo(var("global",string("string"))));
+		assertThat(global.resolveGlobal("global").get(), equalTo(var("global",string("string"))));
 	}
 
 }

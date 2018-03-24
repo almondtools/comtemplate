@@ -6,7 +6,7 @@ import static com.almondtools.comtemplate.engine.expressions.StringLiteral.strin
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
@@ -83,14 +83,14 @@ public class TemplateGroupTest {
 	@Test
 	public void testResolveVariableNotFound() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
-		assertThat(group.resolveVariable("var"), nullValue());
+		assertThat(group.resolveVariable("var").isPresent(), is(false));
 	}
 
 	@Test
 	public void testResolveVariableFound() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
 		group.defineConstant("var").setValue(string("string"));
-		assertThat(group.resolveVariable("var"), equalTo(var("var", string("string"))));
+		assertThat(group.resolveVariable("var").get(), equalTo(var("var", string("string"))));
 	}
 
 	@Test
