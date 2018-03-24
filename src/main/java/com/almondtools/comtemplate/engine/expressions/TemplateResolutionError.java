@@ -18,7 +18,7 @@ public class TemplateResolutionError extends ErrorExpression {
 	public String getMessage() {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("template <").append(template).append("> cannot be resolved");
-		if (definition != null) {
+		if (definition != null && definition.getGroup() != null) {
 			buffer.append("\naccessed in <").append(definition.getName()).append('>');
 			buffer.append("\navailable templates: ");
 			buffer.append(definition.getGroup().getDefinitions().stream()

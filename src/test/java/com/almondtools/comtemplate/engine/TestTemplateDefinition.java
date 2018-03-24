@@ -10,11 +10,16 @@ import java.util.stream.Stream;
 public class TestTemplateDefinition extends TemplateDefinition {
 
 	public TestTemplateDefinition(String name, List<TemplateParameter> parameters) {
-		super(name, parameters);
+		this(name, parameters, new TemplateGroup(name));
 	}
 
 	public TestTemplateDefinition(String name, Object... parameters) {
+		this(name, TemplateParameter.toParams(parameters), new TemplateGroup(name));
+	}
+
+	public TestTemplateDefinition(String name, List<TemplateParameter> parameters, TemplateGroup group) {
 		super(name, parameters);
+		setGroup(group);
 	}
 
 	@Override

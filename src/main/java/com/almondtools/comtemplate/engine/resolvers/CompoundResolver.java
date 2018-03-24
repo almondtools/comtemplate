@@ -9,7 +9,7 @@ import com.almondtools.comtemplate.engine.Resolver;
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 import com.almondtools.comtemplate.engine.expressions.ErrorExpression;
-import com.almondtools.comtemplate.engine.expressions.ResolutionErrors;
+import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionErrors;
 
 public class CompoundResolver implements Resolver {
 
@@ -41,7 +41,7 @@ public class CompoundResolver implements Resolver {
 				return resolved;
 			}
 		}
-		return new ResolutionErrors(errors);
+		return new ExpressionResolutionErrors(base, function, arguments, scope, this, errors);
 	}
 	
 	@Override

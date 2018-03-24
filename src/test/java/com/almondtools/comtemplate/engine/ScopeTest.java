@@ -95,7 +95,8 @@ public class ScopeTest {
 
 	@Test
 	public void testResolveTemplateNoGroup() throws Exception {
-		assertThat(new Scope(definition, var("param", string("string"))).resolveTemplate("call"), nullValue());
+		Scope scope = new Scope(definition, var("param", string("string")));
+		assertThat(scope.resolveTemplate("call"), nullValue());
 	}
 
 	@Test
@@ -128,7 +129,8 @@ public class ScopeTest {
 	public void testResolveTemplateInFailingDefinedScope() throws Exception {
 		TemplateDefinition parentDefinition = new TestTemplateDefinition("parent");
 		Scope parent = new Scope(parentDefinition);
-		assertThat(new Scope(parent, definition).resolveTemplate("temp", definition), nullValue());
+		Scope scope = new Scope(parent, definition);
+		assertThat(scope.resolveTemplate("temp", definition), nullValue());
 	}
 
 	@Test

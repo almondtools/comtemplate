@@ -36,15 +36,12 @@ import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 import com.almondtools.comtemplate.engine.expressions.TestError;
 import com.almondtools.comtemplate.engine.expressions.ToObject;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class TemplateEventNotifierTest {
 
 	@Mock
-	private Scope scope;
-	@Mock
 	private InterpreterListener listener;
-	
+
 	private TemplateEventNotifier notifier;
 
 	@Before
@@ -52,7 +49,7 @@ public class TemplateEventNotifierTest {
 		notifier = new TemplateEventNotifier();
 		notifier.addListener(listener);
 	}
-	
+
 	@Test
 	public void testTemplateEventNotifierHandlingErrors() throws Exception {
 		ErrorHandler errors = mock(ErrorHandler.class);
@@ -61,129 +58,143 @@ public class TemplateEventNotifierTest {
 		notifier = new TemplateEventNotifier(new ResolverRegistry(), defaultTemplates(), errors);
 
 		notifier.visitErrorExpression(error, scope);
-		
-		verify(errors).handle(error);
+
+		verify(errors).clear(error, error);
 	}
 
 	@Test
 	public void testVisitRawText() throws Exception {
-		verifyListenerIsNotified(notifier, new RawText("raw text"));
+		verifyListenerIsNotified(notifier, new TestScope(), new RawText("raw text"));
 	}
 
 	@Test
 	public void testVisitEvalVar() throws Exception {
-		verifyListenerIsNotified(notifier, new EvalVar("var", mock(TemplateDefinition.class)));
+		TestScope scope = new TestScope();
+		verifyListenerIsNotified(notifier, scope, new EvalVar("var", scope.getDefinition()));
 	}
 
 	@Test
 	public void testVisitEvalContextVar() throws Exception {
-		verifyListenerIsNotified(notifier, new EvalContextVar("var"));
+		verifyListenerIsNotified(notifier, new TestScope(), new EvalContextVar("var"));
 	}
 
 	@Test
 	public void testVisitEvalTemplate() throws Exception {
-		verifyListenerIsNotified(notifier, new EvalTemplate("template", mock(TemplateDefinition.class)));
+		TestScope scope = new TestScope() {
+			@Override
+			public TemplateDefinition resolveTemplate(String template, TemplateDefinition definition) {
+				return new TestTemplateDefinition("test");
+			}
+		};
+		verifyListenerIsNotified(notifier, scope, new EvalTemplate("template", scope.getDefinition()));
 	}
 
 	@Test
 	public void testVisitEvalTemplateFunction() throws Exception {
-		verifyListenerIsNotified(notifier, new EvalTemplateFunction("template", mock(TemplateDefinition.class)));
+		TestScope scope = new TestScope() {
+			@Override
+			public TemplateDefinition resolveTemplate(String template, TemplateDefinition definition) {
+				return new TestTemplateDefinition("test");
+			}
+		};
+		verifyListenerIsNotified(notifier, scope, new EvalTemplateFunction("template", scope.getDefinition()));
 	}
 
 	@Test
 	public void testVisitEvalAnonymousTemplate() throws Exception {
-		verifyListenerIsNotified(notifier, new EvalAnonymousTemplate(mock(TemplateDefinition.class)));
+		TestScope scope = new TestScope();
+		verifyListenerIsNotified(notifier, scope, new EvalAnonymousTemplate(scope.getDefinition()));
 	}
 
 	@Test
 	public void testVisitEvalAttribute() throws Exception {
-		verifyListenerIsNotified(notifier, new EvalAttribute(string("base"),"att"));
+		verifyListenerIsNotified(notifier, new TestScope(), new EvalAttribute(string("base"), "att"));
 	}
 
 	@Test
 	public void testVisitEvalFunction() throws Exception {
-		verifyListenerIsNotified(notifier, new EvalFunction(string("base"),"func"));
+		verifyListenerIsNotified(notifier, new TestScope(), new EvalFunction(string("base"), "func"));
 	}
 
 	@Test
 	public void testVisitEvaluated() throws Exception {
-		verifyListenerIsNotified(notifier, new Evaluated());
+		verifyListenerIsNotified(notifier, new TestScope(), new Evaluated());
 	}
 
 	@Test
 	public void testVisitExists() throws Exception {
-		verifyListenerIsNotified(notifier, new Exists(mock(TemplateExpression.class)));
+		verifyListenerIsNotified(notifier, new TestScope(), new Exists(mock(TemplateExpression.class)));
 	}
 
 	@Test
 	public void testVisitDefaulted() throws Exception {
-		verifyListenerIsNotified(notifier, new Defaulted(string("a"), string("b")));
+		verifyListenerIsNotified(notifier, new TestScope(), new Defaulted(string("a"), string("b")));
 	}
 
 	@Test
 	public void testVisitConcat() throws Exception {
-		verifyListenerIsNotified(notifier, new Concat());
+		verifyListenerIsNotified(notifier, new TestScope(), new Concat());
 	}
 
 	@Test
 	public void testVisitToObject() throws Exception {
-		verifyListenerIsNotified(notifier, new ToObject("type", mock(TemplateExpression.class)));
+		verifyListenerIsNotified(notifier, new TestScope(), new ToObject("type", mock(TemplateExpression.class)));
 	}
 
 	@Test
 	public void testVisitMapLiteralMapLiteralScope() throws Exception {
-		verifyListenerIsNotified(notifier, map());
+		verifyListenerIsNotified(notifier, new TestScope(), map());
 	}
 
 	@Test
 	public void testVisitMapLiteralResolvedMapLiteralScope() throws Exception {
-		verifyListenerIsNotified(notifier, new ResolvedMapLiteral());
+		verifyListenerIsNotified(notifier, new TestScope(), new ResolvedMapLiteral());
 	}
 
 	@Test
 	public void testVisitListLiteralListLiteralScope() throws Exception {
-		verifyListenerIsNotified(notifier, list());
+		verifyListenerIsNotified(notifier, new TestScope(), list());
 	}
 
 	@Test
 	public void testVisitListLiteralResolvedListLiteralScope() throws Exception {
-		verifyListenerIsNotified(notifier, new ResolvedListLiteral());
+		verifyListenerIsNotified(notifier, new TestScope(), new ResolvedListLiteral());
 	}
 
 	@Test
 	public void testVisitStringLiteral() throws Exception {
-		verifyListenerIsNotified(notifier, string("s"));
+		verifyListenerIsNotified(notifier, new TestScope(), string("s"));
 	}
 
 	@Test
 	public void testVisitIntegerLiteral() throws Exception {
-		verifyListenerIsNotified(notifier, integer(1));
+		verifyListenerIsNotified(notifier, new TestScope(), integer(1));
 	}
 
 	@Test
 	public void testVisitDecimalLiteral() throws Exception {
-		verifyListenerIsNotified(notifier, decimal(1.2));
+		verifyListenerIsNotified(notifier, new TestScope(), decimal(1.2));
 	}
 
 	@Test
 	public void testVisitBooleanLiteral() throws Exception {
-		verifyListenerIsNotified(notifier, TRUE);
+		verifyListenerIsNotified(notifier, new TestScope(), TRUE);
 	}
 
 	@Test
 	public void testVisitNativeObject() throws Exception {
-		verifyListenerIsNotified(notifier, new NativeObject(new Object()));
+		verifyListenerIsNotified(notifier, new TestScope(), new NativeObject(new Object()));
 	}
 
 	@Test
 	public void testVisitCast() throws Exception {
-		verifyListenerIsNotified(notifier, new Cast(mock(TemplateExpression.class), "to"));
+		verifyListenerIsNotified(notifier, new TestScope(), new Cast(mock(TemplateExpression.class), "to"));
 	}
 
 	@Test
 	public void testVisitErrorExpression() throws Exception {
-		verifyListenerIsNotified(notifier, new ErrorExpression() {
-			
+		verifyListenerIsNotified(notifier, new TestScope(), new ErrorExpression() {
+
 			@Override
 			public String getMessage() {
 				// TODO Auto-generated method stub
@@ -192,9 +203,9 @@ public class TemplateEventNotifierTest {
 		});
 	}
 
-	public void verifyListenerIsNotified(TemplateEventNotifier notifier, TemplateExpression source) {
-		TemplateImmediateExpression result = source.apply(notifier, scope);;
-		
+	public void verifyListenerIsNotified(TemplateEventNotifier notifier, Scope scope, TemplateExpression source) {
+		TemplateImmediateExpression result = source.apply(notifier, scope);
+
 		verify(listener).notify(source, result);
 	}
 

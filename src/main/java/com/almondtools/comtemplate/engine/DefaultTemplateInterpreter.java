@@ -35,7 +35,6 @@ import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.Exists;
-import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 import com.almondtools.comtemplate.engine.expressions.IntegerLiteral;
 import com.almondtools.comtemplate.engine.expressions.ListLiteral;
 import com.almondtools.comtemplate.engine.expressions.MapLiteral;
@@ -74,9 +73,9 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 	public TemplateImmediateExpression visitEvalVar(EvalVar evalVar, Scope scope) {
 		String name = evalVar.getName();
 		TemplateDefinition definition = evalVar.getDefinition();
-		return scope.resolveVariable(name, definition)
+		return handler.clear(evalVar, scope.resolveVariable(name, definition)
 			.map(v -> v.getValue().apply(this, scope))
-			.orElseGet(() -> new VariableResolutionError(name, definition));
+			.orElseGet(() -> new VariableResolutionError(name, definition)));
 	}
 
 	@Override
@@ -86,8 +85,8 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		if (!value.isPresent()) {
 			value = templates.resolveGlobal(name);
 		}
-		return value.map(v -> v.getValue().apply(this, scope))
-			.orElseGet(() -> new VariableResolutionError(name, scope));
+		return handler.clear(evalContextVar, value.map(v -> v.getValue().apply(this, scope))
+			.orElseGet(() -> new VariableResolutionError(name, scope)));
 	}
 
 	@Override
@@ -100,9 +99,9 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 			template = scope.resolveTemplate(name, definition);
 		}
 		if (template == null) {
-			return new TemplateResolutionError(name, definition);
+			return handler.clear(evalTemplate, new TemplateResolutionError(name, definition));
 		}
-		return template.evaluate(this, scope, arguments);
+		return handler.clear(evalTemplate, template.evaluate(this, scope, arguments));
 	}
 
 	@Override
@@ -115,14 +114,14 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 			template = scope.resolveTemplate(name, definition);
 		}
 		if (template == null) {
-			return new TemplateResolutionError(name, definition);
+			return handler.clear(evalTemplateFunction, new TemplateResolutionError(name, definition));
 		}
 		List<TemplateVariable> assignedArguments = template.getParameters().stream()
 			.limit(arguments.size())
 			.map(byIndex(arguments.size()))
 			.map(item -> var(item.value.getName(), arguments.get(item.index)))
 			.collect(toList());
-		return template.evaluate(this, scope, assignedArguments);
+		return handler.clear(evalTemplateFunction, template.evaluate(this, scope, assignedArguments));
 	}
 
 	@Override
@@ -136,7 +135,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 			template = scope.resolveTemplate(name, definition);
 		}
 		if (template == null) {
-			return new TemplateResolutionError(name, definition);
+			return handler.clear(evalTemplateMixed, new TemplateResolutionError(name, definition));
 		}
 		List<TemplateVariable> assignedArguments = Stream.concat(
 			template.getParameters().stream()
@@ -145,15 +144,15 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 				.map(item -> var(item.value.getName(), arguments.get(item.index))),
 			namedArguments.stream())
 			.collect(toList());
-		return template.evaluate(this, scope, assignedArguments);
+		return handler.clear(evalTemplateMixed, template.evaluate(this, scope, assignedArguments));
 	}
 
 	@Override
 	public TemplateImmediateExpression visitEvalAnonymousTemplate(EvalAnonymousTemplate evalAnonymousTemplate, Scope scope) {
-		Scope next = new Scope(scope, scope.getDefinition(), scope.getVariables());
-		return evalAnonymousTemplate.getExpressions().stream()
+		Scope next = new Scope(scope, new AnonymousTemplateDefinition(scope.getGroup()));
+		return handler.clear(evalAnonymousTemplate, evalAnonymousTemplate.getExpressions().stream()
 			.map(expression -> expression.apply(this, next))
-			.collect(assembling());
+			.collect(assembling()));
 	}
 
 	@Override
@@ -162,7 +161,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		String attribute = evalAttribute.getAttribute();
 		TemplateImmediateExpression resolved = base.apply(this, scope);
 		Resolver resolver = resolvers.getResolverFor(resolved);
-		return resolver.resolve(resolved, attribute, emptyList(), scope);
+		return handler.clear(evalAttribute, resolver.resolve(resolved, attribute, emptyList(), scope));
 	}
 
 	@Override
@@ -171,7 +170,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		TemplateImmediateExpression resolved = base.apply(this, scope);
 		TemplateImmediateExpression attribute = evalVirtual.getAttribute().apply(this, scope);
 		Resolver resolver = resolvers.getResolverFor(resolved);
-		return resolver.resolve(resolved, attribute.getText(), emptyList(), scope);
+		return handler.clear(evalVirtual, resolver.resolve(resolved, attribute.getText(), emptyList(), scope));
 	}
 
 	@Override
@@ -183,7 +182,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 			.collect(toList());
 		TemplateImmediateExpression resolved = base.apply(this, scope);
 		Resolver resolver = resolvers.getResolverFor(resolved);
-		return resolver.resolve(resolved, function, arguments, scope);
+		return handler.clear(evalFunction, resolver.resolve(resolved, function, arguments, scope));
 	}
 
 	@Override
@@ -193,22 +192,18 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 
 	@Override
 	public TemplateImmediateExpression visitExists(Exists exists, Scope scope) {
+		handler.addDefault(exists.getExpression(), () -> BooleanLiteral.FALSE);
 		TemplateImmediateExpression result = exists.getExpression().apply(this, scope);
-		if (result instanceof VariableResolutionError || result instanceof ExpressionResolutionError) {
-			return BooleanLiteral.FALSE;
-		} else {
-			return BooleanLiteral.TRUE;
+		if (result != BooleanLiteral.FALSE) {
+			result = BooleanLiteral.TRUE;
 		}
+		return result;
 	}
 
 	@Override
 	public TemplateImmediateExpression visitDefaulted(Defaulted defaulted, Scope scope) {
-		TemplateExpression result = defaulted.getExpression().apply(this, scope);
-		if (result instanceof VariableResolutionError || result instanceof ExpressionResolutionError) {
-			return defaulted.getDefaultExpression().apply(this, scope);
-		} else {
-			return result.apply(this, scope);
-		}
+		handler.addDefault(defaulted.getExpression(), () -> defaulted.getDefaultExpression().apply(this, scope));
+		return defaulted.getExpression().apply(this, scope);
 	}
 
 	@Override
@@ -345,7 +340,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		String type = cast.getType();
 		TemplateImmediateExpression evaluated = cast.getExpression().apply(this, scope);
 		if (!(evaluated instanceof ResolvedMapLiteral)) {
-			return new UnexpectedTypeError(type, evaluated);
+			return handler.clear(cast, new UnexpectedTypeError(type, evaluated));
 		} else {
 			ResolvedMapLiteral object = (ResolvedMapLiteral) evaluated;
 			if (superTypes(object)
@@ -354,14 +349,14 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 				.findAny().isPresent()) {
 				return object;
 			} else {
-				return new UnexpectedTypeError(type, evaluated);
+				return handler.clear(cast, new UnexpectedTypeError(type, evaluated));
 			}
 		}
 	}
 
 	@Override
 	public TemplateImmediateExpression visitErrorExpression(ErrorExpression errorExpression, Scope scope) {
-		return handler.handle(errorExpression);
+		return handler.clear(errorExpression, errorExpression);
 	}
 
 }

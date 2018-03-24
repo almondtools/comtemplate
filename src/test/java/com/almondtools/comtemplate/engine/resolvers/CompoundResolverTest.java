@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
-import com.almondtools.comtemplate.engine.expressions.ResolutionErrors;
+import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionErrors;
 
 public class CompoundResolverTest {
 
@@ -62,7 +62,7 @@ public class CompoundResolverTest {
 
 		TemplateImmediateExpression resolved = resolver.resolve(FALSE, "not", emptyList(), scope);
 
-		assertThat(resolved, instanceOf(ResolutionErrors.class));
+		assertThat(resolved, instanceOf(ExpressionResolutionErrors.class));
 	}
 
 }

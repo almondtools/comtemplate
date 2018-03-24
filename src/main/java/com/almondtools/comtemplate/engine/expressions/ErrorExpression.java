@@ -33,4 +33,8 @@ public abstract class ErrorExpression implements TemplateImmediateExpression {
 		return buffer.toString();
 	}
 
+	@Override
+	public String toString() {
+		return "<" + getClass().getSimpleName().toLowerCase() + ">";
+	}
 }

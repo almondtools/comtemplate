@@ -73,11 +73,15 @@ public abstract class TemplateDefinition {
 	}
 
 	public String evaluate(List<TemplateVariable> arguments) {
-		return evaluate(new DefaultTemplateInterpreter(), null, arguments).getText();
+		TemplateImmediateExpression evaluated = evaluate(new DefaultTemplateInterpreter(), null, arguments);
+			
+		return evaluated.getText();
 	}
 
 	public String evaluate(Scope scope) {
-		return evaluate(new DefaultTemplateInterpreter(), scope, emptyList()).getText();
+		TemplateImmediateExpression evaluated = evaluate(new DefaultTemplateInterpreter(), scope, emptyList());
+		
+		return evaluated.getText();
 	}
 
 	public abstract TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments);

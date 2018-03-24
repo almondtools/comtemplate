@@ -3,6 +3,7 @@ package com.almondtools.comtemplate.engine;
 import static com.almondtools.comtemplate.engine.TemplateParameter.param;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
@@ -60,9 +61,8 @@ public class TemplateGroupTest {
 	@Test
 	public void testGetDefinitionNotFound() throws Exception {
 		TemplateGroup group = new TemplateGroup("group");
-		expected.expect(TemplateDefinitionNotFoundException.class);
 
-		group.getDefinition("template");
+		assertThat(group.getDefinition("template"), nullValue());
 	}
 
 	@Test
@@ -124,5 +124,5 @@ public class TemplateGroupTest {
 		TemplateGroup group = new TemplateGroup("group");
 		assertThat(group.relativeReference("other"), equalTo("other"));
 	}
-	
+
 }

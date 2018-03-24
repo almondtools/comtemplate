@@ -39,6 +39,13 @@ public class Scope {
 		return definition;
 	}
 
+	public TemplateGroup getGroup() {
+		if (definition == null) {
+			return null;
+		}
+		return definition.getGroup();
+	}
+
 	public List<TemplateVariable> getVariables() {
 		return variables;
 	}
