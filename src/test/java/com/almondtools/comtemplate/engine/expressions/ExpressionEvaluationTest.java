@@ -2,13 +2,12 @@ package com.almondtools.comtemplate.engine.expressions;
 
 import static com.almondtools.comtemplate.engine.TemplateParameter.param;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static com.almondtools.comtemplate.engine.expressions.MapLiteral.map;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-
-import java.util.Collections;
 
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class ExpressionEvaluationTest {
 
 		definition.add(new EvalTemplate("temp", definition, var("arg", anonymousTemplate)));
 
-		String evaluated = definition.evaluate(var("callerArg", string("callerArgument")));
+		String evaluated = definition.evaluate(interpreter(), var("callerArg", string("callerArgument")));
 		assertThat(evaluated, equalTo("var: temp(callerArgument)"));
 	}
 
@@ -54,7 +53,7 @@ public class ExpressionEvaluationTest {
 
 		definition.add(new EvalTemplate("temp", definition, var("arg", anonymousTemplate)));
 
-		String evaluated = definition.evaluate(var("callerArg", string("contextArgument")));
+		String evaluated = definition.evaluate(interpreter(), var("callerArg", string("contextArgument")));
 		assertThat(evaluated, equalTo("var: temp(contextArgument)"));
 	}
 
@@ -71,7 +70,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalTemplate("temp", definition, var("arg", map(var("field", string("argument.field"))))));
 
-		String evaluated = definition.evaluate(Collections.emptyList());
+		String evaluated = definition.evaluate(interpreter(), emptyList());
 		assertThat(evaluated, equalTo("var: temp(argument.field)"));
 	}
 
@@ -88,7 +87,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalTemplate("temp", definition));
 
-		String evaluated = definition.evaluate(var("callerArg", string("contextargument")));
+		String evaluated = definition.evaluate(interpreter(), var("callerArg", string("contextargument")));
 		assertThat(evaluated, equalTo("var: temp(contextargument)"));
 	}
 
@@ -103,7 +102,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalFunction(new EvalTemplate("temp", definition), "trim"));
 
-		String evaluated = definition.evaluate(Collections.emptyList());
+		String evaluated = definition.evaluate(interpreter(), emptyList());
 		assertThat(evaluated, equalTo("var: some Text"));
 	}
 
@@ -120,7 +119,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalTemplate("temp", definition, var("arg", string("argument"))));
 
-		String evaluated = definition.evaluate(Collections.emptyList());
+		String evaluated = definition.evaluate(interpreter(), emptyList());
 		assertThat(evaluated, equalTo("var: temp(argument)"));
 	}
 
@@ -140,7 +139,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalTemplate("temp", definition, var("arg", new EvalTemplate("argument", definition))));
 
-		String evaluated = definition.evaluate(Collections.emptyList());
+		String evaluated = definition.evaluate(interpreter(), emptyList());
 		assertThat(evaluated, equalTo("var: temp(argument)"));
 	}
 
@@ -150,7 +149,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalVar("var", definition));
 
-		String result = definition.evaluate(emptyList());
+		String result = definition.evaluate(interpreter(), emptyList());
 		
 		assertThat(result, equalTo("var: "));
 	}
@@ -161,7 +160,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalVar("var", definition));
 
-		String evaluated = definition.evaluate(Collections.emptyList());
+		String evaluated = definition.evaluate(interpreter(), emptyList());
 		assertThat(evaluated, equalTo("var: default"));
 	}
 
@@ -171,7 +170,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalVar("var", definition));
 
-		String evaluated = definition.evaluate(var("var", string("hello world")));
+		String evaluated = definition.evaluate(interpreter(), var("var", string("hello world")));
 		assertThat(evaluated, equalTo("var: hello world"));
 	}
 
@@ -181,7 +180,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalVar("var", definition));
 
-		String result = definition.evaluate(emptyList());
+		String result = definition.evaluate(interpreter(), emptyList());
 		
 		assertThat(result, equalTo("var: "));
 	}
@@ -199,7 +198,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new RawText("var: "));
 		definition.add(new EvalTemplate("temp", definition, var("arg", new EvalVar("callerArg", definition))));
 
-		String evaluated = definition.evaluate(var("callerArg", string("callerargument")));
+		String evaluated = definition.evaluate(interpreter(), var("callerArg", string("callerargument")));
 		assertThat(evaluated, equalTo("var: temp(callerargument)"));
 	}
 

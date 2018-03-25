@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.engine;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -33,7 +34,7 @@ public class AbstractTemplateLoaderTest {
 	public void testLoadDefinition() throws Exception {
 		TemplateDefinition definition = loader.loadDefinition("mygroup.template");
 
-		assertThat(definition.evaluate(emptyList()), equalTo("mytest"));
+		assertThat(definition.evaluate(interpreter(), emptyList()), equalTo("mytest"));
 	}
 
 }

@@ -2,6 +2,7 @@ package com.almondtools.comtemplate.engine;
 
 import static com.almondtools.comtemplate.engine.TemplateParameter.param;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static com.almondtools.comtemplate.engine.expressions.DecimalLiteral.decimal;
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static com.almondtools.comtemplate.engine.expressions.MapLiteral.map;
@@ -20,7 +21,7 @@ public class CustomObjectDefinitionTest {
 		ValueDefinition object = new ValueDefinition("constant");
 		object.setValue(string("string"));
 
-		assertThat(object.evaluate(), equalTo("string"));
+		assertThat(object.evaluate(interpreter()), equalTo("string"));
 	}
 
 	@Test
@@ -28,7 +29,7 @@ public class CustomObjectDefinitionTest {
 		ValueDefinition object = new ValueDefinition("constant");
 		object.setValue(string("string"));
 		
-		assertThat(object.toVariable(), equalTo(TemplateVariable.var("constant", string("string"))));
+		assertThat(object.toVariable(), equalTo(var("constant", string("string"))));
 	}
 
 	@Test
@@ -44,7 +45,7 @@ public class CustomObjectDefinitionTest {
 		ValueDefinition object = new ValueDefinition("object", "dec");
 		object.setObjectValue(new EvalVar("dec", object));
 
-		assertThat(object.evaluate(var("dec", decimal(1.1))), equalTo("[_type=object, _value=1.1]"));
+		assertThat(object.evaluate(interpreter(), var("dec", decimal(1.1))), equalTo("[_type=object, _value=1.1]"));
 	}
 
 	@Test
@@ -52,7 +53,7 @@ public class CustomObjectDefinitionTest {
 		ValueDefinition object = new ValueDefinition("object", "dec", param("int", integer(2)));
 		object.setObjectValue(map(var("dec", new EvalVar("dec", object)), var("int", new EvalVar("int", object))));
 
-		assertThat(object.evaluate(var("dec", decimal(1.1))), equalTo("[_type=object, dec=1.1, int=2]"));
+		assertThat(object.evaluate(interpreter(), var("dec", decimal(1.1))), equalTo("[_type=object, dec=1.1, int=2]"));
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine.templates;
 
+import static com.almondtools.comtemplate.engine.GlobalTemplates.defaultTemplates;
+import static com.almondtools.comtemplate.engine.ResolverRegistry.defaultRegistry;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.MapLiteral.map;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
@@ -17,6 +19,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.almondtools.comtemplate.engine.ArgumentRequiredException;
+import com.almondtools.comtemplate.engine.DefaultErrorHandler;
 import com.almondtools.comtemplate.engine.DefaultTemplateInterpreter;
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
@@ -36,7 +39,7 @@ public class ApplyTemplateTest {
 
 	@Before
 	public void before() throws Exception {
-		interpreter = new DefaultTemplateInterpreter();
+		interpreter = new DefaultTemplateInterpreter(defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.parser.files;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -21,25 +22,25 @@ public class VariablesTest extends TemplateTests {
 	
 	@Test
 	public void testWithContext() throws Exception {
-		String rendered = group.getDefinition("withContext").evaluate();
+		String rendered = group.getDefinition("withContext").evaluate(interpreter());
 		assertThat(rendered, equalTo("someContext"));
 	}
 
 	@Test
 	public void testWithoutContext() throws Exception {
-		String rendered = group.getDefinition("withoutContext").evaluate();
+		String rendered = group.getDefinition("withoutContext").evaluate(interpreter());
 		assertThat(rendered, equalTo("nothing"));
 	}
 	
 	@Test
 	public void testDefaultWithContext() throws Exception {
-		String rendered = group.getDefinition("defaultWithContext").evaluate();
+		String rendered = group.getDefinition("defaultWithContext").evaluate(interpreter());
 		assertThat(rendered, equalTo("someContext"));
 	}
 	
 	@Test
 	public void testDefaultWithoutContext() throws Exception {
-		String rendered = group.getDefinition("defaultWithoutContext").evaluate();
+		String rendered = group.getDefinition("defaultWithoutContext").evaluate(interpreter());
 		assertThat(rendered, equalTo("nothing"));
 	}
 	

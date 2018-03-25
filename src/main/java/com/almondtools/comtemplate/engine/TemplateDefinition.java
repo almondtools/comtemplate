@@ -51,12 +51,12 @@ public abstract class TemplateDefinition {
 			.orElse(null);
 	}
 
-	public String evaluateNative(Object... arguments) {
-		return evaluateNative(asList(arguments));
+	public String evaluateNative(TemplateInterpreter interpreter, Object... arguments) {
+		return evaluateNative(interpreter, asList(arguments));
 	}
 
-	public String evaluateNative(List<Object> arguments) {
-		return evaluate(toVariables(arguments));
+	public String evaluateNative(TemplateInterpreter interpreter, List<Object> arguments) {
+		return evaluate(interpreter, toVariables(arguments));
 	}
 
 	private List<TemplateVariable> toVariables(List<Object> arguments) {
@@ -68,20 +68,26 @@ public abstract class TemplateDefinition {
 			.collect(toList());
 	}
 
-	public String evaluate(TemplateVariable... arguments) {
-		return evaluate(asList(arguments));
+	public String evaluate(TemplateInterpreter interpreter, TemplateVariable... arguments) {
+		return evaluate(interpreter, asList(arguments));
 	}
 
-	public String evaluate(List<TemplateVariable> arguments) {
-		TemplateImmediateExpression evaluated = evaluate(new DefaultTemplateInterpreter(), null, arguments);
+	public String evaluate(TemplateInterpreter interpreter, List<TemplateVariable> arguments) {
+		TemplateImmediateExpression evaluated = evaluate(interpreter, null, arguments);
 			
 		return evaluated.getText();
 	}
 
-	public String evaluate(Scope scope) {
-		TemplateImmediateExpression evaluated = evaluate(new DefaultTemplateInterpreter(), scope, emptyList());
+	public String evaluate(TemplateInterpreter interpreter, Scope scope) {
+		TemplateImmediateExpression evaluated = evaluate(interpreter, scope, emptyList());
 		
 		return evaluated.getText();
+	}
+
+	public String evaluate(TemplateInterpreter interpreter, Scope scope, TemplateVariable... arguments) {
+		TemplateImmediateExpression evalutated = evaluate(interpreter, scope, asList(arguments));
+
+		return evalutated.getText();
 	}
 
 	public abstract TemplateImmediateExpression evaluate(TemplateInterpreter interpreter, Scope parent, List<TemplateVariable> arguments);

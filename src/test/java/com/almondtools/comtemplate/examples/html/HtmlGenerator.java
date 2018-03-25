@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.examples.html;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
+
 import java.io.IOException;
 import java.util.stream.Stream;
 
@@ -18,7 +20,7 @@ public class HtmlGenerator {
 		try {
 			TemplateDefinition template = loader.loadDefinition(name);
 			
-			System.out.println(template.evaluateNative(arguments));
+			System.out.println(template.evaluateNative(interpreter(), arguments));
 		} catch (ComtemplateException e) {
 			System.out.println(e.getMessage());
 		}

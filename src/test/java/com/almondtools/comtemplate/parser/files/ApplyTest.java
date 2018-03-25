@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.parser.files;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static com.almondtools.comtemplate.parser.files.TemplateTests.compileLibrary;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -20,13 +21,13 @@ public class ApplyTest {
 
 	@Test
 	public void testApplyObject() throws Exception {
-		String rendered = group.getDefinition("applyObject").evaluate();
+		String rendered = group.getDefinition("applyObject").evaluate(interpreter());
 		assertThat(rendered, equalTo("myname"));
 	}
 
 	@Test
 	public void testApplyTemplate() throws Exception {
-		String rendered = group.getDefinition("applyTemplate").evaluate();
+		String rendered = group.getDefinition("applyTemplate").evaluate(interpreter());
 		assertThat(rendered, equalTo("mycontent"));
 	}
 }

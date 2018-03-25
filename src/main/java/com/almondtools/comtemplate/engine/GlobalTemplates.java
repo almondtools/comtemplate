@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine;
 
+import static com.almondtools.comtemplate.engine.TemplateVariable.var;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -31,7 +33,7 @@ public class GlobalTemplates {
 	}
 
 	public void register(String name, TemplateExpression global) {
-		register(TemplateVariable.var(name, global));
+		register(var(name, global));
 	}
 
 	public TemplateDefinition resolve(String name) {

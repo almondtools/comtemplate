@@ -20,9 +20,18 @@ import java.util.stream.Stream;
 
 import com.almondtools.comtemplate.engine.ComtemplateException;
 import com.almondtools.comtemplate.engine.ConfigurableTemplateLoader;
+import com.almondtools.comtemplate.engine.DefaultErrorHandler;
+import com.almondtools.comtemplate.engine.DefaultTemplateInterpreter;
+import com.almondtools.comtemplate.engine.GlobalTemplates;
+import com.almondtools.comtemplate.engine.ResolverRegistry;
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateDefinition;
+import com.almondtools.comtemplate.engine.TemplateGroup;
+import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
+import com.almondtools.comtemplate.engine.TemplateInterpreter;
 import com.almondtools.comtemplate.engine.TemplateLoader;
+import com.almondtools.comtemplate.engine.TemplateVariable;
+import com.almondtools.comtemplate.engine.expressions.ResolvedListLiteral;
 
 public class TemplateProcessor {
 
@@ -139,15 +148,47 @@ public class TemplateProcessor {
 			.filter(path -> path.getFileName().toString().endsWith(".ctp") && !path.getFileName().toString().startsWith("_"))
 			.map(path -> path.toString())
 			.collect(toList());
+		
+		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
 		for (String templateFileName : templateFileNames) {
 			try {
 				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar, '.');
-				Path targetPath = target.resolve(templateFileName.replace(".ctp", extension));
 				TemplateDefinition main = loader.loadDefinition(templateName + ".main");
-				Files.createDirectories(targetPath.getParent());
-				Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
-				String evaluate = main.evaluate(globalScope);
-				Files.write(targetPath, evaluate.getBytes());
+				if (main.getParameter("data") == null) {
+					Path targetPath = target.resolve(templateFileName.replace(".ctp", extension));
+					Files.createDirectories(targetPath.getParent());
+					Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
+					
+					String evaluate = main.evaluate(interpreter, globalScope);
+					
+					Files.write(targetPath, evaluate.getBytes());
+				} else {
+					Path parentPath = target.resolve(templateFileName).getParent();
+					Files.createDirectories(parentPath);
+					Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
+
+					TemplateGroup group = main.getGroup();
+					ResolvedListLiteral data = group.resolveVariable("data")
+						.map(v -> v.getValue().apply(interpreter, globalScope))
+						.filter(v -> v instanceof ResolvedListLiteral)
+						.map(v -> (ResolvedListLiteral) v)
+						.orElse(new ResolvedListLiteral());
+
+					TemplateDefinition name = loader.loadDefinition(templateName + ".name");
+					
+					for (TemplateImmediateExpression dataItem : data.getList()) {
+						
+						TemplateVariable dataVar = var("data", dataItem);
+
+						String fileName = name.evaluate(interpreter, globalScope, dataVar);
+						
+						Path targetPath = target.resolve(fileName);
+						
+						String evaluate = main.evaluate(interpreter, globalScope, dataVar);
+						
+						Files.write(targetPath, evaluate.getBytes());
+					}
+				}
 			} catch (ComtemplateException e) {
 				System.err.println(e.getMessage());
 			}

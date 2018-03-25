@@ -54,10 +54,6 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 	private GlobalTemplates templates;
 	private ErrorHandler handler;
 
-	public DefaultTemplateInterpreter() {
-		this(ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
-	}
-
 	public DefaultTemplateInterpreter(ResolverRegistry resolvers, GlobalTemplates templates, ErrorHandler handler) {
 		this.resolvers = resolvers;
 		this.templates = templates;

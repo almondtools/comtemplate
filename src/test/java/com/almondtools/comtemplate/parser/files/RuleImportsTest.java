@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.parser.files;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -25,25 +26,25 @@ public class RuleImportsTest extends TemplateTests {
 
 	@Test
 	public void testBrackets() throws Exception {
-		String rendered = group.getDefinition("testbrackets").evaluate();
+		String rendered = group.getDefinition("testbrackets").evaluate(interpreter());
 		assertThat(rendered, equalTo("brackets: [content]"));
 	}
 
 	@Test
 	public void testBraces() throws Exception {
-		String rendered = group.getDefinition("testbraces").evaluate();
+		String rendered = group.getDefinition("testbraces").evaluate(interpreter());
 		assertThat(rendered, equalTo("braces: {content}"));
 	}
 
 	@Test
 	public void testLocalImport() throws Exception {
-		String rendered = group.getDefinition("testlocal1").evaluate();
+		String rendered = group.getDefinition("testlocal1").evaluate(interpreter());
 		assertThat(rendered, equalTo("local1"));
 	}
 
 	@Test
 	public void testNotLocalImport() throws Exception {
-		String rendered = group.getDefinition("testlocal2").evaluate();
+		String rendered = group.getDefinition("testlocal2").evaluate(interpreter());
 		assertThat(rendered, equalTo(""));
 	}
 

@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.parser.files;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -25,31 +26,31 @@ public class WildcardImportsTest extends TemplateTests {
 
 	@Test
 	public void testBrackets() throws Exception {
-		String rendered = group.getDefinition("testbrackets").evaluate();
+		String rendered = group.getDefinition("testbrackets").evaluate(interpreter());
 		assertThat(rendered, equalTo("brackets: [content]"));
 	}
 
 	@Test
 	public void testBraces() throws Exception {
-		String rendered = group.getDefinition("testbraces").evaluate();
+		String rendered = group.getDefinition("testbraces").evaluate(interpreter());
 		assertThat(rendered, equalTo("braces: {content}"));
 	}
 
 	@Test
 	public void testParentheses() throws Exception {
-		String rendered = group.getDefinition("testparentheses").evaluate();
+		String rendered = group.getDefinition("testparentheses").evaluate(interpreter());
 		assertThat(rendered, equalTo("parentheses: (content)"));
 	}
 
 	@Test
 	public void testLocal1Import() throws Exception {
-		String rendered = group.getDefinition("testlocal1").evaluate();
+		String rendered = group.getDefinition("testlocal1").evaluate(interpreter());
 		assertThat(rendered, equalTo("local1"));
 	}
 
 	@Test
 	public void testLocal2Import() throws Exception {
-		String rendered = group.getDefinition("testlocal2").evaluate();
+		String rendered = group.getDefinition("testlocal2").evaluate(interpreter());
 		assertThat(rendered, equalTo("local2"));
 	}
 

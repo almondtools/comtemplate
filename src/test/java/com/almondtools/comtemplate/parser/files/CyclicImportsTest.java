@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.parser.files;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -25,13 +26,13 @@ public class CyclicImportsTest extends TemplateTests {
 
 	@Test
 	public void testAdd() throws Exception {
-		String rendered = group.getDefinition("testadd").evaluate();
+		String rendered = group.getDefinition("testadd").evaluate(interpreter());
 		assertThat(rendered, equalTo("3 = 1 + 2"));
 	}
 
 	@Test
 	public void testMul() throws Exception {
-		String rendered = group.getDefinition("testmul").evaluate();
+		String rendered = group.getDefinition("testmul").evaluate(interpreter());
 		assertThat(rendered, equalTo("2 = 1 * 2"));
 	}
 

@@ -1,6 +1,7 @@
 package com.almondtools.comtemplate.engine;
 
 import static com.almondtools.comtemplate.engine.GlobalTemplates.defaultTemplates;
+import static com.almondtools.comtemplate.engine.ResolverRegistry.defaultRegistry;
 import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.TRUE;
 import static com.almondtools.comtemplate.engine.expressions.DecimalLiteral.decimal;
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
@@ -46,7 +47,7 @@ public class TemplateEventNotifierTest {
 
 	@Before
 	public void before() throws Exception {
-		notifier = new TemplateEventNotifier();
+		notifier = new TemplateEventNotifier(defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 		notifier.addListener(listener);
 	}
 

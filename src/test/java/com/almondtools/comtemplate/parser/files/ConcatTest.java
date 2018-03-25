@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.parser.files;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -21,13 +22,13 @@ public class ConcatTest extends TemplateTests {
 	
 	@Test
 	public void testConcatLists() throws Exception {
-		String rendered = group.getDefinition("concatLists").evaluate();
+		String rendered = group.getDefinition("concatLists").evaluate(interpreter());
 		assertThat(rendered, equalTo("1 2 | 3 4"));
 	}
 	
 	@Test
 	public void testConcatMaps() throws Exception {
-		String rendered = group.getDefinition("concatMaps").evaluate();
+		String rendered = group.getDefinition("concatMaps").evaluate(interpreter());
 		assertThat(rendered, equalTo("a b -> 1 2"));
 	}
 

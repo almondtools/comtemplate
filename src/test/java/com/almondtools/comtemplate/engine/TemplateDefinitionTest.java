@@ -2,6 +2,7 @@ package com.almondtools.comtemplate.engine;
 
 import static com.almondtools.comtemplate.engine.TemplateParameter.param;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static com.almondtools.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static java.util.Arrays.asList;
@@ -41,7 +42,7 @@ public class TemplateDefinitionTest {
 	public void testEvaluateNative() throws Exception {
 		TestTemplateDefinition def = new TestTemplateDefinition("name", "a", "b");
 
-		String evaluated = def.evaluateNative(1, 2);
+		String evaluated = def.evaluateNative(interpreter(), 1, 2);
 
 		assertThat(evaluated, equalTo("test: a=1,b=2"));
 	}
@@ -50,7 +51,7 @@ public class TemplateDefinitionTest {
 	public void testEvaluate() throws Exception {
 		TestTemplateDefinition def = new TestTemplateDefinition("name", "a", param("b", integer(2)));
 
-		String evaluated = def.evaluate(var("a", integer(1)));
+		String evaluated = def.evaluate(interpreter(), var("a", integer(1)));
 
 		assertThat(evaluated, equalTo("test: a=1"));
 	}
@@ -59,7 +60,7 @@ public class TemplateDefinitionTest {
 	public void testEvaluateWithScope() throws Exception {
 		TestTemplateDefinition def = new TestTemplateDefinition("name", "a", param("b", integer(2)));
 
-		String evaluated = def.evaluate(new Scope(def, var("a", integer(1))));
+		String evaluated = def.evaluate(interpreter(), new Scope(def, var("a", integer(1))));
 
 		assertThat(evaluated, equalTo("test: a=1"));
 	}

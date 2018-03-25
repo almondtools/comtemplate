@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.engine.expressions;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -7,8 +8,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import java.util.Collections;
 
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class RawTextTest {
 		CustomTemplateDefinition definition = new CustomTemplateDefinition("name", emptyList());
 		definition.add(new RawText("text"));
 
-		String evaluated = definition.evaluate(Collections.emptyList());
+		String evaluated = definition.evaluate(interpreter(), emptyList());
 		assertThat(evaluated, equalTo("text"));
 	}
 

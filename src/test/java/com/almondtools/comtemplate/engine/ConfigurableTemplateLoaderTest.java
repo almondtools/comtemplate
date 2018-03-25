@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.engine;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -69,7 +70,7 @@ public class ConfigurableTemplateLoaderTest {
 		TemplateGroup group = loader.loadGroup("mygroup");
 
 		assertThat(group.getName(), equalTo("mygroup"));
-		assertThat(group.getDefinition("template").evaluate(emptyList()), equalTo("template"));
+		assertThat(group.getDefinition("template").evaluate(interpreter(), emptyList()), equalTo("template"));
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package com.almondtools.comtemplate.engine;
 
+import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -40,7 +41,7 @@ public class CurrentPathTemplateLoaderTest {
 		TemplateGroup group = loader.loadGroup("existing");
 		
 		assertThat(group.getName(), equalTo("existing"));
-		assertThat(group.getDefinition("template").evaluate(emptyList()), equalTo("tmp"));
+		assertThat(group.getDefinition("template").evaluate(interpreter(), emptyList()), equalTo("tmp"));
 	}
 	
 	@Test

@@ -1,6 +1,7 @@
 package com.almondtools.comtemplate.engine.templates;
 
 import static com.almondtools.comtemplate.engine.TemplateParameter.param;
+import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.MapLiteral.map;
 import static java.util.stream.Collectors.toList;
 
@@ -42,7 +43,7 @@ public class ApplyTemplate extends TemplateDefinition {
 			.map(expression -> (ResolvedMapLiteral) expression)
 			.orElse(new ResolvedMapLiteral());
 		List<TemplateVariable> resolvedArguments = resolvedArgumentMap.getMap().entrySet().stream()
-			.map(entry -> TemplateVariable.var(entry.getKey(), entry.getValue()))
+			.map(entry -> var(entry.getKey(), entry.getValue()))
 			.collect(toList());
 
 		if (parent == null) {
