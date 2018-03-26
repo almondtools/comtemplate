@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.parser.ComtemplateParser.FunctionDefinitionContext;
 

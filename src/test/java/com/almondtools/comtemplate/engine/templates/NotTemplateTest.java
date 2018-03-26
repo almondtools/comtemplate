@@ -9,8 +9,8 @@ import static com.almondtools.comtemplate.engine.expressions.StringLiteral.strin
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.DefaultErrorHandler;
 import com.almondtools.comtemplate.engine.DefaultTemplateInterpreter;
@@ -20,7 +20,7 @@ public class NotTemplateTest {
 
 	private TemplateInterpreter interpreter;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		interpreter = new DefaultTemplateInterpreter(defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 	}

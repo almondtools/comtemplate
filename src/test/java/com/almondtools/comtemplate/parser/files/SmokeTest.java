@@ -3,7 +3,7 @@ package com.almondtools.comtemplate.parser.files;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.parser.ComtemplateLexer;
 import com.almondtools.comtemplate.parser.ComtemplateParser;

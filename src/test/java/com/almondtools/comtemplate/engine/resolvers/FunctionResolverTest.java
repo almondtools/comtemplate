@@ -11,8 +11,8 @@ import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
@@ -22,7 +22,7 @@ public class FunctionResolverTest {
 
 	private FunctionResolver resolver;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		resolver = new FunctionResolver("func", 2) {
 

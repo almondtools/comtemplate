@@ -10,11 +10,10 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.ArgumentRequiredException;
 import com.almondtools.comtemplate.engine.DefaultErrorHandler;
@@ -27,12 +26,9 @@ import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 
 public class ForTemplateTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	private TemplateInterpreter interpreter;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		interpreter = new DefaultTemplateInterpreter(defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 	}
@@ -96,7 +92,7 @@ public class ForTemplateTest {
 	public void testEvaluateVarIsNotList() throws Exception {
 		ForTemplate template = new ForTemplate();
 		EvalContextVar body = new EvalContextVar("ivar");
-		
+
 		String result = template.evaluate(interpreter, var("var", string("['a','b']")), var("do", body));
 
 		assertThat(result, equalTo(""));
@@ -106,23 +102,20 @@ public class ForTemplateTest {
 	public void testEvaluateVarIsNotDefined() throws Exception {
 		ForTemplate template = new ForTemplate();
 		EvalContextVar body = new EvalContextVar("var");
-		thrown.expect(matchesException(ArgumentRequiredException.class)
+
+		ArgumentRequiredException thrown = assertThrows(ArgumentRequiredException.class, () -> template.evaluate(interpreter, var("do", body)));
+
+		assertThat(thrown, matchesException(ArgumentRequiredException.class)
 			.withMessage(containsString("argument <item> is required")));
-		
-		String result = template.evaluate(interpreter, var("do", body));
-		
-		assertThat(result, equalTo(""));
 	}
-	
+
 	@Test
 	public void testEvaluateDoIsNotList() throws Exception {
 		ForTemplate template = new ForTemplate();
-		thrown.expect(matchesException(ArgumentRequiredException.class)
-			.withMessage(containsString("argument <do> is required")));
-		
-		String result = template.evaluate(interpreter, var("var", list(string("a"))));
+		ArgumentRequiredException thrown = assertThrows(ArgumentRequiredException.class, () -> template.evaluate(interpreter, var("var", list(string("a")))));
 
-		assertThat(result, equalTo(""));
+		assertThat(thrown, matchesException(ArgumentRequiredException.class)
+			.withMessage(containsString("argument <do> is required")));
 	}
 
 }

@@ -1,41 +1,36 @@
-package com.almondtools.util.logback;
+package com.almondtools.util.extension;
 
 import static java.util.stream.Collectors.joining;
 
-import org.junit.rules.ExternalResource;
 import org.slf4j.LoggerFactory;
-
-import com.almondtools.comtemplate.engine.DefaultErrorHandler;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 
-public class LogBackLog extends ExternalResource {
+public class LogBackLog {
 
-	private Class<DefaultErrorHandler> clazz;
+	private Class<?> clazz;
 	private ListAppender<ILoggingEvent> appender;
 
-	public LogBackLog(Class<DefaultErrorHandler> clazz) {
+	public LogBackLog(Class<?> clazz) {
 		this.clazz = clazz;
 	}
 
-	@Override
-	protected void before() {
+	public void init() {
 		appender = new ListAppender<ILoggingEvent>();
 		appender.start();
 		Logger logger = (Logger) LoggerFactory.getLogger(clazz);
 		logger.addAppender(appender);
 	}
 
-	@Override
-	protected void after() {
+	public void close() {
 		Logger logger = (Logger) LoggerFactory.getLogger(clazz);
 		logger.detachAppender(appender);
 		appender.stop();
 	}
-	
+
 	public String getMessages() {
 		return appender.list.stream()
 			.map(event -> event.getMessage())
@@ -49,7 +44,7 @@ public class LogBackLog extends ExternalResource {
 			.collect(joining("\n"));
 	}
 
-	public static LogBackLog forClass(Class<DefaultErrorHandler> clazz) {
+	public static LogBackLog forClass(Class<?> clazz) {
 		return new LogBackLog(clazz);
 	}
 

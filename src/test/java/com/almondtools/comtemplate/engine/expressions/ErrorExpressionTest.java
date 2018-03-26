@@ -6,8 +6,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateExpressionVisitor;
@@ -17,7 +17,7 @@ public class ErrorExpressionTest {
 
 	private ErrorExpression expression;
 	
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		expression = new ErrorExpression() {
 			

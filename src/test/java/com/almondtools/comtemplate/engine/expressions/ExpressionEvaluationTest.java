@@ -9,7 +9,7 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.CustomTemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateGroup;

@@ -1,7 +1,7 @@
 package com.almondtools.comtemplate.parser;
 
 import static com.almondtools.conmatch.datatypes.PrimitiveArrayMatcher.intArrayContaining;
-import static com.almondtools.picklock.ObjectAccess.unlock;
+import static net.amygdalum.xrayinterface.XRayInterface.xray;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MultiChannelTokenStreamTest {
 
@@ -19,7 +19,7 @@ public class MultiChannelTokenStreamTest {
 	public void testInitialChannels() throws Exception {
 		TokenSource tokenSource = mock(TokenSource.class);
 		MultiChannelTokenStream stream = new MultiChannelTokenStream(tokenSource);
-		assertThat(unlock(stream).features(OpenChannel.class).getChannels(), intArrayContaining(0));
+		assertThat(xray(stream).to(OpenChannel.class).getChannels(), intArrayContaining(0));
 	}
 
 	@Test
@@ -27,7 +27,7 @@ public class MultiChannelTokenStreamTest {
 		TokenSource tokenSource = mock(TokenSource.class);
 		MultiChannelTokenStream stream = new MultiChannelTokenStream(tokenSource);
 		stream.enable(4);
-		assertThat(unlock(stream).features(OpenChannel.class).getChannels(), intArrayContaining(0, 4));
+		assertThat(xray(stream).to(OpenChannel.class).getChannels(), intArrayContaining(0, 4));
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class MultiChannelTokenStreamTest {
 		MultiChannelTokenStream stream = new MultiChannelTokenStream(tokenSource);
 		stream.enable(4);
 		stream.disable(0);
-		assertThat(unlock(stream).features(OpenChannel.class).getChannels(), intArrayContaining(4));
+		assertThat(xray(stream).to(OpenChannel.class).getChannels(), intArrayContaining(4));
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class MultiChannelTokenStreamTest {
 		stream.enable(4);
 		stream.enable(5);
 		stream.enable(4);
-		assertThat(unlock(stream).features(OpenChannel.class).getChannels(), intArrayContaining(0, 4, 5));
+		assertThat(xray(stream).to(OpenChannel.class).getChannels(), intArrayContaining(0, 4, 5));
 	}
 
 	@Test

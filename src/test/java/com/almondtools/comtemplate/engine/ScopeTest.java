@@ -11,15 +11,15 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ScopeTest {
 
 	private TemplateDefinition definition;
 	private List<TemplateVariable> variables;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		definition = new TestTemplateDefinition("test");
 		variables = emptyList();

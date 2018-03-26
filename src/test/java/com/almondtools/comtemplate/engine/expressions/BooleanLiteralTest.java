@@ -8,25 +8,20 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateExpressionVisitor;
 
 public class BooleanLiteralTest {
 
-	@Rule
-	public ExpectedException expected = ExpectedException.none();
-
 	@Test
 	public void testBoolFailsOnNull() throws Exception {
-		expected.expect(IllegalArgumentException.class);
-		bool((Boolean) null);
+		assertThrows(IllegalArgumentException.class, () -> bool((Boolean) null));
 	}
 
 	@Test

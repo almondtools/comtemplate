@@ -6,8 +6,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.expressions.RawText;
@@ -17,7 +17,7 @@ public class SeparatedResolverTest {
 
 	private SeparatedResolver resolver;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		resolver = new SeparatedResolver();
 	}

@@ -10,8 +10,8 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
@@ -23,7 +23,7 @@ public class TrimResolverTest {
 
 	private TrimResolver resolver;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		resolver = new TrimResolver();
 	}

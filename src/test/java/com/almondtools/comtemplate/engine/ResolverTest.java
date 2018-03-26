@@ -3,7 +3,7 @@ package com.almondtools.comtemplate.engine;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.expressions.ExpressionResolutionError;
 

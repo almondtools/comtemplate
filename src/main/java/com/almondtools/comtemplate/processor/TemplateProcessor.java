@@ -8,6 +8,7 @@ import static java.util.stream.Collectors.toList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -162,8 +163,7 @@ public class TemplateProcessor {
 					Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
 					
 					String evaluate = main.evaluate(interpreter, globalScope);
-					
-					Files.write(targetPath, evaluate.getBytes());
+					Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
 				} else {
 					Path parentPath = target.resolve(templateFileName).getParent();
 					Files.createDirectories(parentPath);
@@ -188,7 +188,7 @@ public class TemplateProcessor {
 						
 						String evaluate = main.evaluate(interpreter, globalScope, dataVar);
 						
-						Files.write(targetPath, evaluate.getBytes());
+						Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
 					}
 				}
 			} catch (ComtemplateException e) {

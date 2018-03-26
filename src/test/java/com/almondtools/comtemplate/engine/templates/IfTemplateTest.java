@@ -8,11 +8,10 @@ import static com.almondtools.comtemplate.engine.expressions.BooleanLiteral.TRUE
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.ArgumentRequiredException;
 import com.almondtools.comtemplate.engine.DefaultErrorHandler;
@@ -21,12 +20,9 @@ import com.almondtools.comtemplate.engine.TemplateInterpreter;
 
 public class IfTemplateTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	private TemplateInterpreter interpreter;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		interpreter = new DefaultTemplateInterpreter(defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 	}
@@ -57,21 +53,13 @@ public class IfTemplateTest {
 	@Test
 	public void testEvaluateCondIsNotDefined() throws Exception {
 		IfTemplate template = new IfTemplate();
-		thrown.expect(ArgumentRequiredException.class);
-
-		String result = template.evaluate(interpreter, var("then", string("str")));
-
-		assertThat(result, equalTo(""));
+		assertThrows(ArgumentRequiredException.class, () -> template.evaluate(interpreter, var("then", string("str"))));
 	}
 
 	@Test
 	public void testEvaluateThenIsNotList() throws Exception {
 		IfTemplate template = new IfTemplate();
-		thrown.expect(ArgumentRequiredException.class);
-
-		String result = template.evaluate(interpreter, var("cond", TRUE));
-
-		assertThat(result, equalTo(""));
+		assertThrows(ArgumentRequiredException.class, () -> template.evaluate(interpreter, var("cond", TRUE)));
 	}
 
 }

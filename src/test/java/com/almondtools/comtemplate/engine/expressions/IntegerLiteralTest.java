@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 
 import java.math.BigInteger;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateExpressionVisitor;

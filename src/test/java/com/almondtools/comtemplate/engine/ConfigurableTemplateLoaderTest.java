@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,21 +16,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ConfigurableTemplateLoaderTest {
 
-	@Rule
-	public ExpectedException expected = ExpectedException.none();
-
-	@Mock
 	private ClassLoader classLoader;
+
+	@BeforeEach
+	public void before() throws Exception {
+		classLoader = Mockito.mock(ClassLoader.class);
+	}
 
 	@Test
 	public void testForPaths() throws Exception {
@@ -43,9 +41,8 @@ public class ConfigurableTemplateLoaderTest {
 	public void testAddClassPathPathFails() throws Exception {
 		ConfigurableTemplateLoader loader = new ConfigurableTemplateLoader()
 			.forPaths("srctestresources");
-		expected.expect(TemplateGroupNotFoundException.class);
 
-		loader.loadGroup("cp.test");
+		assertThrows(TemplateGroupNotFoundException.class, () -> loader.loadGroup("cp.test"));
 	}
 
 	public ConfigurableTemplateLoader newConfigurableTemplateLoaderWithMockedClassLoader() {
@@ -89,9 +86,8 @@ public class ConfigurableTemplateLoaderTest {
 	public void testLoadGroupFailsWithNull() throws Exception {
 		ConfigurableTemplateLoader loader = newConfigurableTemplateLoaderWithMockedClassLoader();
 		when(classLoader.getResourceAsStream("mygroup.ctp")).thenReturn(null);
-		expected.expect(TemplateGroupNotFoundException.class);
 
-		loader.loadGroup("mygroup");
+		assertThrows(TemplateGroupNotFoundException.class, () -> loader.loadGroup("mygroup"));
 	}
 
 	@Test
@@ -104,9 +100,7 @@ public class ConfigurableTemplateLoaderTest {
 				throw new IOException();
 			}
 		});
-		expected.expect(TemplateGroupNotFoundException.class);
-
-		loader.loadGroup("mygroup");
+		assertThrows(TemplateGroupNotFoundException.class, () -> loader.loadGroup("mygroup"));
 	}
 
 	@Test

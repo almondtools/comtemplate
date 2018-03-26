@@ -1,25 +1,24 @@
 package com.almondtools.comtemplate.parser;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.BeforeEach;
 
 public class UnsupportedLoaderTest {
 
 	private UnsupportedLoader loader;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		loader = new UnsupportedLoader();
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
 	public void testLoadDefinition() throws Exception {
-		loader.loadDefinition("def");
+		assertThrows(UnsupportedOperationException.class, () -> loader.loadDefinition("def"));
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
 	public void testLoadGroup() throws Exception {
-		loader.loadGroup("group");
+		assertThrows(UnsupportedOperationException.class, () -> loader.loadGroup("group"));
 	}
 
 }

@@ -25,15 +25,9 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import com.almondtools.comtemplate.engine.expressions.Cast;
 import com.almondtools.comtemplate.engine.expressions.Concat;
@@ -63,22 +57,19 @@ import com.almondtools.comtemplate.engine.expressions.ToObject;
 import com.almondtools.comtemplate.engine.expressions.UnexpectedTypeError;
 import com.almondtools.comtemplate.engine.expressions.VariableResolutionError;
 
-@RunWith(MockitoJUnitRunner.class)
 public class DefaultTemplateInterpreterTest {
 
-	@Rule
-	public ExpectedException expected = ExpectedException.none();
-	@Mock
 	private GlobalTemplates globals;
-	@Mock
 	private ResolverRegistry resolvers;
-	@Spy
 	private ErrorHandler handler = new DefaultErrorHandler();
 
 	private DefaultTemplateInterpreter interpreter;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
+		globals = Mockito.mock(GlobalTemplates.class);
+		resolvers = Mockito.mock(ResolverRegistry.class);
+		handler = Mockito.spy(new DefaultErrorHandler());
 		interpreter = new DefaultTemplateInterpreter(resolvers, globals, handler);
 	}
 

@@ -3,14 +3,14 @@ package com.almondtools.util.stream;
 import static com.almondtools.util.stream.Unescaper.defaultUnescaper;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UnescaperTest {
 
-	@Test(expected=IllegalArgumentException.class)
 	public void testUnescaperWithIllegalNumberOfChars() throws Exception {
-		defaultUnescaper('n', '\n', 'r');
+		assertThrows(IllegalArgumentException.class, () ->defaultUnescaper('n', '\n', 'r'));
 	}
 
 	@Test

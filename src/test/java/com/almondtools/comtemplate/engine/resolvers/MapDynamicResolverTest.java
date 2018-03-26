@@ -11,8 +11,8 @@ import static org.mockito.Mockito.mock;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
@@ -23,7 +23,7 @@ public class MapDynamicResolverTest {
 
 	private MapDynamicResolver resolver;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		resolver = new MapDynamicResolver();
 	}

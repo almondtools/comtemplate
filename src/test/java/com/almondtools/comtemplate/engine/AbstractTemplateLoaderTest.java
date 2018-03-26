@@ -8,17 +8,14 @@ import static org.junit.Assert.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-@RunWith(MockitoJUnitRunner.class)
 public class AbstractTemplateLoaderTest {
 
 	private AbstractTemplateLoader loader;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
 		loader = new AbstractTemplateLoader() {
 

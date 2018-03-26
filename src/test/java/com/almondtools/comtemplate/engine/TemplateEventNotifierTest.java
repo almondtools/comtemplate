@@ -11,11 +11,9 @@ import static com.almondtools.comtemplate.engine.expressions.StringLiteral.strin
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import com.almondtools.comtemplate.engine.expressions.Cast;
 import com.almondtools.comtemplate.engine.expressions.Concat;
@@ -37,16 +35,15 @@ import com.almondtools.comtemplate.engine.expressions.ResolvedMapLiteral;
 import com.almondtools.comtemplate.engine.expressions.TestError;
 import com.almondtools.comtemplate.engine.expressions.ToObject;
 
-@RunWith(MockitoJUnitRunner.class)
 public class TemplateEventNotifierTest {
 
-	@Mock
 	private InterpreterListener listener;
 
 	private TemplateEventNotifier notifier;
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception {
+		listener = Mockito.mock(InterpreterListener.class);
 		notifier = new TemplateEventNotifier(defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 		notifier.addListener(listener);
 	}

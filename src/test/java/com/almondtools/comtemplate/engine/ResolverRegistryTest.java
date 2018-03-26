@@ -2,7 +2,7 @@ package com.almondtools.comtemplate.engine;
 
 import static com.almondtools.comtemplate.engine.ResolverRegistry.defaultRegistry;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
-import static com.almondtools.picklock.ObjectAccess.unlock;
+import static net.amygdalum.xrayinterface.XRayInterface.xray;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 import com.almondtools.comtemplate.engine.resolvers.BasicResolver;
@@ -90,7 +90,7 @@ public class ResolverRegistryTest {
 	@Test
 	public void testDefaultRegistry() throws Exception {
 		ResolverRegistry registry = defaultRegistry();
-		Map<String, Resolver> resolverMap = unlock(registry).features(OpenRegistry.class).getResolvers();
+		Map<String, Resolver> resolverMap = xray(registry).to(OpenRegistry.class).getResolvers();
 		Set<Resolver> resolvers = new HashSet<>();
 		for (Resolver resolver : resolverMap.values()) {
 			resolvers.add(resolver);

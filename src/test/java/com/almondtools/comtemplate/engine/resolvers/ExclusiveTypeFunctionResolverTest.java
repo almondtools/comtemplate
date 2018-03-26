@@ -11,8 +11,8 @@ import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.almondtools.comtemplate.engine.Scope;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
@@ -23,7 +23,7 @@ public class ExclusiveTypeFunctionResolverTest {
 
 	private ExclusiveTypeFunctionResolver<StringLiteral> resolver;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		resolver = new ExclusiveTypeFunctionResolver<StringLiteral>(StringLiteral.class, "func", 2) {
 

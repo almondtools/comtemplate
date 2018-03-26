@@ -5,133 +5,153 @@ import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.almondtools.comtemplate.engine.TemplateGroupException;
+import com.almondtools.util.extension.TemporaryFolder;
+import com.almondtools.util.extension.TemporaryFolderExtension;
 
-
+@ExtendWith(TemporaryFolderExtension.class)
 public class TemplateGroupBuilderTest {
 
-	@Rule
-	public TemporaryFolder folder = new TemporaryFolder();
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-	
-	private TemplateGroupBuilder builder;
+	private TemporaryFolder folder;
 
-	@Before
-	public void before() throws Exception {
-		File newFile = folder.newFile("name.ctp");
-		builder = TemplateGroupBuilder.library("name", newFile.getAbsolutePath(), Files.newInputStream(newFile.toPath()));
+	@BeforeEach
+	public void before(TemporaryFolder folder) throws Exception {
+		this.folder = folder;
+		Files.createFile(folder.resolve("name.ctp"));
 	}
-	
+
 	@Test
-	public void testTemplateGroupBuilderStringInputStream() throws Exception {
+	public void testTemplateGroupBuilderStringInputStream(TemporaryFolder folder) throws Exception {
 		InputStream stream = new ByteArrayInputStream("template ::= {}".getBytes());
 
-		builder = TemplateGroupBuilder.library("name", "resource", stream);
-		
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", "resource", stream);
+
 		assertThat(builder.buildGroup().getDefinitions(), hasSize(1));
 	}
 
 	@Test
 	public void testTemplateGroupBuilderStringInputStreamWithErrors() throws Exception {
-		thrown.expect(matchesException(TemplateGroupException.class)
+		TemplateGroupException thrown = assertThrows(TemplateGroupException.class, () -> {
+			InputStream stream = new ByteArrayInputStream("broken template ::= {}".getBytes());
+			TemplateGroupBuilder.library("name", "resource", stream);
+		});
+		assertThat(thrown, matchesException(TemplateGroupException.class)
 			.withMessage(containsString("parsing template group <name> in file 'resource' failed")));
-		
-		InputStream stream = new ByteArrayInputStream("broken template ::= {}".getBytes());
-		builder = TemplateGroupBuilder.library("name", "resource", stream);
 	}
 
 	@Test
-	public void testTemplateGroupBuilderStringString() throws Exception {
-		Path file = Paths.get(folder.getRoot().getPath()).resolve("name.ctp");
+	public void testTemplateGroupBuilderStringString(TemporaryFolder folder) throws Exception {
+		Path file = folder.resolve("name.ctp");
 		Files.write(file, "template ::= {}".getBytes());
-		
-		builder = TemplateGroupBuilder.library("name", file.toString(), Files.newInputStream(file));
-		
+
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", file.toString(), Files.newInputStream(file));
+
 		assertThat(builder.buildGroup().getDefinitions(), hasSize(1));
 	}
 
 	@Test
-	public void testTemplateGroupBuilderStringStringWithErrors() throws Exception {
-		Path file = Paths.get(folder.getRoot().getPath()).resolve("name.ctp");
-		thrown.expect(matchesException(TemplateGroupException.class)
+	public void testTemplateGroupBuilderStringStringWithErrors(TemporaryFolder folder) throws Exception {
+		Path file = folder.resolve("name.ctp");
+		TemplateGroupException thrown = assertThrows(TemplateGroupException.class, () -> {
+			Files.write(file, "broken template ::= {}".getBytes());
+			TemplateGroupBuilder.library("name", file.toString(), Files.newInputStream(file));
+		});
+		assertThat(thrown, matchesException(TemplateGroupException.class)
 			.withMessage(both(containsString("name.ctp")).and(containsString("parsing template group <name> in file '" + file.toString() + "' failed"))));
-		
-		Files.write(file, "broken template ::= {}".getBytes());
-		builder = TemplateGroupBuilder.library("name", file.toString(), Files.newInputStream(file));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitImports() throws Exception {
-		builder.visitImports(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitImports(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitQualifiedName() throws Exception {
-		builder.visitQualifiedName(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitQualifiedName(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitQualifiedWildcard() throws Exception {
-		builder.visitQualifiedWildcard(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitQualifiedWildcard(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitClauses() throws Exception {
-		builder.visitClauses(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitClauses(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitParameters() throws Exception {
-		builder.visitParameters(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitParameters(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitFunction() throws Exception {
-		builder.visitFunction(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitFunction(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitAttributes() throws Exception {
-		builder.visitAttributes(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitAttributes(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitItems() throws Exception {
-		builder.visitItems(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitItems(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitInlineToken() throws Exception {
-		builder.visitInlineToken(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitInlineToken(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitSingleQuoteToken() throws Exception {
-		builder.visitSingleQuoteToken(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitSingleQuoteToken(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitDoubleQuoteToken() throws Exception {
-		builder.visitDoubleQuoteToken(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitDoubleQuoteToken(null));
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testVisitRefTemplateError() throws Exception {
-		builder.visitRefTemplateError(null);
+		Path newFile = folder.resolve("name.ctp");
+		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
+		assertThrows(UnsupportedOperationException.class, () -> builder.visitRefTemplateError(null));
 	}
 }

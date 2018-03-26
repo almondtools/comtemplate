@@ -12,15 +12,11 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 public class TemplateParameterTest {
-
-	@Rule
-	public ExpectedException expected = ExpectedException.none();
 
 	@Test
 	public void testToParams() throws Exception {
@@ -34,9 +30,7 @@ public class TemplateParameterTest {
 
 	@Test
 	public void testToParamsFails() throws Exception {
-		expected.expect(IllegalArgumentException.class);
-
-		toParams(new Object());
+		assertThrows(IllegalArgumentException.class, () -> toParams(new Object()));
 	}
 
 	@Test
