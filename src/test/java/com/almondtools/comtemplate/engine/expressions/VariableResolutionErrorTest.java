@@ -28,11 +28,11 @@ public class VariableResolutionErrorTest {
 	@Test
 	public void testGetMessageDefinition() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
-		when(definition.getName()).thenReturn("template");
+		when(definition.getLocation()).thenReturn("resource:template");
 		
 		VariableResolutionError error = new VariableResolutionError("var", definition);
 		
-		assertThat(error.getMessage(), containsString("accessed in <template>"));
+		assertThat(error.getMessage(), containsString("accessed in <resource:template>"));
 	}
 	
 	@Test

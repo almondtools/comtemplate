@@ -2,6 +2,9 @@ package com.almondtools.comtemplate.parser.files;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.antlr.v4.runtime.CharStreams;
@@ -17,15 +20,17 @@ import com.almondtools.comtemplate.parser.TemplateGroupBuilder;
 public class TemplateTests {
 
 	public static TemplateGroup compileLibrary(String fileName) throws IOException {
-		return TemplateGroupBuilder.library(fileName, fileName).buildGroup();
+		InputStream fileStream = Files.newInputStream(Paths.get(fileName));
+		return TemplateGroupBuilder.library(fileName, fileName, fileStream).buildGroup();
 	}
 
 	public static TemplateDefinition compileMain(String fileName) throws IOException {
-		return TemplateGroupBuilder.main(fileName, fileName).buildMain();
+		InputStream fileStream = Files.newInputStream(Paths.get(fileName));
+		return TemplateGroupBuilder.main(fileName, fileName, fileStream).buildMain();
 	}
 
 	public static TemplateDefinition compileMainFromText(String text) throws IOException {
-		return TemplateGroupBuilder.main("", new ByteArrayInputStream(text.getBytes())).buildMain();
+		return TemplateGroupBuilder.main("test", "test", new ByteArrayInputStream(text.getBytes())).buildMain();
 	}
 
 	public static List<String> findErrors(String fileName) throws IOException {

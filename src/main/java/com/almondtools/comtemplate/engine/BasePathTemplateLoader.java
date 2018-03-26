@@ -27,5 +27,10 @@ public class BasePathTemplateLoader extends AbstractTemplateLoader implements Te
 			return null;
 		}
 	}
+	
+	@Override
+	public String resolveResource(String name) {
+		return base.resolve(pathOf(name)).toString();
+	}
 
 }

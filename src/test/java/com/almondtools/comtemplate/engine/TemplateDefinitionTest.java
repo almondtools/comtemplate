@@ -17,7 +17,7 @@ public class TemplateDefinitionTest {
 
 	@Test
 	public void testGetGroup() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 		TestTemplateDefinition def = new TestTemplateDefinition("name");
 		def.setGroup(group);
 

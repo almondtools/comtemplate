@@ -25,7 +25,7 @@ public class VariableResolutionError extends ErrorExpression {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("variable <").append(variable).append("> cannot be resolved");
 		if (definition != null)  {
-			buffer.append("\naccessed in <").append(definition.getName()).append(">");
+			buffer.append("\naccessed in <").append(definition.getLocation()).append(">");
 		}
 		if (scope != null) {
 			buffer.append('\n').append(getScopeStack(scope));

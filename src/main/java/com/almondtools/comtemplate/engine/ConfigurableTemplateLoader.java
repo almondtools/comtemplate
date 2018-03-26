@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,7 +62,7 @@ public class ConfigurableTemplateLoader extends AbstractTemplateLoader implement
 				try {
 					return Files.newInputStream(sourcePath);
 				} catch (IOException e) {
-					//fall back
+					return null;
 				}
 			}
 		}
@@ -77,11 +78,35 @@ public class ConfigurableTemplateLoader extends AbstractTemplateLoader implement
 				try {
 					return Files.newInputStream(filePath);
 				} catch (IOException e) {
-					//fall back
+					return null;
 				}
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public String resolveResource(String name) {
+		String file = pathOf(name);
+		if (source != null) {
+			Path sourcePath = source.resolve(file);
+			if (Files.exists(sourcePath)) {
+				return sourcePath.toString();
+			}
+		}
+		if (useClassPath) {
+			URL url = getClassLoader().getResource(file);
+			if (url != null) {
+				return url.toString();
+			}
+		}
+		for (Path path : paths) {
+			Path filePath = path.resolve(pathOf(name));
+			if (Files.exists(filePath)) {
+				return filePath.toString();
+			}
+		}
+		return "";
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.almondtools.comtemplate.engine;
 
+import static com.almondtools.comtemplate.engine.TemplateGroup.NONE_ID;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,16 +22,16 @@ public abstract class AbstractTemplateLoader implements TemplateLoader {
 		this(new DefaultTemplateCompiler());
 	}
 
-	public TemplateGroup compile(String name, InputStream stream) throws IOException {
-		return compiler.compileLibrary(name, stream, this);
+	public TemplateGroup compile(String name, String resource, InputStream stream) throws IOException {
+		return compiler.compileLibrary(name, resource, stream, this);
 	}
 
-	public TemplateDefinition compileMain(String name, InputStream stream) throws IOException {
-		return compiler.compileMain(name, stream, this);
+	public TemplateDefinition compileMain(String name, String resource, InputStream stream) throws IOException {
+		return compiler.compileMain(name, resource, stream, this);
 	}
 
 	public TemplateDefinition compileText(String text) throws IOException {
-		return compileMain("", new ByteArrayInputStream(text.getBytes()));
+		return compileMain(NONE_ID, NONE_ID, new ByteArrayInputStream(text.getBytes()));
 	}
 
 	@Override
@@ -38,7 +40,8 @@ public abstract class AbstractTemplateLoader implements TemplateLoader {
 		if (resolved == null) {
 			try {
 				InputStream stream = loadSource(name);
-				resolved = compile(name, stream);
+				String resource = resolveResource(name);
+				resolved = compile(name, resource, stream);
 				resolvedGroups.put(name, resolved);
 			} catch (IOException e) {
 				throw new TemplateGroupNotFoundException(name);
@@ -48,6 +51,8 @@ public abstract class AbstractTemplateLoader implements TemplateLoader {
 	}
 
 	public abstract InputStream loadSource(String name);
+
+	public abstract String resolveResource(String name);
 
 	@Override
 	public TemplateDefinition loadDefinition(String name) {

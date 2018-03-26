@@ -34,14 +34,14 @@ public class TemplateGroupBuilderTest {
 	@Before
 	public void before() throws Exception {
 		File newFile = folder.newFile("name.ctp");
-		builder = TemplateGroupBuilder.library("name", newFile.getAbsolutePath());
+		builder = TemplateGroupBuilder.library("name", newFile.getAbsolutePath(), Files.newInputStream(newFile.toPath()));
 	}
 	
 	@Test
 	public void testTemplateGroupBuilderStringInputStream() throws Exception {
 		InputStream stream = new ByteArrayInputStream("template ::= {}".getBytes());
 
-		builder = TemplateGroupBuilder.library("name", stream);
+		builder = TemplateGroupBuilder.library("name", "resource", stream);
 		
 		assertThat(builder.buildGroup().getDefinitions(), hasSize(1));
 	}
@@ -49,10 +49,10 @@ public class TemplateGroupBuilderTest {
 	@Test
 	public void testTemplateGroupBuilderStringInputStreamWithErrors() throws Exception {
 		thrown.expect(matchesException(TemplateGroupException.class)
-			.withMessage(containsString("parsing template group <name> in file '<unknown>' failed")));
+			.withMessage(containsString("parsing template group <name> in file 'resource' failed")));
 		
 		InputStream stream = new ByteArrayInputStream("broken template ::= {}".getBytes());
-		builder = TemplateGroupBuilder.library("name", stream);
+		builder = TemplateGroupBuilder.library("name", "resource", stream);
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class TemplateGroupBuilderTest {
 		Path file = Paths.get(folder.getRoot().getPath()).resolve("name.ctp");
 		Files.write(file, "template ::= {}".getBytes());
 		
-		builder = TemplateGroupBuilder.library("name", file.toString());
+		builder = TemplateGroupBuilder.library("name", file.toString(), Files.newInputStream(file));
 		
 		assertThat(builder.buildGroup().getDefinitions(), hasSize(1));
 	}
@@ -72,8 +72,7 @@ public class TemplateGroupBuilderTest {
 			.withMessage(both(containsString("name.ctp")).and(containsString("parsing template group <name> in file '" + file.toString() + "' failed"))));
 		
 		Files.write(file, "broken template ::= {}".getBytes());
-		builder = TemplateGroupBuilder.library("name", file.toString());
-		
+		builder = TemplateGroupBuilder.library("name", file.toString(), Files.newInputStream(file));
 	}
 
 	@Test(expected=UnsupportedOperationException.class)

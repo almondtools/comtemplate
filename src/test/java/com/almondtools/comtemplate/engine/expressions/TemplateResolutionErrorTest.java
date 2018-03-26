@@ -26,13 +26,13 @@ public class TemplateResolutionErrorTest {
 	@Test
 	public void testGetMessageDefinition() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class, RETURNS_DEEP_STUBS);
-		when(definition.getName()).thenReturn("definer");
+		when(definition.getLocation()).thenReturn("file:definer");
 		when(definition.getGroup().getDefinitions()).thenReturn(asList(new TestTemplateDefinition("test1"), new TestTemplateDefinition("test2")));
 		
 		TemplateResolutionError error = new TemplateResolutionError("template", definition);
 		String message = error.getMessage();
 		
-		assertThat(message, containsString("accessed in <definer>"));
+		assertThat(message, containsString("accessed in <file:definer>"));
 		assertThat(message, containsString("available templates:"));
 		assertThat(message, containsString("test1,test2"));
 	}

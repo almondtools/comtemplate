@@ -173,7 +173,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalTemplateNotResolved() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
-		when(definition.getGroup()).thenReturn(new TemplateGroup("test"));
+		when(definition.getGroup()).thenReturn(new TemplateGroup("test", "testresource"));
 		Scope scope = new TestScope();
 
 		TemplateImmediateExpression result = interpreter.visitEvalTemplate(new EvalTemplate("template", definition, var("param", integer(4))), scope);
@@ -212,7 +212,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalTemplateFunctionNotResolved() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
-		when(definition.getGroup()).thenReturn(new TemplateGroup("test"));
+		when(definition.getGroup()).thenReturn(new TemplateGroup("test", "testresource"));
 		Scope scope = new TestScope();
 
 		TemplateImmediateExpression result = interpreter.visitEvalTemplateFunction(new EvalTemplateFunction("template", definition, integer(4)), scope);
@@ -252,7 +252,7 @@ public class DefaultTemplateInterpreterTest {
 	@Test
 	public void testVisitEvalTemplateMixedNotResolved() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
-		when(definition.getGroup()).thenReturn(new TemplateGroup("test"));
+		when(definition.getGroup()).thenReturn(new TemplateGroup("test", "testresource"));
 		Scope scope = new TestScope();
 
 		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(4) }), scope);
@@ -287,7 +287,7 @@ public class DefaultTemplateInterpreterTest {
 		Scope scope = new TestScope(definition, var("var", string("key")));
 		TemplateExpression base = map(var("key", string("value")));
 		when(resolvers.getResolverFor(any(ResolvedMapLiteral.class))).thenReturn(new TestResolver(ResolvedMapLiteral.class));
-		
+
 		TemplateImmediateExpression result = interpreter.visitEvalVirtual(new EvalVirtual(base, new EvalVar("var", definition)), scope);
 
 		assertThat(result, equalTo(string("[key='value'].key()")));
@@ -297,7 +297,7 @@ public class DefaultTemplateInterpreterTest {
 	public void testVisitEvalFunction() throws Exception {
 		Scope scope = new TestScope();
 		TemplateExpression base = map(var("key", string("value")));
-		
+
 		when(resolvers.getResolverFor(Mockito.any(ResolvedMapLiteral.class))).thenReturn(new TestResolver(ResolvedMapLiteral.class));
 		TemplateImmediateExpression result = interpreter.visitEvalFunction(new EvalFunction(base, "attribute", integer(1), integer(2)), scope);
 
@@ -328,7 +328,7 @@ public class DefaultTemplateInterpreterTest {
 	public void testVisitExistsOnResolved() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		Scope scope = new TestScope(definition, var("resolvable", string("exists")));
-	
+
 		TemplateImmediateExpression result = interpreter.visitExists(new Exists(new EvalContextVar("resolvable")), scope);
 
 		assertThat(result, equalTo(TRUE));
@@ -386,7 +386,7 @@ public class DefaultTemplateInterpreterTest {
 	public void testVisitDefaultedOnResolved() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		Scope scope = new TestScope(definition, var("resolvable", string("exists")));
-		
+
 		TemplateImmediateExpression result = interpreter.visitDefaulted(new Defaulted(new EvalContextVar("resolvable"), string("default")), scope);
 
 		assertThat(result, equalTo(string("exists")));

@@ -154,7 +154,9 @@ public class TemplateProcessor {
 			try {
 				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar, '.');
 				TemplateDefinition main = loader.loadDefinition(templateName + ".main");
-				if (main.getParameter("data") == null) {
+				if (main == null) {
+					continue;
+				} else if (main.getParameter("data") == null) {
 					Path targetPath = target.resolve(templateFileName.replace(".ctp", extension));
 					Files.createDirectories(targetPath.getParent());
 					Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));

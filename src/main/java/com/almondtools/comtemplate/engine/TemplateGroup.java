@@ -9,18 +9,28 @@ import java.util.stream.Stream;
 
 public class TemplateGroup {
 
+	public static final String NONE_ID = "<none>";
+	
+	public static final TemplateGroup NONE = new TemplateGroup(NONE_ID, NONE_ID);
+	
 	private String name;
+	private String resource;
 	private List<TemplateDefinition> imports;
 	private List<TemplateDefinition> definitions;
 
-	public TemplateGroup(String name) {
+	public TemplateGroup(String name, String resource) {
 		this.name = name;
+		this.resource = resource;
 		this.imports = new ArrayList<>();
 		this.definitions = new ArrayList<>();
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getResource() {
+		return resource;
 	}
 
 	public String relativeReference(String reference) {

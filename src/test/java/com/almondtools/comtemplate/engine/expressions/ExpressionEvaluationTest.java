@@ -16,10 +16,9 @@ import com.almondtools.comtemplate.engine.TemplateGroup;
 
 public class ExpressionEvaluationTest {
 
-
 	@Test
 	public void testEvaluateWithTemplateCallReferencedAnonymousTemplateArgumentWithStaticVariableReference() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 
 		CustomTemplateDefinition temp = group.defineTemplate("temp", "arg");
 		temp.add(new RawText("temp("));
@@ -39,7 +38,7 @@ public class ExpressionEvaluationTest {
 
 	@Test
 	public void testEvaluateWithTemplateCallReferencedAnonymousTemplateArgumentWithContextVariableReference() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 
 		CustomTemplateDefinition temp = group.defineTemplate("temp", "arg");
 		temp.add(new RawText("temp("));
@@ -59,7 +58,7 @@ public class ExpressionEvaluationTest {
 
 	@Test
 	public void testEvaluateWithTemplateCallReferencedValueArgument() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 
 		CustomTemplateDefinition temp = group.defineTemplate("temp", "arg");
 		temp.add(new RawText("temp("));
@@ -76,7 +75,7 @@ public class ExpressionEvaluationTest {
 
 	@Test
 	public void testEvaluateWithTemplateCallContextArgument() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 
 		CustomTemplateDefinition temp = group.defineTemplate("temp", emptyList());
 		temp.add(new RawText("temp("));
@@ -93,7 +92,7 @@ public class ExpressionEvaluationTest {
 
 	@Test
 	public void testEvaluateWithTemplateFunctionCall() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 
 		CustomTemplateDefinition temp = group.defineTemplate("temp", emptyList());
 		temp.add(new RawText("\n some Text\n"));
@@ -108,7 +107,7 @@ public class ExpressionEvaluationTest {
 
 	@Test
 	public void testEvaluateWithTemplateCallConstantArguments() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 
 		CustomTemplateDefinition temp = group.defineTemplate("temp", "arg");
 		temp.add(new RawText("temp("));
@@ -125,7 +124,7 @@ public class ExpressionEvaluationTest {
 
 	@Test
 	public void testEvaluateWithTemplateCallReferencedTemplateArgument() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 
 		CustomTemplateDefinition argument = group.defineTemplate("argument", emptyList());
 		argument.add(new RawText("argument"));
@@ -150,7 +149,7 @@ public class ExpressionEvaluationTest {
 		definition.add(new EvalVar("var", definition));
 
 		String result = definition.evaluate(interpreter(), emptyList());
-		
+
 		assertThat(result, equalTo("var: "));
 	}
 
@@ -181,13 +180,13 @@ public class ExpressionEvaluationTest {
 		definition.add(new EvalVar("var", definition));
 
 		String result = definition.evaluate(interpreter(), emptyList());
-		
+
 		assertThat(result, equalTo("var: "));
 	}
 
 	@Test
 	public void testEvaluateWithTemplateCallPassThroughArgument() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 
 		CustomTemplateDefinition temp = group.defineTemplate("temp", "arg");
 		temp.add(new RawText("temp("));

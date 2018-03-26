@@ -40,6 +40,11 @@ public abstract class TemplateDefinition {
 		return name;
 	}
 
+	public String getLocation() {
+		TemplateGroup group = this.group == null ? TemplateGroup.NONE : this.group;
+		return group.getResource() + ":" + name;
+	}
+
 	public List<TemplateParameter> getParameters() {
 		return parameters;
 	}

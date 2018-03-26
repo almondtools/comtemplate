@@ -48,7 +48,7 @@ public class ScopeTest {
 
 	@Test
 	public void testResolveVariableToConstant() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 		ValueDefinition definedConstant = group.defineConstant("constant");
 		definedConstant.setValue(string("string"));
 		definition = definedConstant;
@@ -101,7 +101,7 @@ public class ScopeTest {
 
 	@Test
 	public void testResolveTemplateGroupDefined() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 		CustomTemplateDefinition calldef = group.defineTemplate("call");
 		definition.setGroup(group);
 		assertThat(new Scope(definition, var("param", string("string"))).resolveTemplate("call"), sameInstance(calldef));
@@ -109,7 +109,7 @@ public class ScopeTest {
 
 	@Test
 	public void testResolveTemplateGroupImported() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 		TestTemplateDefinition calldef = new TestTemplateDefinition("call");
 		group.addImport(calldef);
 		definition.setGroup(group);
@@ -118,7 +118,7 @@ public class ScopeTest {
 
 	@Test
 	public void testResolveTemplateInDistantDefinedScope() throws Exception {
-		TemplateGroup group = new TemplateGroup("group");
+		TemplateGroup group = new TemplateGroup("group", "testresource");
 		TemplateDefinition parentDefinition = group.defineTemplate("parent");
 		TemplateDefinition tempDefinition = group.defineTemplate("temp");
 		Scope parent = new Scope(parentDefinition);

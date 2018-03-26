@@ -26,6 +26,10 @@ public class AbstractTemplateLoaderTest {
 			public InputStream loadSource(String name) {
 				return new ByteArrayInputStream("template() ::= {mytest}".getBytes());
 			}
+			@Override
+			public String resolveResource(String name) {
+				return "test";
+			}
 
 		};
 	}

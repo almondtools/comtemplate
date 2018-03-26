@@ -114,6 +114,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	private static final char[] ESCAPE_MAPPING_RAWTEXT = new char[] { '}', '}', '{', '{', '#', '#', 'u', 0 };
 
 	private String name;
+	private String resource;
 	private ParserRuleContext root;
 	private TemplateLoader loader;
 	private String tab;
@@ -121,8 +122,9 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	private TemplateGroup activeGroup;
 	private TemplateDefinition activeDefinition;
 
-	public TemplateGroupBuilder(String name, TemplateLoader loader) throws IOException {
+	public TemplateGroupBuilder(String name, String resource, TemplateLoader loader) throws IOException {
 		this.name = name;
+		this.resource = resource;
 		this.loader = loader;
 		this.tab = "    ";
 	}
@@ -131,40 +133,22 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		return name;
 	}
 
-	public static TemplateGroupBuilder library(String name, InputStream stream) throws IOException {
-		return library(name, stream, new UnsupportedLoader());
+	public static TemplateGroupBuilder library(String name, String resource, InputStream stream) throws IOException {
+		return library(name, resource, stream, new UnsupportedLoader());
 	}
 
-	public static TemplateGroupBuilder library(String name, InputStream stream, TemplateLoader loader) throws IOException {
-		return new TemplateGroupBuilder(name, loader)
+	public static TemplateGroupBuilder library(String name, String resource, InputStream stream, TemplateLoader loader) throws IOException {
+		return new TemplateGroupBuilder(name, resource, loader)
 			.parseGroup(CharStreams.fromStream(stream));
 	}
 
-	public static TemplateGroupBuilder library(String name, String fileName) throws IOException {
-		return library(name, fileName, new UnsupportedLoader());
+	public static TemplateGroupBuilder main(String name, String resource, InputStream stream) throws IOException {
+		return main(name, resource, stream, new UnsupportedLoader());
 	}
 
-	public static TemplateGroupBuilder library(String name, String fileName, TemplateLoader loader) throws IOException {
-		return new TemplateGroupBuilder(name, loader)
-			.parseGroup(CharStreams.fromFileName(fileName));
-	}
-
-	public static TemplateGroupBuilder main(String name, InputStream stream) throws IOException {
-		return main(name, stream, new UnsupportedLoader());
-	}
-
-	public static TemplateGroupBuilder main(String name, InputStream stream, TemplateLoader loader) throws IOException {
-		return new TemplateGroupBuilder(name, loader)
+	public static TemplateGroupBuilder main(String name, String resource, InputStream stream, TemplateLoader loader) throws IOException {
+		return new TemplateGroupBuilder(name, resource, loader)
 			.parseMain(CharStreams.fromStream(stream));
-	}
-
-	public static TemplateGroupBuilder main(String name, String fileName) throws IOException {
-		return main(name, fileName, new UnsupportedLoader());
-	}
-
-	public static TemplateGroupBuilder main(String name, String fileName, TemplateLoader loader) throws IOException {
-		return new TemplateGroupBuilder(name, loader)
-			.parseMain(CharStreams.fromFileName(fileName));
 	}
 
 	public TemplateGroupBuilder parseGroup(CharStream stream) {
@@ -172,7 +156,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 			this.root = parse(stream, parser -> parser.templateFile());
 			return this;
 		} catch (TemplateGroupException e) {
-			e.setFileName(stream.getSourceName());
+			e.setFileName(resource);
 			throw e;
 		}
 	}
@@ -182,7 +166,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 			this.root = parse(stream, parser -> parser.templateBody());
 			return this;
 		} catch (TemplateGroupException e) {
-			e.setFileName(stream.getSourceName());
+			e.setFileName(resource);
 			throw e;
 		}
 	}
@@ -217,7 +201,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 			activeGroup.addImport(definition);
 			return node(definition);
 		} catch (TemplateGroupNotFoundException e) {
-			e.setFileName(name);
+			e.setFileName(resource);
 			throw e;
 		}
 	}
@@ -233,7 +217,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 			activeGroup.addImports(group.getDefinitions());
 			return node(group);
 		} catch (TemplateGroupNotFoundException e) {
-			e.setFileName(name);
+			e.setFileName(resource);
 			throw e;
 		}
 	}
@@ -250,7 +234,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 
 	@Override
 	public TemplateGroupNode visitTemplateFile(TemplateFileContext ctx) {
-		activeGroup = new TemplateGroup(name);
+		activeGroup = new TemplateGroup(name, resource);
 		for (ImportctpContext imp : ctx.imports().importctp()) {
 			visit(imp);
 		}
@@ -327,7 +311,7 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	@Override
 	public TemplateGroupNode visitTemplateBody(TemplateBodyContext ctx) {
 		if (activeGroup == null) {
-			activeGroup = new TemplateGroup(name);
+			activeGroup = new TemplateGroup(name, resource);
 		}
 		List<TemplateParameter> templateParameters = new ArrayList<>();
 		CustomTemplateDefinition templateDefinition = activeGroup.defineTemplate("", templateParameters);

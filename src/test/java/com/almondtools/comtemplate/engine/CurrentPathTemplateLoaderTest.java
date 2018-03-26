@@ -23,27 +23,27 @@ public class CurrentPathTemplateLoaderTest {
 
 	@Rule
 	public ExpectedException expected = ExpectedException.none();
-	
+
 	@Before
 	public void before() throws Exception {
 		Files.write(Paths.get("existing.ctp"), "template ::= {tmp}".getBytes());
 	}
-	
+
 	@After
 	public void after() throws Exception {
 		Files.deleteIfExists(Paths.get("existing.ctp"));
 	}
-	
+
 	@Test
 	public void testLoadGroup() throws Exception {
 		CurrentPathTemplateLoader loader = new CurrentPathTemplateLoader();
-		
+
 		TemplateGroup group = loader.loadGroup("existing");
-		
+
 		assertThat(group.getName(), equalTo("existing"));
 		assertThat(group.getDefinition("template").evaluate(interpreter(), emptyList()), equalTo("tmp"));
 	}
-	
+
 	@Test
 	public void testLoadGroupFailsWithException() throws Exception {
 		CurrentPathTemplateLoader loader = new CurrentPathTemplateLoader();
@@ -57,10 +57,9 @@ public class CurrentPathTemplateLoaderTest {
 	public void testClassPathTemplateLoaderTemplateCompiler() throws Exception {
 		TemplateCompiler compiler = mock(TemplateCompiler.class);
 		CurrentPathTemplateLoader loader = new CurrentPathTemplateLoader(compiler);
-		loader.compile("unit", null);
-		
-		verify(compiler).compileLibrary("unit", null, loader);
+		loader.compile("unit", "unit", null);
+
+		verify(compiler).compileLibrary("unit", "unit", null, loader);
 	}
-	
 
 }

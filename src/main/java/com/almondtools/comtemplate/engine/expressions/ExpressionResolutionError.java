@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.almondtools.comtemplate.engine.Resolver;
 import com.almondtools.comtemplate.engine.Scope;
+import com.almondtools.comtemplate.engine.TemplateDefinition;
 import com.almondtools.comtemplate.engine.TemplateImmediateExpression;
 
 public class ExpressionResolutionError extends ErrorExpression {
@@ -33,6 +34,10 @@ public class ExpressionResolutionError extends ErrorExpression {
 			buffer.append("\nevaluated by <").append(resolver.getClass().getSimpleName()).append(">");
 		}
 		if (scope != null) {
+			TemplateDefinition definition = scope.getDefinition();
+			if (definition != null) {
+				buffer.append("\naccessed in <").append(definition.getLocation()).append(">");
+			}
 			buffer.append('\n').append(getScopeStack(scope));
 		}
 		return buffer.toString();

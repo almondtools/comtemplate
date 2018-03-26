@@ -113,9 +113,9 @@ public class ConfigurableTemplateLoaderTest {
 	public void testConfigurableTemplateLoaderTemplateCompiler() throws Exception {
 		TemplateCompiler compiler = mock(TemplateCompiler.class);
 		ConfigurableTemplateLoader loader = new ConfigurableTemplateLoader(compiler);
-		loader.compile("unit", null);
+		loader.compile("unit", "unit", null);
 
-		verify(compiler).compileLibrary("unit", null, loader);
+		verify(compiler).compileLibrary("unit", "unit", null, loader);
 	}
 
 }

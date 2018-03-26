@@ -23,4 +23,8 @@ public class CurrentPathTemplateLoader extends AbstractTemplateLoader implements
 		}
 	}
 
+	@Override
+	public String resolveResource(String name) {
+		return Paths.get(pathOf(name)).toString();
+	}
 }
