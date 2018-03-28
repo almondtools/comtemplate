@@ -3,7 +3,9 @@ package com.almondtools.comtemplate.engine.resolvers;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import com.almondtools.comtemplate.engine.Resolver;
 import com.almondtools.comtemplate.engine.Scope;
@@ -18,7 +20,21 @@ public class CompoundResolver implements Resolver {
 
 	public CompoundResolver(Class<? extends TemplateImmediateExpression> clazz, Resolver... init) {
 		this.clazz = clazz;
-		this.resolvers = new ArrayList<>(asList(init));
+		this.resolvers = flatten(init);
+	}
+
+	private List<Resolver> flatten(Resolver[] resolvers) {
+		Queue<Resolver> todo = new LinkedList<>(asList(resolvers));
+		List<Resolver> allResolvers = new ArrayList<>();
+		while (!todo.isEmpty()) {
+			Resolver current = todo.remove();
+			if (current instanceof CompoundResolver) {
+				todo.addAll(((CompoundResolver) current).resolvers);
+			} else {
+				allResolvers.add(current);
+			}
+		}
+		return allResolvers;
 	}
 
 	public void add(Resolver resolver) {
