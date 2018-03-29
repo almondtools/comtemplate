@@ -1,6 +1,8 @@
 package com.almondtools.comtemplate.parser.files;
 
+import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.TestTemplateIntepreter.interpreter;
+import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static com.almondtools.comtemplate.parser.files.TemplateTests.compileLibrary;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -61,6 +63,14 @@ public class IfTest {
 		String rendered = group.getDefinition("ifWithNot").evaluate(interpreter());
 		assertThat(rendered, containsString("not(true)=false"));
 		assertThat(rendered, containsString("not(false)=true"));
+	}
+
+	@Test
+	public void testIfLazy() throws Exception {
+		String renderedExisting = group.getDefinition("ifLazy").evaluate(interpreter(), var("field", string("field")));
+		assertThat(renderedExisting, equalTo("field = value"));
+		String renderedNotExisting = group.getDefinition("ifLazy").evaluate(interpreter(), var("field", string("otherfield")));
+		assertThat(renderedNotExisting, equalTo("otherfield not found"));
 	}
 
 }

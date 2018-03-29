@@ -27,3 +27,10 @@ ifWithNot() ::= {
 <<if(not(false), then={not(false)=<<@cond>>}, else={})>>
 }
 
+ifLazy(field) ::= {
+<<if(@struct.(@field)?, then={<<@field>> = <<struct.(@field).value>>}, else={<<@field>> not found})>>
+}
+
+struct ::= [
+  field = [value="value"]
+]

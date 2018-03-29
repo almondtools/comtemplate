@@ -51,7 +51,11 @@ public class ResolvedMapLiteral implements TemplateImmediateExpression {
 
 	@Override
 	public <T> T as(Class<T> clazz) {
-		return null;
+		TemplateImmediateExpression value = map.get(ToObject.VALUE);
+		if (value == null) {
+			return null;
+		}
+		return value.as(clazz);
 	}
 
 	@Override

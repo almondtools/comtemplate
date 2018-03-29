@@ -3,6 +3,7 @@ package com.almondtools.comtemplate.processor;
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
@@ -149,7 +150,7 @@ public class TemplateProcessor {
 			.filter(path -> path.getFileName().toString().endsWith(".ctp") && !path.getFileName().toString().startsWith("_"))
 			.map(path -> path.toString())
 			.collect(toList());
-		
+
 		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
 		for (String templateFileName : templateFileNames) {
 			try {
@@ -161,7 +162,7 @@ public class TemplateProcessor {
 					Path targetPath = target.resolve(templateFileName.replace(".ctp", extension));
 					Files.createDirectories(targetPath.getParent());
 					Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
-					
+
 					String evaluate = main.evaluate(interpreter, globalScope);
 					Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
 				} else {
@@ -177,18 +178,22 @@ public class TemplateProcessor {
 						.orElse(new ResolvedListLiteral());
 
 					TemplateDefinition name = loader.loadDefinition(templateName + ".name");
-					
+					TemplateDefinition valid = loader.loadDefinition(templateName + ".valid");
+
 					for (TemplateImmediateExpression dataItem : data.getList()) {
-						
+
 						TemplateVariable dataVar = var("data", dataItem);
 
-						String fileName = name.evaluate(interpreter, globalScope, dataVar);
-						
-						Path targetPath = target.resolve(fileName);
-						
-						String evaluate = main.evaluate(interpreter, globalScope, dataVar);
-						
-						Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
+						if (isValid(valid, interpreter, globalScope, dataVar)) {
+
+							String fileName = name.evaluate(interpreter, globalScope, dataVar);
+
+							Path targetPath = target.resolve(fileName);
+
+							String evaluate = main.evaluate(interpreter, globalScope, dataVar);
+
+							Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
+						}
 					}
 				}
 			} catch (ComtemplateException e) {
@@ -206,6 +211,18 @@ public class TemplateProcessor {
 			Path targetPath = target.resolve(file);
 			Files.createDirectories(targetPath.getParent());
 			Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
+		}
+	}
+
+	private boolean isValid(TemplateDefinition valid, TemplateInterpreter interpreter, Scope globalScope, TemplateVariable dataVar) {
+		if (valid == null) {
+			return true;
+		}
+		TemplateImmediateExpression evaluated = valid.evaluate(interpreter, globalScope, asList(dataVar));
+		try {
+			return evaluated.as(Boolean.class);
+		} catch (NullPointerException e) {
+			return false;
 		}
 	}
 
