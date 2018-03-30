@@ -50,11 +50,13 @@ import com.almondtools.comtemplate.engine.expressions.VariableResolutionError;
 
 public class DefaultTemplateInterpreter implements TemplateInterpreter {
 
+	private TemplateLoader loader;
 	private ResolverRegistry resolvers;
 	private GlobalTemplates templates;
 	private ErrorHandler handler;
 
-	public DefaultTemplateInterpreter(ResolverRegistry resolvers, GlobalTemplates templates, ErrorHandler handler) {
+	public DefaultTemplateInterpreter(TemplateLoader loader, ResolverRegistry resolvers, GlobalTemplates templates, ErrorHandler handler) {
+		this.loader = loader;
 		this.resolvers = resolvers;
 		this.templates = templates;
 		this.handler = handler;
@@ -90,10 +92,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		String name = evalTemplate.getTemplate();
 		TemplateDefinition definition = evalTemplate.getDefinition();
 		List<TemplateVariable> arguments = evalTemplate.getArguments();
-		TemplateDefinition template = templates.resolve(name);
-		if (template == null) {
-			template = scope.resolveTemplate(name, definition);
-		}
+		TemplateDefinition template = resolveTemplate(definition, scope, name);
 		if (template == null) {
 			return handler.clear(evalTemplate, new TemplateResolutionError(name, definition));
 		}
@@ -105,10 +104,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		String name = evalTemplateFunction.getTemplate();
 		TemplateDefinition definition = evalTemplateFunction.getDefinition();
 		List<TemplateExpression> arguments = evalTemplateFunction.getArguments();
-		TemplateDefinition template = templates.resolve(name);
-		if (template == null) {
-			template = scope.resolveTemplate(name, definition);
-		}
+		TemplateDefinition template = resolveTemplate(definition, scope, name);
 		if (template == null) {
 			return handler.clear(evalTemplateFunction, new TemplateResolutionError(name, definition));
 		}
@@ -126,10 +122,7 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		TemplateDefinition definition = evalTemplateMixed.getDefinition();
 		List<TemplateExpression> arguments = evalTemplateMixed.getArguments();
 		List<TemplateVariable> namedArguments = evalTemplateMixed.getNamedArguments();
-		TemplateDefinition template = templates.resolve(name);
-		if (template == null) {
-			template = scope.resolveTemplate(name, definition);
-		}
+		TemplateDefinition template = resolveTemplate(definition, scope, name);
 		if (template == null) {
 			return handler.clear(evalTemplateMixed, new TemplateResolutionError(name, definition));
 		}
@@ -141,6 +134,21 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 			namedArguments.stream())
 			.collect(toList());
 		return handler.clear(evalTemplateMixed, template.evaluate(this, scope, assignedArguments));
+	}
+
+	protected TemplateDefinition resolveTemplate(TemplateDefinition definition, Scope scope, String name) {
+		TemplateDefinition template = templates.resolve(name);
+		if (template == null) {
+			template = scope.resolveTemplate(name, definition);
+		}
+		if (template == null && isAbsoluteReference(name)) {
+			template = loader.loadDefinition(name);
+		}
+		return template;
+	}
+
+	private boolean isAbsoluteReference(String name) {
+		return name.indexOf('.') > -1;
 	}
 
 	@Override

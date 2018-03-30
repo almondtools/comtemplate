@@ -37,14 +37,16 @@ import com.almondtools.comtemplate.engine.expressions.ToObject;
 
 public class TemplateEventNotifierTest {
 
+	private TemplateLoader loader;
 	private InterpreterListener listener;
-
 	private TemplateEventNotifier notifier;
+
 
 	@BeforeEach
 	public void before() throws Exception {
 		listener = Mockito.mock(InterpreterListener.class);
-		notifier = new TemplateEventNotifier(defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
+		loader = Mockito.mock(TemplateLoader.class);
+		notifier = new TemplateEventNotifier(loader, defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 		notifier.addListener(listener);
 	}
 
@@ -53,7 +55,7 @@ public class TemplateEventNotifierTest {
 		ErrorHandler errors = mock(ErrorHandler.class);
 		Scope scope = mock(Scope.class);
 		TestError error = new TestError("test");
-		notifier = new TemplateEventNotifier(new ResolverRegistry(), defaultTemplates(), errors);
+		notifier = new TemplateEventNotifier(loader, new ResolverRegistry(), defaultTemplates(), errors);
 
 		notifier.visitErrorExpression(error, scope);
 

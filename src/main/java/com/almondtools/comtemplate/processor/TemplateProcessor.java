@@ -151,7 +151,7 @@ public class TemplateProcessor {
 			.map(path -> path.toString())
 			.collect(toList());
 
-		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
+		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(loader, ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
 		for (String templateFileName : templateFileNames) {
 			try {
 				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar, '.');

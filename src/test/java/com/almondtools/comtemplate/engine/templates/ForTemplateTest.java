@@ -14,11 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import com.almondtools.comtemplate.engine.ArgumentRequiredException;
 import com.almondtools.comtemplate.engine.DefaultErrorHandler;
 import com.almondtools.comtemplate.engine.DefaultTemplateInterpreter;
 import com.almondtools.comtemplate.engine.TemplateInterpreter;
+import com.almondtools.comtemplate.engine.TemplateLoader;
 import com.almondtools.comtemplate.engine.expressions.EvalAnonymousTemplate;
 import com.almondtools.comtemplate.engine.expressions.EvalContextVar;
 import com.almondtools.comtemplate.engine.expressions.ResolvedListLiteral;
@@ -26,11 +28,13 @@ import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 
 public class ForTemplateTest {
 
+	private TemplateLoader loader;
 	private TemplateInterpreter interpreter;
 
 	@BeforeEach
 	public void before() throws Exception {
-		interpreter = new DefaultTemplateInterpreter(defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
+		loader = Mockito.mock(TemplateLoader.class);
+		interpreter = new DefaultTemplateInterpreter(loader, defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 	}
 
 	@Test

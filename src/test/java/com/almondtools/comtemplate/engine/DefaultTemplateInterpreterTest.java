@@ -59,6 +59,7 @@ import com.almondtools.comtemplate.engine.expressions.VariableResolutionError;
 
 public class DefaultTemplateInterpreterTest {
 
+	private TemplateLoader loader;
 	private GlobalTemplates globals;
 	private ResolverRegistry resolvers;
 	private ErrorHandler handler = new DefaultErrorHandler();
@@ -67,10 +68,11 @@ public class DefaultTemplateInterpreterTest {
 
 	@BeforeEach
 	public void before() throws Exception {
+		loader = Mockito.mock(TemplateLoader.class);
 		globals = Mockito.mock(GlobalTemplates.class);
 		resolvers = Mockito.mock(ResolverRegistry.class);
 		handler = Mockito.spy(new DefaultErrorHandler());
-		interpreter = new DefaultTemplateInterpreter(resolvers, globals, handler);
+		interpreter = new DefaultTemplateInterpreter(loader, resolvers, globals, handler);
 	}
 
 	@Test
@@ -144,6 +146,17 @@ public class DefaultTemplateInterpreterTest {
 	}
 
 	@Test
+	public void testVisitEvalTemplateResolvedAbsolute() throws Exception {
+		TemplateDefinition definition = mock(TemplateDefinition.class);
+		Scope scope = new TestScope();
+		when(loader.loadDefinition("absolute.template")).thenReturn(new TestTemplateDefinition("template", param("paramabs")));
+
+		TemplateImmediateExpression result = interpreter.visitEvalTemplate(new EvalTemplate("absolute.template", definition, var("paramabs", integer(2))), scope);
+
+		assertThat(result, equalTo(string("test: paramabs=2")));
+	}
+
+	@Test
 	public void testVisitEvalTemplateResolvedInScope() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		Scope scope = new TestScope() {
@@ -177,9 +190,21 @@ public class DefaultTemplateInterpreterTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		Scope scope = new TestScope();
 		when(globals.resolve("template")).thenReturn(new TestTemplateDefinition("template", param("param")));
+
 		TemplateImmediateExpression result = interpreter.visitEvalTemplateFunction(new EvalTemplateFunction("template", definition, integer(2)), scope);
 
 		assertThat(result, equalTo(string("test: param=2")));
+	}
+
+	@Test
+	public void testVisitEvalTemplateFunctionResolvedAbsolute() throws Exception {
+		TemplateDefinition definition = mock(TemplateDefinition.class);
+		Scope scope = new TestScope();
+		when(loader.loadDefinition("absolute.template")).thenReturn(new TestTemplateDefinition("template", param("paramabs")));
+
+		TemplateImmediateExpression result = interpreter.visitEvalTemplateFunction(new EvalTemplateFunction("absolute.template", definition, integer(2)), scope);
+
+		assertThat(result, equalTo(string("test: paramabs=2")));
 	}
 
 	@Test
@@ -216,12 +241,25 @@ public class DefaultTemplateInterpreterTest {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
 		Scope scope = new TestScope();
 		when(globals.resolve("template")).thenReturn(new TestTemplateDefinition("template", param("param"), param("named")));
-		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(2) }, var("named", integer(3))),
-			scope);
+		
+		EvalTemplateMixed template = new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(2) }, var("named", integer(3)));
+		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(template, scope);
 
 		assertThat(result, equalTo(string("test: param=2,named=3")));
 	}
 
+	@Test
+	public void testVisitEvalTemplateMixedResolvedAbsolute() throws Exception {
+		TemplateDefinition definition = mock(TemplateDefinition.class);
+		Scope scope = new TestScope();
+		when(loader.loadDefinition("absolute.template")).thenReturn(new TestTemplateDefinition("template", param("paramabs")));
+		
+		EvalTemplateMixed template = new EvalTemplateMixed("absolute.template", definition, new TemplateExpression[] { integer(2) }, var("named", integer(3)));
+		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(template, scope);
+		
+		assertThat(result, equalTo(string("test: paramabs=2,named=3")));
+	}
+	
 	@Test
 	public void testVisitEvalTemplateMixedResolvedInScope() throws Exception {
 		TemplateDefinition definition = mock(TemplateDefinition.class);
@@ -234,8 +272,9 @@ public class DefaultTemplateInterpreterTest {
 				return super.resolveTemplate(template, definition);
 			}
 		};
-		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(3) }, var("named", integer(4))),
-			scope);
+		
+		EvalTemplateMixed template = new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(3) }, var("named", integer(4)));
+		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(template,scope);
 
 		assertThat(result, equalTo(string("test: param=3,named=4")));
 	}
@@ -246,7 +285,8 @@ public class DefaultTemplateInterpreterTest {
 		when(definition.getGroup()).thenReturn(new TemplateGroup("test", "testresource"));
 		Scope scope = new TestScope();
 
-		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(4) }), scope);
+		EvalTemplateMixed template = new EvalTemplateMixed("template", definition, new TemplateExpression[] { integer(4) });
+		TemplateImmediateExpression result = interpreter.visitEvalTemplateMixed(template, scope);
 
 		assertThat(result, instanceOf(TemplateResolutionError.class));
 	}

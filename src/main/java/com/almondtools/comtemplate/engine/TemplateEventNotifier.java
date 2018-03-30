@@ -32,8 +32,8 @@ public class TemplateEventNotifier extends DefaultTemplateInterpreter {
 
 	private List<InterpreterListener> listeners;
 
-	public TemplateEventNotifier(ResolverRegistry resolvers, GlobalTemplates templates, ErrorHandler handler) {
-		super(resolvers, templates, handler);
+	public TemplateEventNotifier(TemplateLoader loader, ResolverRegistry resolvers, GlobalTemplates templates, ErrorHandler handler) {
+		super(loader, resolvers, templates, handler);
 		this.listeners = new ArrayList<InterpreterListener>();
 	}
 
