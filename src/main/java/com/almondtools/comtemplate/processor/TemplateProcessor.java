@@ -2,18 +2,16 @@ package com.almondtools.comtemplate.processor;
 
 import static com.almondtools.comtemplate.engine.TemplateVariable.var;
 import static com.almondtools.comtemplate.engine.expressions.StringLiteral.string;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
@@ -43,34 +41,22 @@ public class TemplateProcessor {
 	private static final String LIBRARIES = "libraries";
 	private static final String CLASSPATH = "classpath";
 	private static final String EXTENSION = "extension";
-	private static final String EXTENSIONS = "extensions";
 
 	private Path source;
 	private Path target;
 	private TemplateLoader loader;
 
 	private String extension;
-	private PathMatcher resources;
 
 	public TemplateProcessor(String source, String target, Properties properties) throws IOException {
 		this.source = validPath(source);
 		this.target = validTargetPath(target);
 		this.loader = loaderFor(this.source, this.target, properties);
 		this.extension = extensionFrom(properties);
-		this.resources = resourceExtensionsFrom(properties);
 	}
 
 	private String extensionFrom(Properties properties) {
 		return "." + properties.getProperty(EXTENSION, "html");
-	}
-
-	private PathMatcher resourceExtensionsFrom(Properties properties) {
-		String extensions = properties.getProperty(EXTENSIONS);
-		if (extensions == null) {
-			return FileSystems.getDefault().getPathMatcher("glob:*");
-		} else {
-			return FileSystems.getDefault().getPathMatcher("glob:*.{" + extensions + "}");
-		}
 	}
 
 	private TemplateLoader loaderFor(Path source, Path target, Properties properties) {
@@ -128,7 +114,7 @@ public class TemplateProcessor {
 		} catch (ArrayIndexOutOfBoundsException | FileNotFoundException e) {
 			System.err.println("signature: java " + TemplateProcessor.class.getName() + " <source path> <target path>");
 		} catch (IOException e) {
-			System.err.println("generation of files failed: " + e.getMessage());
+			System.err.println("error setting up template processor " + e.getMessage());
 		} finally {
 		}
 	}
@@ -143,13 +129,8 @@ public class TemplateProcessor {
 		return properties;
 	}
 
-	public void run() throws IOException {
-		List<String> templateFileNames = Files.walk(source)
-			.filter(path -> Files.isRegularFile(path))
-			.map(path -> source.relativize(path))
-			.filter(path -> path.getFileName().toString().endsWith(".ctp") && !path.getFileName().toString().startsWith("_"))
-			.map(path -> path.toString())
-			.collect(toList());
+	public void run() {
+		List<String> templateFileNames = findAllSources();
 
 		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(loader, ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
 		for (String templateFileName : templateFileNames) {
@@ -159,58 +140,83 @@ public class TemplateProcessor {
 				if (main == null) {
 					continue;
 				} else if (main.getParameter("data") == null) {
-					Path targetPath = target.resolve(templateFileName.replace(".ctp", extension));
-					Files.createDirectories(targetPath.getParent());
-					Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
-
-					String evaluate = main.evaluate(interpreter, globalScope);
-					Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
+					generateMain(templateFileName, main, interpreter);
 				} else {
-					Path parentPath = target.resolve(templateFileName).getParent();
-					Files.createDirectories(parentPath);
-					Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
-
-					TemplateGroup group = main.getGroup();
-					ResolvedListLiteral data = group.resolveVariable("data")
-						.map(v -> v.getValue().apply(interpreter, globalScope))
-						.filter(v -> v instanceof ResolvedListLiteral)
-						.map(v -> (ResolvedListLiteral) v)
-						.orElse(new ResolvedListLiteral());
-
-					TemplateDefinition name = loader.loadDefinition(templateName + ".name");
-					TemplateDefinition valid = loader.loadDefinition(templateName + ".valid");
-
-					for (TemplateImmediateExpression dataItem : data.getList()) {
-
-						TemplateVariable dataVar = var("data", dataItem);
-
-						if (isValid(valid, interpreter, globalScope, dataVar)) {
-
-							String fileName = name.evaluate(interpreter, globalScope, dataVar);
-
-							Path targetPath = target.resolve(fileName);
-
-							String evaluate = main.evaluate(interpreter, globalScope, dataVar);
-
-							Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
-						}
-					}
+					generateProjection(templateFileName, main, interpreter);
 				}
 			} catch (ComtemplateException e) {
-				System.err.println(e.getMessage());
+				System.err.println("failed template generation");
+				e.printStackTrace(System.err);
 			}
 		}
-		List<Path> otherfiles = Files.walk(source)
-			.filter(path -> Files.isRegularFile(path))
-			.map(path -> source.relativize(path))
-			.filter(path -> !path.toString().endsWith(".ctp"))
-			.filter(path -> resources.matches(path))
-			.collect(toList());
-		for (Path file : otherfiles) {
-			Path sourcePath = source.resolve(file);
-			Path targetPath = target.resolve(file);
+	}
+
+	private List<String> findAllSources()  {
+		try {
+			return Files.walk(source)
+				.filter(path -> Files.isRegularFile(path))
+				.map(path -> source.relativize(path))
+				.filter(path -> path.getFileName().toString().endsWith(".ctp") && !path.getFileName().toString().startsWith("_"))
+				.map(path -> path.toString())
+				.collect(toList());
+		} catch (IOException e) {
+			System.err.println("cannot collect source files from " + source);
+			e.printStackTrace(System.err);
+			return emptyList();
+		}
+	}
+
+	private void generateMain(String templateFileName, TemplateDefinition main, TemplateInterpreter interpreter) {
+		Path targetPath = target.resolve(templateFileName.replace(".ctp", extension));
+		try {
 			Files.createDirectories(targetPath.getParent());
-			Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
+			Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
+
+			String evaluate = main.evaluate(interpreter, globalScope);
+			Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			System.err.println("failed generating from " + templateFileName + " to " + targetPath);
+			e.printStackTrace(System.err);
+		}
+	}
+
+	private void generateProjection(String templateFileName, TemplateDefinition main, TemplateInterpreter interpreter) {
+		Path parentPath = target.resolve(templateFileName).getParent();
+		try {
+			Files.createDirectories(parentPath);
+			Scope globalScope = new Scope(main, var(SOURCE, string(source.toString())), var(TARGET, string(source.toString())));
+
+			TemplateGroup group = main.getGroup();
+			ResolvedListLiteral data = group.resolveVariable("data")
+				.map(v -> v.getValue().apply(interpreter, globalScope))
+				.filter(v -> v instanceof ResolvedListLiteral)
+				.map(v -> (ResolvedListLiteral) v)
+				.orElse(new ResolvedListLiteral());
+
+			TemplateDefinition name = main.getGroup().getDefinition("name");
+			TemplateDefinition valid = main.getGroup().getDefinition("valid");
+
+			for (TemplateImmediateExpression dataItem : data.getList()) {
+
+				TemplateVariable dataVar = var("data", dataItem);
+
+				if (isValid(valid, interpreter, globalScope, dataVar)) {
+					String fileName = name.evaluate(interpreter, globalScope, dataVar);
+					Path targetPath = target.resolve(fileName);
+
+					try {
+						String evaluate = main.evaluate(interpreter, globalScope, dataVar);
+
+						Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
+					} catch (IOException e) {
+						System.err.println("failed generating from " + fileName + " to " + targetPath);
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		} catch (IOException e) {
+			System.err.println("failed generating to " + parentPath);
+			e.printStackTrace(System.err);
 		}
 	}
 
