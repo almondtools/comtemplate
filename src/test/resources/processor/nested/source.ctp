@@ -1,6 +1,6 @@
 import html.*
 
-main() ::= {
+_main() ::= {
 <<html(content={
   <<head(content={
   })>>

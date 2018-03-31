@@ -136,7 +136,7 @@ public class TemplateProcessor {
 		for (String templateFileName : templateFileNames) {
 			try {
 				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar, '.');
-				TemplateDefinition main = loader.loadDefinition(templateName + ".main");
+				TemplateDefinition main = loader.loadDefinition(templateName + "._main");
 				if (main == null) {
 					continue;
 				} else if (main.getParameter("data") == null) {
@@ -193,8 +193,8 @@ public class TemplateProcessor {
 				.map(v -> (ResolvedListLiteral) v)
 				.orElse(new ResolvedListLiteral());
 
-			TemplateDefinition name = main.getGroup().getDefinition("name");
-			TemplateDefinition valid = main.getGroup().getDefinition("valid");
+			TemplateDefinition name = main.getGroup().getDefinition("_name");
+			TemplateDefinition valid = main.getGroup().getDefinition("_valid");
 
 			for (TemplateImmediateExpression dataItem : data.getList()) {
 
