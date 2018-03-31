@@ -121,6 +121,7 @@ value
 	| value '.' attr=Identifier # valueAttribute
 	| value '.' '(' ref ')' #valueVirtual
 	| value ('~' value)+ # valueConcat
+    | value '!' # valueIgnoreError
 	| value '?' # valueExists
 	| value '?:' value # valueDefault
 	;

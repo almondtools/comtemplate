@@ -49,6 +49,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalTemplateMixed;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Exists;
+import com.almondtools.comtemplate.engine.expressions.IgnoreErrors;
 import com.almondtools.comtemplate.engine.expressions.RawText;
 import com.almondtools.comtemplate.engine.expressions.StringLiteral;
 import com.almondtools.comtemplate.parser.ComtemplateParser.AttributeContext;
@@ -101,6 +102,7 @@ import com.almondtools.comtemplate.parser.ComtemplateParser.ValueDefaultContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueDefinitionContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueExistsContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueFunctionContext;
+import com.almondtools.comtemplate.parser.ComtemplateParser.ValueIgnoreErrorContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueListContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueMapContext;
 import com.almondtools.comtemplate.parser.ComtemplateParser.ValueRefContext;
@@ -517,6 +519,12 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 		TemplateExpression base = visit(ctx.value()).as(TemplateExpression.class);
 		TemplateExpression attribute = visit(ctx.ref()).as(TemplateExpression.class);
 		return node(new EvalVirtual(base, attribute));
+	}
+
+	@Override
+	public TemplateGroupNode visitValueIgnoreError(ValueIgnoreErrorContext ctx) {
+		TemplateExpression expression = visit(ctx.value()).as(TemplateExpression.class);
+		return node(new IgnoreErrors(expression));
 	}
 
 	@Override

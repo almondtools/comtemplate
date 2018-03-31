@@ -23,6 +23,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.Exists;
+import com.almondtools.comtemplate.engine.expressions.IgnoreErrors;
 import com.almondtools.comtemplate.engine.expressions.IntegerLiteral;
 import com.almondtools.comtemplate.engine.expressions.ListLiteral;
 import com.almondtools.comtemplate.engine.expressions.MapLiteral;
@@ -119,11 +120,17 @@ public class VariableCollector implements TemplateExpressionVisitor<TemplateExpr
 	}
 
 	@Override
+	public TemplateExpression visitIgnoreErrors(IgnoreErrors ignoreErrors, Scope scope) {
+		ignoreErrors.getExpression().apply(this, scope);
+		return ignoreErrors;
+	}
+
+	@Override
 	public TemplateExpression visitExists(Exists exists, Scope scope) {
 		exists.getExpression().apply(this, scope);
 		return exists;
 	}
-
+	
 	@Override
 	public TemplateExpression visitDefaulted(Defaulted defaulted, Scope scope) {
 		defaulted.getExpression().apply(this, scope);

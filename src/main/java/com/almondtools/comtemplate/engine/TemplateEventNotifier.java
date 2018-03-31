@@ -18,6 +18,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalTemplateFunction;
 import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.Exists;
+import com.almondtools.comtemplate.engine.expressions.IgnoreErrors;
 import com.almondtools.comtemplate.engine.expressions.IntegerLiteral;
 import com.almondtools.comtemplate.engine.expressions.ListLiteral;
 import com.almondtools.comtemplate.engine.expressions.MapLiteral;
@@ -91,6 +92,11 @@ public class TemplateEventNotifier extends DefaultTemplateInterpreter {
 	@Override
 	public TemplateImmediateExpression visitEvaluated(Evaluated evaluated, Scope scope) {
 		return notifyAndReturn(evaluated, super.visitEvaluated(evaluated, scope));
+	}
+	
+	@Override
+	public TemplateImmediateExpression visitIgnoreErrors(IgnoreErrors ignoreErrors, Scope scope) {
+		return notifyAndReturn(ignoreErrors, super.visitIgnoreErrors(ignoreErrors, scope));
 	}
 
 	@Override

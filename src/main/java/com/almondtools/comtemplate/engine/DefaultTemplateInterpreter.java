@@ -35,6 +35,7 @@ import com.almondtools.comtemplate.engine.expressions.EvalVar;
 import com.almondtools.comtemplate.engine.expressions.EvalVirtual;
 import com.almondtools.comtemplate.engine.expressions.Evaluated;
 import com.almondtools.comtemplate.engine.expressions.Exists;
+import com.almondtools.comtemplate.engine.expressions.IgnoreErrors;
 import com.almondtools.comtemplate.engine.expressions.IntegerLiteral;
 import com.almondtools.comtemplate.engine.expressions.ListLiteral;
 import com.almondtools.comtemplate.engine.expressions.MapLiteral;
@@ -194,6 +195,13 @@ public class DefaultTemplateInterpreter implements TemplateInterpreter {
 		return evaluated;
 	}
 
+	@Override
+	public TemplateImmediateExpression visitIgnoreErrors(IgnoreErrors ignoreErrors, Scope scope) {
+		handler.addDefault(ignoreErrors.getExpression(), () -> BooleanLiteral.FALSE);
+		TemplateImmediateExpression result = ignoreErrors.getExpression().apply(this, scope);
+		return result;
+	}
+	
 	@Override
 	public TemplateImmediateExpression visitExists(Exists exists, Scope scope) {
 		handler.addDefault(exists.getExpression(), () -> BooleanLiteral.FALSE);

@@ -44,4 +44,28 @@ public class VariablesTest extends TemplateTests {
 		assertThat(rendered, equalTo("nothing"));
 	}
 	
+	@Test
+	public void testIgnoringErrorsWithSufficientContext() throws Exception {
+		String rendered = group.getDefinition("ignoringErrorsWithSufficientContext").evaluate(interpreter());
+		assertThat(rendered, equalTo("next"));
+	}
+	
+	@Test
+	public void testIgnoringErrorsWithAlmostSufficientContext() throws Exception {
+		String rendered = group.getDefinition("ignoringErrorsWithAlmostSufficientContext").evaluate(interpreter());
+		assertThat(rendered, equalTo("nothing"));
+	}
+	
+	@Test
+	public void testIgnoringErrorsWithContext() throws Exception {
+		String rendered = group.getDefinition("ignoringErrorsWithContext").evaluate(interpreter());
+		assertThat(rendered, equalTo("nothing"));
+	}
+	
+	@Test
+	public void testIgnoringErrorsWithoutContext() throws Exception {
+		String rendered = group.getDefinition("ignoringErrorsWithoutContext").evaluate(interpreter());
+		assertThat(rendered, equalTo("nothing"));
+	}
+	
 }
