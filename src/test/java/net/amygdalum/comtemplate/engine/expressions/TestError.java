@@ -1,0 +1,20 @@
+package net.amygdalum.comtemplate.engine.expressions;
+
+import net.amygdalum.comtemplate.engine.expressions.ErrorExpression;
+
+public class TestError extends ErrorExpression {
+
+	private String msg;
+
+	public TestError(String msg) {
+		this.msg = msg;
+	}
+
+	public TestError() {
+		this("test");
+	}
+	
+	public String getMessage() {
+		return msg;
+	}
+}
