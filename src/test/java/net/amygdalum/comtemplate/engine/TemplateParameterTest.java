@@ -9,9 +9,9 @@ import static net.amygdalum.comtemplate.engine.expressions.DecimalLiteral.decima
 import static net.amygdalum.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;

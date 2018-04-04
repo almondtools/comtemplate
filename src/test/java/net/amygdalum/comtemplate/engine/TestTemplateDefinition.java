@@ -7,14 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import net.amygdalum.comtemplate.engine.Scope;
-import net.amygdalum.comtemplate.engine.TemplateDefinition;
-import net.amygdalum.comtemplate.engine.TemplateGroup;
-import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
-import net.amygdalum.comtemplate.engine.TemplateInterpreter;
-import net.amygdalum.comtemplate.engine.TemplateParameter;
-import net.amygdalum.comtemplate.engine.TemplateVariable;
-
 public class TestTemplateDefinition extends TemplateDefinition {
 
 	public TestTemplateDefinition(String name, List<TemplateParameter> parameters) {

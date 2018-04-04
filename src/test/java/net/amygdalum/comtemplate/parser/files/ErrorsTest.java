@@ -1,27 +1,13 @@
 package net.amygdalum.comtemplate.parser.files;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 public class ErrorsTest extends TemplateTests {
-
-	@Test
-	public void testInvalidCall() throws Exception {
-		List<String> errors = findErrors("src/test/resources/errors/invalidcall.ctp");
-		
-		assertThat(errors, contains("error at 2:2 unexpected token <call(var=\"x\",secondvar)>"));
-	}
-
-	@Test
-	public void testIncompleteCall() throws Exception {
-		List<String> errors = findErrors("src/test/resources/errors/incompletecall.ctp");
-		
-		assertThat(errors, contains("error at 2:2 unexpected token <call(var=\"x\",secondvar>"));
-	}
 
 	@Test
 	public void testMissingParameterCommaCall() throws Exception {

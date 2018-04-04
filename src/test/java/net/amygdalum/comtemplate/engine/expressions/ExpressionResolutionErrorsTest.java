@@ -3,14 +3,11 @@ package net.amygdalum.comtemplate.engine.expressions;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.comtemplate.engine.expressions.ExpressionResolutionError;
-import net.amygdalum.comtemplate.engine.expressions.ExpressionResolutionErrors;
 
 
 public class ExpressionResolutionErrorsTest {

@@ -4,8 +4,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static net.amygdalum.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.expressions.ExpressionResolutionError;
 import net.amygdalum.comtemplate.engine.expressions.NativeObject;
-import net.amygdalum.comtemplate.engine.resolvers.BeanDynamicResolver;
 
 
 public class BeanDynamicResolverTest {

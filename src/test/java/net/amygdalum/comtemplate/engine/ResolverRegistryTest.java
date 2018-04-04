@@ -5,9 +5,9 @@ import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static net.amygdalum.xrayinterface.XRayInterface.xray;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -16,9 +16,6 @@ import java.util.Set;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
-import net.amygdalum.comtemplate.engine.Resolver;
-import net.amygdalum.comtemplate.engine.ResolverRegistry;
-import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
 import net.amygdalum.comtemplate.engine.expressions.StringLiteral;
 import net.amygdalum.comtemplate.engine.resolvers.BasicResolver;
 import net.amygdalum.comtemplate.engine.resolvers.BeanDynamicResolver;

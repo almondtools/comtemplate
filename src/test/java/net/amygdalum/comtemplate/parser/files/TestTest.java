@@ -4,8 +4,8 @@ import static java.util.Collections.emptyList;
 import static net.amygdalum.comtemplate.engine.GlobalTemplates.defaultTemplates;
 import static net.amygdalum.comtemplate.engine.ResolverRegistry.defaultRegistry;
 import static net.amygdalum.comtemplate.parser.files.TemplateTests.compileLibrary;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

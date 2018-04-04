@@ -3,8 +3,8 @@ package net.amygdalum.comtemplate.engine.expressions;
 import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

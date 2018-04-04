@@ -52,9 +52,6 @@ import net.amygdalum.comtemplate.engine.expressions.Exists;
 import net.amygdalum.comtemplate.engine.expressions.IgnoreErrors;
 import net.amygdalum.comtemplate.engine.expressions.RawText;
 import net.amygdalum.comtemplate.engine.expressions.StringLiteral;
-import net.amygdalum.comtemplate.parser.ComtemplateLexer;
-import net.amygdalum.comtemplate.parser.ComtemplateParser;
-import net.amygdalum.comtemplate.parser.ComtemplateVisitor;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.AttributeContext;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.AttributesContext;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.BoolScalarContext;
@@ -85,7 +82,6 @@ import net.amygdalum.comtemplate.parser.ComtemplateParser.RefTemplateByMixedCont
 import net.amygdalum.comtemplate.parser.ComtemplateParser.RefTemplateByNameContext;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.RefTemplateBySequenceContext;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.RefTemplateEmptyContext;
-import net.amygdalum.comtemplate.parser.ComtemplateParser.RefTemplateErrorContext;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.RefVariableContext;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.SingleQuoteTokenContext;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.StrScalarContext;
@@ -602,11 +598,6 @@ public class TemplateGroupBuilder extends AbstractParseTreeVisitor<TemplateGroup
 	@Override
 	public TemplateGroupNode visitInlineToken(InlineTokenContext ctx) {
 		throw new UnsupportedOperationException("group builder skips visiting inline token node");
-	}
-
-	@Override
-	public TemplateGroupNode visitRefTemplateError(RefTemplateErrorContext ctx) {
-		throw new UnsupportedOperationException("group builder skips visiting error nodes");
 	}
 
 	public TemplateGroup buildGroup() {

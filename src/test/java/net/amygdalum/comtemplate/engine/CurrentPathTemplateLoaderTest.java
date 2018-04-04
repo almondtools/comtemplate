@@ -1,9 +1,9 @@
 package net.amygdalum.comtemplate.engine;
 
-import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static java.util.Collections.emptyList;
+import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -14,11 +14,6 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.comtemplate.engine.CurrentPathTemplateLoader;
-import net.amygdalum.comtemplate.engine.TemplateCompiler;
-import net.amygdalum.comtemplate.engine.TemplateGroup;
-import net.amygdalum.comtemplate.engine.TemplateGroupNotFoundException;
 
 public class CurrentPathTemplateLoaderTest {
 

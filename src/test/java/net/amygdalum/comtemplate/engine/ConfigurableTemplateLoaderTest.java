@@ -1,11 +1,11 @@
 package net.amygdalum.comtemplate.engine;
 
-import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static java.util.Collections.emptyList;
+import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -19,12 +19,6 @@ import java.io.InputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import net.amygdalum.comtemplate.engine.ConfigurableTemplateLoader;
-import net.amygdalum.comtemplate.engine.TemplateCompiler;
-import net.amygdalum.comtemplate.engine.TemplateGroup;
-import net.amygdalum.comtemplate.engine.TemplateGroupNotFoundException;
-import net.amygdalum.comtemplate.engine.ValueDefinition;
 
 public class ConfigurableTemplateLoaderTest {
 

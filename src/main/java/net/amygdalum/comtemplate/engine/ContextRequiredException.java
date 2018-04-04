@@ -11,7 +11,6 @@ public class ContextRequiredException extends ComtemplateException {
 
 	@Override
 	public String getMessage() {
-		return "template evaluation failed:\n"
-			+ "- context variable <" + variable + "> is required";
+		return "context variable <" + variable + "> is required";
 	}
 }

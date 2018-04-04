@@ -109,6 +109,7 @@ public class VariableCollector implements TemplateExpressionVisitor<TemplateExpr
 
 	@Override
 	public TemplateExpression visitEvalFunction(EvalFunction evalFunction, Scope scope) {
+		evalFunction.getBase().apply(this, scope);
 		evalFunction.getArguments().stream()
 			.forEach(expression -> expression.apply(this, scope));
 		return evalFunction;

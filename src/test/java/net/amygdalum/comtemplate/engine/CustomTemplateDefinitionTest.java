@@ -1,14 +1,13 @@
 package net.amygdalum.comtemplate.engine;
 
-import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static net.amygdalum.comtemplate.engine.TemplateVariable.var;
+import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import net.amygdalum.comtemplate.engine.CustomTemplateDefinition;
 import net.amygdalum.comtemplate.engine.expressions.EvalVar;
 import net.amygdalum.comtemplate.engine.expressions.RawText;
 

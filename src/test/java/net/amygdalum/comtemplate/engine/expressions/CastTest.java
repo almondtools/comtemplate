@@ -1,8 +1,8 @@
 package net.amygdalum.comtemplate.engine.expressions;
 
 import static net.amygdalum.comtemplate.engine.expressions.IntegerLiteral.integer;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.TemplateExpressionVisitor;
-import net.amygdalum.comtemplate.engine.expressions.Cast;
 
 
 public class CastTest {

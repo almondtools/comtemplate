@@ -34,9 +34,6 @@ public class ComtemplateErrorStrategy extends DefaultErrorStrategy {
 			reportInputMismatch(recognizer, (InputMismatchException) e);
 		} else if (e instanceof FailedPredicateException) {
 			reportFailedPredicate(recognizer, (FailedPredicateException) e);
-		} else if (e instanceof TemplateSyntaxException) {
-			Token t = e.getOffendingToken();
-			recognizer.notifyErrorListeners(t, "unexpected token <" + e.getCtx().getText() + '>', e);
 		} else if (e != null) {
 			Token t = e.getOffendingToken();
 			recognizer.notifyErrorListeners(t, "unexpected token <" + found(t) + ">, expected " + expected(recognizer, e.getExpectedTokens()), e);

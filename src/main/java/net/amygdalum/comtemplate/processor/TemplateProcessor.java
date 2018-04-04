@@ -1,7 +1,6 @@
 package net.amygdalum.comtemplate.processor;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static net.amygdalum.comtemplate.engine.TemplateVariable.var;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
@@ -23,6 +22,7 @@ import net.amygdalum.comtemplate.engine.ConfigurableTemplateLoader;
 import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
 import net.amygdalum.comtemplate.engine.DefaultTemplateInterpreter;
 import net.amygdalum.comtemplate.engine.GlobalTemplates;
+import net.amygdalum.comtemplate.engine.Messages;
 import net.amygdalum.comtemplate.engine.ResolverRegistry;
 import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.TemplateDefinition;
@@ -105,17 +105,16 @@ public class TemplateProcessor {
 		return path;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		try {
 			TemplateProcessor processor = new TemplateProcessor(args[0], args[1], properties(args[0]));
-			System.out.println("processing templates started");
+			Messages.info("processing templates started");
 			processor.run();
-			System.out.println("processing templates finished");
+			Messages.info("processing templates finished");
 		} catch (ArrayIndexOutOfBoundsException | FileNotFoundException e) {
-			System.err.println("signature: java " + TemplateProcessor.class.getName() + " <source path> <target path>");
+			Messages.error("signature: java " + TemplateProcessor.class.getName() + " <source path> <target path>");
 		} catch (IOException e) {
-			System.err.println("error setting up template processor " + e.getMessage());
-		} finally {
+			Messages.error("error setting up template processor " + e.getMessage());
 		}
 	}
 
@@ -129,11 +128,10 @@ public class TemplateProcessor {
 		return properties;
 	}
 
-	public void run() {
-		List<String> templateFileNames = findAllSources();
-
+	public void run() throws IOException {
 		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(loader, ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
-		for (String templateFileName : templateFileNames) {
+
+		for (String templateFileName : findAllSources()) {
 			try {
 				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar, '.');
 				TemplateDefinition main = loader.loadDefinition(templateName + "._main");
@@ -145,28 +143,21 @@ public class TemplateProcessor {
 					generateProjection(templateFileName, main, interpreter);
 				}
 			} catch (ComtemplateException e) {
-				System.err.println("failed template generation");
-				e.printStackTrace(System.err);
+				Messages.error("failed template generation:\n" + e.getMessage());
 			}
 		}
 	}
 
-	private List<String> findAllSources() {
-		try {
-			return Files.walk(source)
-				.filter(path -> Files.isRegularFile(path))
-				.map(path -> source.relativize(path))
-				.filter(path -> path.getFileName().toString().endsWith(".ctp") && !path.getFileName().toString().startsWith("_"))
-				.map(path -> path.toString())
-				.collect(toList());
-		} catch (IOException e) {
-			System.err.println("cannot collect source files from " + source);
-			e.printStackTrace(System.err);
-			return emptyList();
-		}
+	protected List<String> findAllSources() throws IOException {
+		return Files.walk(source)
+			.filter(path -> Files.isRegularFile(path))
+			.map(path -> source.relativize(path))
+			.filter(path -> path.getFileName().toString().endsWith(".ctp"))
+			.map(path -> path.toString())
+			.collect(toList());
 	}
 
-	private void generateMain(String templateFileName, TemplateDefinition main, TemplateInterpreter interpreter) {
+	protected void generateMain(String templateFileName, TemplateDefinition main, TemplateInterpreter interpreter) {
 		Path parentPath = target.resolve(templateFileName).getParent();
 		try {
 			Files.createDirectories(parentPath);
@@ -181,16 +172,14 @@ public class TemplateProcessor {
 				String evaluate = main.evaluate(interpreter, globalScope);
 				Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
 			} catch (IOException e) {
-				System.err.println("failed generating from " + templateFileName + " to " + targetPath);
-				e.printStackTrace(System.err);
+				Messages.error("failed generating from " + templateFileName + " to " + targetPath + ": " + e.getMessage());
 			}
 		} catch (IOException e) {
-			System.err.println("failed generating to " + parentPath);
-			e.printStackTrace(System.err);
+			Messages.error("failed generating to " + parentPath + ": " + e.getMessage());
 		}
 	}
 
-	private void generateProjection(String templateFileName, TemplateDefinition main, TemplateInterpreter interpreter) {
+	protected void generateProjection(String templateFileName, TemplateDefinition main, TemplateInterpreter interpreter) {
 		Path parentPath = target.resolve(templateFileName).getParent();
 		try {
 			Files.createDirectories(parentPath);
@@ -219,27 +208,28 @@ public class TemplateProcessor {
 
 						Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
 					} catch (IOException e) {
-						System.err.println("failed generating from " + fileName + " to " + targetPath);
-						e.printStackTrace(System.err);
+						Messages.error("failed generating from " + fileName + " to " + targetPath + ": " + e.getMessage());
 					}
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("failed generating to " + parentPath);
-			e.printStackTrace(System.err);
+			Messages.error("failed generating to " + parentPath + ": " + e.getMessage());
 		}
 	}
 
-	private boolean isValid(TemplateDefinition valid, TemplateInterpreter interpreter, Scope globalScope, TemplateVariable dataVar) {
+	protected boolean isValid(TemplateDefinition valid, TemplateInterpreter interpreter, Scope globalScope, TemplateVariable dataVar) {
 		if (valid == null) {
 			return true;
 		}
 		TemplateImmediateExpression evaluated = valid.evaluate(interpreter, globalScope, asList(dataVar));
-		try {
-			return evaluated.as(Boolean.class);
-		} catch (NullPointerException e) {
+		if (evaluated == null) {
 			return false;
 		}
+		Boolean result = evaluated.as(Boolean.class);
+		if (result == null) {
+			return false;
+		}
+		return result;
 	}
 
 }

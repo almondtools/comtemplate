@@ -3,10 +3,10 @@ package net.amygdalum.comtemplate.engine.resolvers;
 import static java.util.Collections.emptyList;
 import static net.amygdalum.comtemplate.engine.expressions.BooleanLiteral.FALSE;
 import static net.amygdalum.comtemplate.engine.expressions.BooleanLiteral.TRUE;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +15,6 @@ import org.junit.jupiter.api.Test;
 import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
 import net.amygdalum.comtemplate.engine.expressions.ExpressionResolutionErrors;
-import net.amygdalum.comtemplate.engine.resolvers.CompoundResolver;
-import net.amygdalum.comtemplate.engine.resolvers.NotResolver;
-import net.amygdalum.comtemplate.engine.resolvers.TrimResolver;
 
 public class CompoundResolverTest {
 

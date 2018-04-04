@@ -1,13 +1,12 @@
 package net.amygdalum.comtemplate.parser;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.junit.jupiter.api.Test;
 
-import net.amygdalum.comtemplate.parser.MultiChannelTokenStream;
 import net.amygdalum.comtemplate.parser.ComtemplateParser.FunctionDefinitionContext;
 
 public class TemplateBodyContextTest {

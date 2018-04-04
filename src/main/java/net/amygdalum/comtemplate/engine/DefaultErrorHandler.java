@@ -5,14 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.amygdalum.comtemplate.engine.expressions.ErrorExpression;
 
 public class DefaultErrorHandler implements ErrorHandler {
-
-	private static final Logger LOG = LoggerFactory.getLogger(DefaultErrorHandler.class);
 
 	private List<Default> defaults;
 
@@ -22,7 +17,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 
 	@Override
 	public TemplateImmediateExpression handle(ErrorExpression errorExpression) {
-		LOG.error(errorExpression.getMessage());
+		Messages.error(errorExpression.getMessage());
 		return errorExpression;
 	}
 

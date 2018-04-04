@@ -2,8 +2,8 @@ package net.amygdalum.comtemplate.engine.resolvers;
 
 import static java.util.Arrays.asList;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.expressions.RawText;
 import net.amygdalum.comtemplate.engine.expressions.ResolvedListLiteral;
-import net.amygdalum.comtemplate.engine.resolvers.SeparatedResolver;
 
 public class SeparatedResolverTest {
 

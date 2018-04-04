@@ -1,25 +1,18 @@
 package net.amygdalum.comtemplate.engine.expressions;
 
-import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static java.util.Collections.emptyList;
 import static net.amygdalum.comtemplate.engine.TemplateParameter.param;
 import static net.amygdalum.comtemplate.engine.TemplateVariable.var;
+import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static net.amygdalum.comtemplate.engine.expressions.MapLiteral.map;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
 import net.amygdalum.comtemplate.engine.CustomTemplateDefinition;
 import net.amygdalum.comtemplate.engine.TemplateGroup;
-import net.amygdalum.comtemplate.engine.expressions.EvalAnonymousTemplate;
-import net.amygdalum.comtemplate.engine.expressions.EvalAttribute;
-import net.amygdalum.comtemplate.engine.expressions.EvalContextVar;
-import net.amygdalum.comtemplate.engine.expressions.EvalFunction;
-import net.amygdalum.comtemplate.engine.expressions.EvalTemplate;
-import net.amygdalum.comtemplate.engine.expressions.EvalVar;
-import net.amygdalum.comtemplate.engine.expressions.RawText;
 
 public class ExpressionEvaluationTest {
 

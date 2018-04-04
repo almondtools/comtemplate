@@ -3,12 +3,11 @@ package net.amygdalum.comtemplate.engine;
 import static net.amygdalum.comtemplate.engine.TemplateVariable.var;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import net.amygdalum.comtemplate.engine.GlobalTemplates;
 import net.amygdalum.comtemplate.engine.templates.ForTemplate;
 import net.amygdalum.comtemplate.engine.templates.IfTemplate;
 

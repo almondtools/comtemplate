@@ -6,16 +6,13 @@ import static net.amygdalum.comtemplate.engine.expressions.DecimalLiteral.decima
 import static net.amygdalum.comtemplate.engine.expressions.Expressions.fromNative;
 import static net.amygdalum.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.comtemplate.engine.expressions.Expressions;
-import net.amygdalum.comtemplate.engine.expressions.NativeObject;
 
 public class ExpressionsTest {
 

@@ -1,26 +1,23 @@
 package net.amygdalum.comtemplate.engine;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static net.amygdalum.comtemplate.engine.Messages.setERROR;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 
 import net.amygdalum.comtemplate.engine.expressions.TestError;
 
-import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
-import net.amygdalum.util.extension.LogBackExtension;
-import net.amygdalum.util.extension.LogBackLog;
-import net.amygdalum.util.extension.LogBackExtension.ForClass;
 
-
-@ExtendWith(LogBackExtension.class)
 public class DefaultErrorHandlerTest {
 
 	@Test
-	public void testHandle(@ForClass(DefaultErrorHandler.class)LogBackLog log) throws Exception {
+	public void testHandle() throws Exception {
+		Messages messages = Mockito.mock(Messages.class);
+		setERROR(messages);
+		
 		new DefaultErrorHandler().handle(new TestError("test error"));
-		assertThat(log.getError(), containsString("test error"));
+		
+		Mockito.verify(messages).log("test error");
 	}
 
 }

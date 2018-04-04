@@ -1,18 +1,15 @@
 package net.amygdalum.comtemplate.engine;
 
-import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static java.util.Collections.emptyList;
+import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.comtemplate.engine.AbstractTemplateLoader;
-import net.amygdalum.comtemplate.engine.TemplateDefinition;
 
 public class AbstractTemplateLoaderTest {
 

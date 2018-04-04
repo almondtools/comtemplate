@@ -5,8 +5,8 @@ import static net.amygdalum.comtemplate.engine.expressions.BooleanLiteral.TRUE;
 import static net.amygdalum.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.util.List;
@@ -19,7 +19,6 @@ import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
 import net.amygdalum.comtemplate.engine.expressions.ExpressionResolutionError;
 import net.amygdalum.comtemplate.engine.expressions.IntegerLiteral;
 import net.amygdalum.comtemplate.engine.expressions.StringLiteral;
-import net.amygdalum.comtemplate.engine.resolvers.ExclusiveTypeResolver;
 
 public class ExclusiveTypeResolverTest {
 

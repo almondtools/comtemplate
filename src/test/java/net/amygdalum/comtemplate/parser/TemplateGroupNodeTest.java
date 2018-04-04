@@ -1,12 +1,10 @@
 package net.amygdalum.comtemplate.parser;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.comtemplate.parser.TemplateGroupNode;
 
 
 public class TemplateGroupNodeTest {

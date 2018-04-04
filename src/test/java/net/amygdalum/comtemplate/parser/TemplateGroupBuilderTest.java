@@ -3,8 +3,9 @@ package net.amygdalum.comtemplate.parser;
 import static com.almondtools.conmatch.exceptions.ExceptionMatcher.matchesException;
 import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import net.amygdalum.comtemplate.engine.TemplateGroupException;
-import net.amygdalum.comtemplate.parser.TemplateGroupBuilder;
 import net.amygdalum.util.extension.TemporaryFolder;
 import net.amygdalum.util.extension.TemporaryFolderExtension;
 
@@ -30,6 +30,14 @@ public class TemplateGroupBuilderTest {
 	public void before(TemporaryFolder folder) throws Exception {
 		this.folder = folder;
 		Files.createFile(folder.resolve("name.ctp"));
+	}
+
+	@Test
+	public void testGetName() throws Exception {
+		InputStream stream = new ByteArrayInputStream("template ::= {}".getBytes());
+		
+		assertThat(TemplateGroupBuilder.library("name1", "resource", stream).getName(), equalTo("name1"));
+		assertThat(TemplateGroupBuilder.main("name2", "resource", stream).getName(), equalTo("name2"));
 	}
 
 	@Test
@@ -149,10 +157,4 @@ public class TemplateGroupBuilderTest {
 		assertThrows(UnsupportedOperationException.class, () -> builder.visitDoubleQuoteToken(null));
 	}
 
-	@Test
-	public void testVisitRefTemplateError() throws Exception {
-		Path newFile = folder.resolve("name.ctp");
-		TemplateGroupBuilder builder = TemplateGroupBuilder.library("name", newFile.toString(), Files.newInputStream(newFile));
-		assertThrows(UnsupportedOperationException.class, () -> builder.visitRefTemplateError(null));
-	}
 }

@@ -3,8 +3,8 @@ package net.amygdalum.comtemplate.parser;
 import static com.almondtools.conmatch.datatypes.PrimitiveArrayMatcher.intArrayContaining;
 import static net.amygdalum.xrayinterface.XRayInterface.xray;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,8 +12,6 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenSource;
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.comtemplate.parser.MultiChannelTokenStream;
 
 public class MultiChannelTokenStreamTest {
 

@@ -5,13 +5,6 @@ import static net.amygdalum.comtemplate.engine.ResolverRegistry.defaultRegistry;
 
 import org.mockito.Mockito;
 
-import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
-import net.amygdalum.comtemplate.engine.DefaultTemplateInterpreter;
-import net.amygdalum.comtemplate.engine.ErrorHandler;
-import net.amygdalum.comtemplate.engine.GlobalTemplates;
-import net.amygdalum.comtemplate.engine.ResolverRegistry;
-import net.amygdalum.comtemplate.engine.TemplateLoader;
-
 public class TestTemplateIntepreter extends DefaultTemplateInterpreter {
 
 	public TestTemplateIntepreter(TemplateLoader loader, ResolverRegistry resolvers, GlobalTemplates templates, ErrorHandler handler) {

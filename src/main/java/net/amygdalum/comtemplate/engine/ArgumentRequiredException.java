@@ -11,7 +11,6 @@ public class ArgumentRequiredException extends ComtemplateException {
 
 	@Override
 	public String getMessage() {
-		return "template evaluation failed:\n"
-			+ "- argument <" + variable + "> is required";
+		return "argument <" + variable + "> is required";
 	}
 }

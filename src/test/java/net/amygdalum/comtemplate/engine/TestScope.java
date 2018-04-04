@@ -1,9 +1,5 @@
 package net.amygdalum.comtemplate.engine;
 
-import net.amygdalum.comtemplate.engine.Scope;
-import net.amygdalum.comtemplate.engine.TemplateDefinition;
-import net.amygdalum.comtemplate.engine.TemplateVariable;
-
 public class TestScope extends Scope {
 
 	public TestScope() {

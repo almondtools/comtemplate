@@ -8,7 +8,7 @@ import static net.amygdalum.comtemplate.engine.expressions.BooleanLiteral.TRUE;
 import static net.amygdalum.comtemplate.engine.expressions.ListLiteral.list;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,6 @@ import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
 import net.amygdalum.comtemplate.engine.DefaultTemplateInterpreter;
 import net.amygdalum.comtemplate.engine.TemplateInterpreter;
 import net.amygdalum.comtemplate.engine.TemplateLoader;
-import net.amygdalum.comtemplate.engine.templates.AllTemplate;
 
 public class AllTemplateTest {
 

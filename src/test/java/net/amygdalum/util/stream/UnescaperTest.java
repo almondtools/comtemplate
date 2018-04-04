@@ -2,12 +2,10 @@ package net.amygdalum.util.stream;
 
 import static net.amygdalum.util.stream.Unescaper.defaultUnescaper;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.util.stream.Unescaper;
 
 public class UnescaperTest {
 

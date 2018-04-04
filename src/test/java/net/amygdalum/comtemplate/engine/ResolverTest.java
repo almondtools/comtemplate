@@ -1,11 +1,10 @@
 package net.amygdalum.comtemplate.engine;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import net.amygdalum.comtemplate.engine.Resolver;
 import net.amygdalum.comtemplate.engine.expressions.ExpressionResolutionError;
 
 public class ResolverTest {

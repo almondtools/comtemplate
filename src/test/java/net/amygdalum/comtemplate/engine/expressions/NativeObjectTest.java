@@ -3,9 +3,9 @@ package net.amygdalum.comtemplate.engine.expressions;
 import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefaultEquality;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.TemplateExpressionVisitor;
-import net.amygdalum.comtemplate.engine.expressions.NativeObject;
 
 public class NativeObjectTest {
 

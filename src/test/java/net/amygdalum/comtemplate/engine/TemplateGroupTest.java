@@ -4,25 +4,15 @@ import static net.amygdalum.comtemplate.engine.TemplateParameter.param;
 import static net.amygdalum.comtemplate.engine.TemplateVariable.var;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
-
-import net.amygdalum.comtemplate.engine.CustomTemplateDefinition;
-import net.amygdalum.comtemplate.engine.TemplateDefinition;
-import net.amygdalum.comtemplate.engine.TemplateGroup;
-import net.amygdalum.comtemplate.engine.ValueDefinition;
 
 public class TemplateGroupTest {
-
-	@Rule
-	public ExpectedException expected = ExpectedException.none();
 
 	@Test
 	public void testGetName() throws Exception {

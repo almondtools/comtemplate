@@ -6,10 +6,6 @@ import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 
 import java.util.List;
 
-import net.amygdalum.comtemplate.engine.Resolver;
-import net.amygdalum.comtemplate.engine.Scope;
-import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
-
 public class TestResolver implements Resolver {
 
 	private Class<? extends TemplateImmediateExpression> clazz;

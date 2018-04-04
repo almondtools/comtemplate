@@ -68,6 +68,7 @@ public class TemporaryFolder {
 
 	public void prepare() throws IOException {
 		root = File.createTempFile("temporary", "", null).toPath();
+		files.add(root);
 		Files.deleteIfExists(root);
 		Files.createDirectories(root);
 	}

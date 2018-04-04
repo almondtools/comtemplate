@@ -9,7 +9,7 @@ import static net.amygdalum.comtemplate.engine.expressions.MapLiteral.map;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,8 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import net.amygdalum.comtemplate.engine.TestTemplateDefinition;
-
 import net.amygdalum.comtemplate.engine.ArgumentRequiredException;
 import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
 import net.amygdalum.comtemplate.engine.DefaultTemplateInterpreter;
@@ -27,10 +25,10 @@ import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
 import net.amygdalum.comtemplate.engine.TemplateInterpreter;
 import net.amygdalum.comtemplate.engine.TemplateLoader;
+import net.amygdalum.comtemplate.engine.TestTemplateDefinition;
 import net.amygdalum.comtemplate.engine.expressions.BooleanLiteral;
 import net.amygdalum.comtemplate.engine.expressions.TemplateResolutionError;
 import net.amygdalum.comtemplate.engine.expressions.UnexpectedTypeError;
-import net.amygdalum.comtemplate.engine.templates.ApplyTemplate;
 
 public class ApplyTemplateTest {
 

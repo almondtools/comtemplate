@@ -79,7 +79,6 @@ ref
 	| name=Identifier '(' items ')' #refTemplateBySequence
 	| name=Identifier '(' items ',' attributes ')' #refTemplateByMixed
 	| name=Identifier '(' ')' #refTemplateEmpty
-	| name=Identifier '(' (item | attribute) (',' (item | attribute))+ ')'? {syntaxError();} #refTemplateError
 	| EscapeMark? name=Identifier  #refVariable
 	;
 

@@ -5,7 +5,7 @@ import static net.amygdalum.comtemplate.engine.expressions.BooleanLiteral.TRUE;
 import static net.amygdalum.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,6 @@ import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
 import net.amygdalum.comtemplate.engine.expressions.Evaluated;
 import net.amygdalum.comtemplate.engine.expressions.NativeObject;
 import net.amygdalum.comtemplate.engine.expressions.RawText;
-import net.amygdalum.comtemplate.engine.resolvers.CompressResolver;
 
 public class CompressResolverTest {
 

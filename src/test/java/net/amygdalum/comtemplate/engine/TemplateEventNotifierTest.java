@@ -15,18 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import net.amygdalum.comtemplate.engine.expressions.TestError;
-
-import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
-import net.amygdalum.comtemplate.engine.ErrorHandler;
-import net.amygdalum.comtemplate.engine.InterpreterListener;
-import net.amygdalum.comtemplate.engine.ResolverRegistry;
-import net.amygdalum.comtemplate.engine.Scope;
-import net.amygdalum.comtemplate.engine.TemplateDefinition;
-import net.amygdalum.comtemplate.engine.TemplateEventNotifier;
-import net.amygdalum.comtemplate.engine.TemplateExpression;
-import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
-import net.amygdalum.comtemplate.engine.TemplateLoader;
 import net.amygdalum.comtemplate.engine.expressions.Cast;
 import net.amygdalum.comtemplate.engine.expressions.Concat;
 import net.amygdalum.comtemplate.engine.expressions.Defaulted;
@@ -44,6 +32,7 @@ import net.amygdalum.comtemplate.engine.expressions.NativeObject;
 import net.amygdalum.comtemplate.engine.expressions.RawText;
 import net.amygdalum.comtemplate.engine.expressions.ResolvedListLiteral;
 import net.amygdalum.comtemplate.engine.expressions.ResolvedMapLiteral;
+import net.amygdalum.comtemplate.engine.expressions.TestError;
 import net.amygdalum.comtemplate.engine.expressions.ToObject;
 
 public class TemplateEventNotifierTest {

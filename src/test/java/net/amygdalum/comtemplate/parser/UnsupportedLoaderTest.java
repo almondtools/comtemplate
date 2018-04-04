@@ -3,8 +3,7 @@ package net.amygdalum.comtemplate.parser;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
-
-import net.amygdalum.comtemplate.parser.UnsupportedLoader;
+import org.junit.jupiter.api.Test;
 
 public class UnsupportedLoaderTest {
 
@@ -15,10 +14,12 @@ public class UnsupportedLoaderTest {
 		loader = new UnsupportedLoader();
 	}
 
+	@Test
 	public void testLoadDefinition() throws Exception {
 		assertThrows(UnsupportedOperationException.class, () -> loader.loadDefinition("def"));
 	}
 
+	@Test
 	public void testLoadGroup() throws Exception {
 		assertThrows(UnsupportedOperationException.class, () -> loader.loadGroup("group"));
 	}

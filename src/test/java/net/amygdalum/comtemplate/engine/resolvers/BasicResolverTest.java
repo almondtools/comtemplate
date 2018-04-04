@@ -1,17 +1,11 @@
 package net.amygdalum.comtemplate.engine.resolvers;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.comtemplate.engine.resolvers.BasicResolver;
-import net.amygdalum.comtemplate.engine.resolvers.CompressResolver;
-import net.amygdalum.comtemplate.engine.resolvers.EmptyResolver;
-import net.amygdalum.comtemplate.engine.resolvers.IndentResolver;
-import net.amygdalum.comtemplate.engine.resolvers.TrimResolver;
 
 public class BasicResolverTest {
 

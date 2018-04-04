@@ -5,7 +5,7 @@ import static net.amygdalum.comtemplate.engine.expressions.BooleanLiteral.FALSE;
 import static net.amygdalum.comtemplate.engine.expressions.BooleanLiteral.TRUE;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
@@ -18,7 +18,6 @@ import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
 import net.amygdalum.comtemplate.engine.expressions.Evaluated;
 import net.amygdalum.comtemplate.engine.expressions.NativeObject;
 import net.amygdalum.comtemplate.engine.expressions.RawText;
-import net.amygdalum.comtemplate.engine.resolvers.TrimResolver;
 
 public class TrimResolverTest {
 

@@ -4,8 +4,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.util.HashMap;
@@ -18,7 +18,6 @@ import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
 import net.amygdalum.comtemplate.engine.expressions.ExpressionResolutionError;
 import net.amygdalum.comtemplate.engine.expressions.ResolvedMapLiteral;
-import net.amygdalum.comtemplate.engine.resolvers.MapDynamicResolver;
 
 public class MapDynamicResolverTest {
 

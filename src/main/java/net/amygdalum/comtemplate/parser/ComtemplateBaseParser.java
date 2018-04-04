@@ -22,8 +22,4 @@ public abstract class ComtemplateBaseParser extends Parser {
 		}
 	}
 
-	public void syntaxError() {
-		throw new TemplateSyntaxException(this, this._input, this._ctx);
-	}
-	
 }

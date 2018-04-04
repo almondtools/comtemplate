@@ -4,9 +4,9 @@ import static com.almondtools.conmatch.conventions.EqualityMatcher.satisfiesDefa
 import static net.amygdalum.comtemplate.engine.TemplateVariable.var;
 import static net.amygdalum.comtemplate.engine.expressions.DecimalLiteral.decimal;
 import static net.amygdalum.comtemplate.engine.expressions.IntegerLiteral.integer;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.Test;
 

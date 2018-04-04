@@ -1,21 +1,17 @@
 package net.amygdalum.comtemplate.engine;
 
-import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static java.util.Arrays.asList;
 import static net.amygdalum.comtemplate.engine.TemplateParameter.param;
 import static net.amygdalum.comtemplate.engine.TemplateVariable.var;
+import static net.amygdalum.comtemplate.engine.TestTemplateIntepreter.interpreter;
 import static net.amygdalum.comtemplate.engine.expressions.IntegerLiteral.integer;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.Test;
-
-import net.amygdalum.comtemplate.engine.Scope;
-import net.amygdalum.comtemplate.engine.TemplateGroup;
-import net.amygdalum.comtemplate.engine.TemplateVariable;
 
 public class TemplateDefinitionTest {
 
