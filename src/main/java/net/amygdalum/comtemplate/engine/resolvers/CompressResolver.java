@@ -4,7 +4,7 @@ import static java.lang.Character.isWhitespace;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
-import static net.amygdalum.util.stream.WithWindow.withWindow;
+import static net.amygdalum.util.stream.Windowed.windowed;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,10 +36,8 @@ public class CompressResolver extends FunctionResolver {
 			} else if (evaluated.size() == 1) {
 				return new Evaluated(resolve(evaluated.get(0), arguments, scope));
 			} else {
-				return new Evaluated(evaluated.stream()
-					.map(withWindow(2, TemplateImmediateExpression.class))
-					.flatMap(item -> {
-						TemplateImmediateExpression[] window = item.window;
+				return new Evaluated(windowed(evaluated.stream(), new TemplateImmediateExpression[2])
+					.flatMap(window -> {
 						if (window[0] == null) {
 							return Stream.of(resolve(window[1], arguments, scope));
 						} else if (endsWithWhitespace(window[0].getText()) || startsWithWhitespace(window[1].getText())) {
