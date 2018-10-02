@@ -18,6 +18,10 @@ public class TemplateGroupException extends ComtemplateException {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+	
+	public List<String> getMessages() {
+		return messages;
+	}
 
 	@Override
 	public String getMessage() {

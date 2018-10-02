@@ -2,6 +2,8 @@ package net.amygdalum.comtemplate.parser.files;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 
 import java.util.List;
 
@@ -28,4 +30,17 @@ public class ErrorsTest extends TemplateTests {
 			));
 		
 	}
+
+	@Test
+	public void testInvalidSyntaxInBody() throws Exception {
+		List<String> errors = findErrors("src/test/resources/errors/invalidsyntaxinbody.ctp");
+		
+		assertThat(errors, hasItems(
+			"error at 15:18 unexpected token <>>, expected <'>>'>",
+			"error at 28:26 unexpected token <>>, expected <'.', '~', '!', '?', '?:', '>>'>",
+			"error at 47:18 unexpected token <>>, expected <'>>'>"
+			));
+		assertThat(errors, hasSize(3));
+	}
+	
 }

@@ -12,9 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import net.amygdalum.comtemplate.engine.ComtemplateException;
@@ -131,6 +133,7 @@ public class TemplateProcessor {
 	public void run() throws IOException {
 		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(loader, ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
 
+		Set<String> messages = new HashSet<>();
 		for (String templateFileName : findAllSources()) {
 			try {
 				String templateName = templateFileName.substring(0, templateFileName.length() - 4).replace(File.separatorChar, '.');
@@ -143,7 +146,10 @@ public class TemplateProcessor {
 					generateProjection(templateFileName, main, interpreter);
 				}
 			} catch (ComtemplateException e) {
-				Messages.error("failed template generation:\n" + e.getMessage());
+				String msg = e.getMessage();
+				if (messages.add(msg)) {
+					Messages.error("failed template generation:\n" + msg);
+				}
 			}
 		}
 	}
