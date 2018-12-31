@@ -96,13 +96,13 @@
 		<dependency>
 			<groupId>net.amygdalum</groupId>
 			<artifactId>xrayinterface</artifactId>
-			<version>0.3.1</version>
+			<version>0.3.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.amygdalum</groupId>
 			<artifactId>hamcrest-extensions</artifactId>
-			<version>0.1.16-SNAPSHOT</version>
+			<version>0.1.18</version>
 		</dependency>
 	</dependencies>
 	<build>
