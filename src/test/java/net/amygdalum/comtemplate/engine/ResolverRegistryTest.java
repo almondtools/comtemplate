@@ -86,7 +86,6 @@ public class ResolverRegistryTest {
 		assertThat(resolver.getResolvers(), hasSize(3));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testDefaultRegistry() throws Exception {
 		ResolverRegistry registry = defaultRegistry();

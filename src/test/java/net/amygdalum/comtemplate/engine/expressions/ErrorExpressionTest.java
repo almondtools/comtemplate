@@ -2,7 +2,7 @@ package net.amygdalum.comtemplate.engine.expressions;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.emptyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -45,7 +45,7 @@ public class ErrorExpressionTest {
 
 	@Test
 	public void testGetText() throws Exception {
-		assertThat(expression.getText(), isEmptyString());
+		assertThat(expression.getText(), emptyString());
 	}
 
 }

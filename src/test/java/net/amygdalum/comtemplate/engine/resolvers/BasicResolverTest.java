@@ -16,7 +16,6 @@ public class BasicResolverTest {
 		resolvers = new BasicResolver();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testDefaultResolvers() throws Exception {
 		assertThat(resolvers.getResolvers(), containsInAnyOrder(

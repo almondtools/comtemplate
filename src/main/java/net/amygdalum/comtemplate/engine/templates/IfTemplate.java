@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static net.amygdalum.comtemplate.engine.TemplateParameter.param;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.List;
 
 import net.amygdalum.comtemplate.engine.ArgumentRequiredException;
 import net.amygdalum.comtemplate.engine.Scope;
@@ -13,8 +14,6 @@ import net.amygdalum.comtemplate.engine.TemplateInterpreter;
 import net.amygdalum.comtemplate.engine.TemplateVariable;
 import net.amygdalum.comtemplate.engine.expressions.RawText;
 import net.amygdalum.comtemplate.engine.expressions.UnexpectedTypeError;
-
-import java.util.List;
 
 public class IfTemplate extends TemplateDefinition {
 

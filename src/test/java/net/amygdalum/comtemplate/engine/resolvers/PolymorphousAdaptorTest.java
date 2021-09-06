@@ -18,7 +18,6 @@ import net.amygdalum.comtemplate.engine.expressions.ResolvedMapLiteral;
 
 public class PolymorphousAdaptorTest {
 
-	@SuppressWarnings({ "unchecked" })
 	@Test
 	public void testGetResolvedClasses() throws Exception {
 		TestPolymorphousAdaptor adaptor = new TestPolymorphousAdaptor("poly");
