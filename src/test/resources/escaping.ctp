@@ -8,6 +8,10 @@ escapedExample2() ::= {
 \<<escaped\>>
 }
 
+escapedExample3() ::= {
+\@<escaped>
+}
+
 escapedHtml() ::= {
 <\<<html>myhtml</html>\>>
 }

@@ -200,7 +200,7 @@ inlineToken
 	| Identifier
 	| Wildcard
 	| '\\'
-	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')')
+	| '\\' ('{' |  '}' | '.' | '?' | ':' | '~' | '(' | ')' | '@')
 	| EscapedReferenceMark
 	| EscapedComment
 	| AnythingElse
