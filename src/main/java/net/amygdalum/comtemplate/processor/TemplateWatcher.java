@@ -316,7 +316,7 @@ public class TemplateWatcher {
             String fileName = name != null ? name.evaluate(interpreter, globalScope) : templateFileName.replace(".ctp", extension);
             Path targetPath = target.resolve(fileName);
             try {
-                Messages.info("Generating " + targetPath);
+                Messages.info("Generating (M)" + targetPath);
 
                 String evaluate = main.evaluate(interpreter, globalScope);
                 Files.write(targetPath, evaluate.getBytes(StandardCharsets.UTF_8));
@@ -354,7 +354,7 @@ public class TemplateWatcher {
                     Path targetPath = target.resolve(fileName);
 
                     try {
-                        Messages.info("Generating " + targetPath);
+                        Messages.info("Generating (P)" + targetPath);
 
                         String evaluate = main.evaluate(interpreter, globalScope, dataVar);
 
@@ -390,9 +390,9 @@ public class TemplateWatcher {
             if (main == null) {
 
             } else if (main.getParameter("data") == null) {
-                generateMain(main.getGroup().getResource(), main, interpreter);
+                generateMain(source.relativize(Paths.get(main.getGroup().getResource())).toString(), main, interpreter);
             } else {
-                generateProjection(main.getGroup().getResource(), main, interpreter);
+                generateProjection(source.relativize(Paths.get(main.getGroup().getResource())).toString(), main, interpreter);
             }
             todo.addAll(provisions);
         }
@@ -420,9 +420,10 @@ public class TemplateWatcher {
                 if (main == null) {
 
                 } else if (main.getParameter("data") == null) {
-                    generateMain(main.getGroup().getResource(), main, interpreter);
+                    generateMain(source.relativize(Paths.get(main.getGroup().getResource())).toString(), main, interpreter);
                 } else {
-                    generateProjection(main.getGroup().getResource(), main, interpreter);
+                    generateProjection(source.relativize(Paths.get(main.getGroup().getResource())).toString(), main, interpreter);
+
                 }
             } catch (TemplateGroupNotFoundException e) {
                 // only template groups are generated so skip this case
