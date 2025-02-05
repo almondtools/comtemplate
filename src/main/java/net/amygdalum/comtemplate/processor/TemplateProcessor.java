@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import net.amygdalum.comtemplate.engine.ComtemplateException;
 import net.amygdalum.comtemplate.engine.ConfigurableTemplateLoader;
 import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
-import net.amygdalum.comtemplate.engine.DefaultTemplateInterpreter;
+import net.amygdalum.comtemplate.engine.SilentTemplateInterpreter;
 import net.amygdalum.comtemplate.engine.GlobalTemplates;
 import net.amygdalum.comtemplate.engine.Messages;
 import net.amygdalum.comtemplate.engine.ResolverRegistry;
@@ -131,7 +131,7 @@ public class TemplateProcessor {
 	}
 
 	public void run() throws IOException {
-		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(loader, ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
+		TemplateInterpreter interpreter = new SilentTemplateInterpreter(loader, ResolverRegistry.defaultRegistry(), GlobalTemplates.defaultTemplates(), new DefaultErrorHandler());
 
 		Set<String> messages = new HashSet<>();
 		for (String templateFileName : findAllSources()) {

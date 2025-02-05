@@ -10,8 +10,9 @@ import net.amygdalum.comtemplate.engine.TemplateDefinition;
 import net.amygdalum.comtemplate.engine.TemplateExpression;
 import net.amygdalum.comtemplate.engine.TemplateExpressionVisitor;
 import net.amygdalum.comtemplate.engine.TemplateVariable;
+import net.amygdalum.comtemplate.engine.WithArguments;
 
-public class EvalTemplate implements TemplateExpression {
+public class EvalTemplate implements TemplateExpression, WithArguments {
 
 	private String template;
 	private TemplateDefinition definition;
@@ -35,6 +36,7 @@ public class EvalTemplate implements TemplateExpression {
 		return definition;
 	}
 
+	@Override
 	public List<TemplateVariable> getArguments() {
 		return arguments;
 	}

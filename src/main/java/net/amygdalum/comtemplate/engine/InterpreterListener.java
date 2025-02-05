@@ -2,6 +2,6 @@ package net.amygdalum.comtemplate.engine;
 
 public interface InterpreterListener {
 
-	void notify(TemplateExpression source, TemplateImmediateExpression result);
+	void notify(Scope scope, TemplateExpression source, TemplateImmediateExpression result);
 
 }

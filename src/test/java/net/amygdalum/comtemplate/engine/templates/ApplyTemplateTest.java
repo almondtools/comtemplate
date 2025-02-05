@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 
 import net.amygdalum.comtemplate.engine.ArgumentRequiredException;
 import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
-import net.amygdalum.comtemplate.engine.DefaultTemplateInterpreter;
+import net.amygdalum.comtemplate.engine.SilentTemplateInterpreter;
 import net.amygdalum.comtemplate.engine.Scope;
 import net.amygdalum.comtemplate.engine.TemplateImmediateExpression;
 import net.amygdalum.comtemplate.engine.TemplateInterpreter;
@@ -38,7 +38,7 @@ public class ApplyTemplateTest {
 	@BeforeEach
 	public void before() throws Exception {
 		loader = Mockito.mock(TemplateLoader.class);
-		interpreter = new DefaultTemplateInterpreter(loader, defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
+		interpreter = new SilentTemplateInterpreter(loader, defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 	}
 
 	@Test

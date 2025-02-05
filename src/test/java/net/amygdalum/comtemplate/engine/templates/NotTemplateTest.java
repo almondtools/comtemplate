@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
-import net.amygdalum.comtemplate.engine.DefaultTemplateInterpreter;
+import net.amygdalum.comtemplate.engine.SilentTemplateInterpreter;
 import net.amygdalum.comtemplate.engine.TemplateInterpreter;
 import net.amygdalum.comtemplate.engine.TemplateLoader;
 
@@ -26,7 +26,7 @@ public class NotTemplateTest {
 	@BeforeEach
 	public void before() throws Exception {
 		loader = Mockito.mock(TemplateLoader.class);
-		interpreter = new DefaultTemplateInterpreter(loader, defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
+		interpreter = new SilentTemplateInterpreter(loader, defaultRegistry(), defaultTemplates(), new DefaultErrorHandler());
 	}
 
 	@Test

@@ -5,7 +5,7 @@ import static net.amygdalum.comtemplate.engine.ResolverRegistry.defaultRegistry;
 
 import org.mockito.Mockito;
 
-public class TestTemplateIntepreter extends DefaultTemplateInterpreter {
+public class TestTemplateIntepreter extends SilentTemplateInterpreter {
 
 	public TestTemplateIntepreter(TemplateLoader loader, ResolverRegistry resolvers, GlobalTemplates templates, ErrorHandler handler) {
 		super(loader, resolvers, templates, handler);

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import net.amygdalum.comtemplate.engine.DefaultErrorHandler;
-import net.amygdalum.comtemplate.engine.DefaultTemplateInterpreter;
+import net.amygdalum.comtemplate.engine.SilentTemplateInterpreter;
 import net.amygdalum.comtemplate.engine.GlobalTemplates;
 import net.amygdalum.comtemplate.engine.ResolverRegistry;
 import net.amygdalum.comtemplate.engine.TemplateGroup;
@@ -38,7 +38,7 @@ public class GlobalDataTest extends TemplateTests {
 		GlobalTemplates globals = defaultTemplates();
 		globals.register(var("global", new ResolvedMapLiteral(var("mystring", string("my string")))));
 		DefaultErrorHandler errors = new DefaultErrorHandler();
-		TemplateInterpreter interpreter = new DefaultTemplateInterpreter(loader, resolvers, globals, errors);
+		TemplateInterpreter interpreter = new SilentTemplateInterpreter(loader, resolvers, globals, errors);
 		
 		String rendered = group.getDefinition("globalDataRule").evaluate(interpreter, null, emptyList()).getText();
 		
