@@ -3,10 +3,10 @@ package net.amygdalum.comtemplate.engine.resolvers;
 import static java.util.Collections.emptyList;
 import static net.amygdalum.comtemplate.engine.TemplateVariable.var;
 import static net.amygdalum.comtemplate.engine.expressions.StringLiteral.string;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

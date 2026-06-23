@@ -35,12 +35,12 @@ public class DecimalLiteralTest {
 
 	@Test
 	public void testAsDouble() throws Exception {
-		assertThat(decimal(2.71).as(Double.class), equalTo(new Double(2.71)));
+		assertThat(decimal(2.71).as(Double.class), equalTo(Double.valueOf(2.71)));
 	}
 	
 	@Test
 	public void testAsFloat() throws Exception {
-		assertThat(decimal(2.71).as(Float.class), equalTo(new Float(2.71)));
+		assertThat(decimal(2.71).as(Float.class), equalTo(Float.valueOf(2.71f)));
 	}
 	
 	@Test
